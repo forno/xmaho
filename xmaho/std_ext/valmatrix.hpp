@@ -130,6 +130,13 @@ public:
    */
   T* end() noexcept;
 
+  /**
+   * @brief Swap objects.
+   *
+   * @param other Swap target.
+   */
+  void swap(valmatrix& other) noexcept;
+
   using std::valarray<T>::operator[];
   using std::valarray<T>::operator+;
   using std::valarray<T>::operator-;
@@ -146,6 +153,18 @@ public:
 private:
   position_type size_;
 };
+
+/**
+ * @brief Swap objects.
+ *
+ * @param a Swap target.
+ * @param b Swap target.
+ */
+template<typename T>
+void swap(valmatrix<T>& a, valmatrix<T>& b) noexcept
+{
+  a.swap(b);
+}
 
 }
 }

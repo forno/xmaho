@@ -96,4 +96,10 @@ T* xmaho::std_ext::valmatrix<T>::end() noexcept
   return (&std::valarray<T>::operator[](size() - 1)) + 1;
 }
 
+template<typename T>
+void xmaho::std_ext::valmatrix<T>::swap(valmatrix& other) noexcept
+{
+  std::swap(*this, other);
+}
+
 #endif
