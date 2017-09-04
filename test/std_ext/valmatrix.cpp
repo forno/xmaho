@@ -59,8 +59,7 @@ protected:
     : values(assign_size.first, assign_size.second),
       base_array(size(assign_size))
   {
-    for (auto& e : base_matrix)
-      e = base_bias;
+    base_matrix = base_bias;
     base_array = base_bias;
     std::default_random_engine rand {std::random_device{}()};
     std::uniform_int_distribution<> dist {-threshold, threshold};
@@ -81,8 +80,7 @@ protected:
     : values(size(assign_size)),
       base_array(size(assign_size))
   {
-    for (auto& e : base_matrix)
-      e = base_bias;
+    base_matrix = base_bias;
     base_array = base_bias;
     std::default_random_engine rand {std::random_device{}()};
     std::uniform_int_distribution<> dist {-5, 5};
@@ -101,8 +99,7 @@ protected:
 
   ValmatrixOperatorWithValueTest()
   {
-    for (auto& e : base_matrix)
-      e = base_bias;
+    base_matrix = base_bias;
     std::random_device rand {};
     value = std::uniform_int_distribution<>{-5, 5}(rand);
   }
