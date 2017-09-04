@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.1.3)
-project(xmaho
-  VERSION 0.1.0
-  LANGUAGES C CXX
-)
+project(xmaho VERSION 0.1.0)
 
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS RelWithDebInfo Release Debug MinSizeRel None)
 if(NOT CMAKE_BUILD_TYPE)
