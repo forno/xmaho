@@ -103,6 +103,33 @@ public:
   T& operator[](position_type position);
 
   /**
+   * @brief Add assign to each element in the matrix.
+   *
+   * @pre row_size() == rhs.row_size()
+   * @pre col_size() == rhs.col_size()
+   * @param rhs Same dimention matrix.
+   * @return This reference.
+   */
+  valmatrix& operator+=(const valmatrix& rhs) &;
+
+  /**
+   * @brief Add assign to each element in the matrix.
+   *
+   * @pre size() == rhs.size()
+   * @param rhs Same size array.
+   * @return This reference.
+   */
+  valmatrix& operator+=(const std::valarray<T>& rhs) &;
+
+  /**
+   * @brief Add assign to each element in the matrix.
+   *
+   * @param rhs value.
+   * @return This reference.
+   */
+  valmatrix& operator+=(const T& rhs) &;
+
+  /**
    * @brief Get begin iterator.
    *
    * @return Const begin iterator.

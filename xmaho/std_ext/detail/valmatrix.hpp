@@ -30,6 +30,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "../valmatrix.hpp"
 
+#include <cassert>
+
 namespace xmaho
 {
 namespace std_ext
@@ -70,6 +72,28 @@ template<typename T>
 T& xmaho::std_ext::valmatrix<T>::operator[](position_type position)
 {
   return std::valarray<T>::operator[](detail::get_serial_index(position, size_.second));
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator+=(const valmatrix& rhs) &
+{
+  std::valarray<T>::operator+=(rhs);
+  return *this;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator+=(const std::valarray<T>& rhs) &
+{
+  assert(size() == rhs.size());
+  std::valarray<T>::operator+=(rhs);
+  return *this;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator+=(const T& rhs) &
+{
+  std::valarray<T>::operator+=(rhs);
+  return *this;
 }
 
 template<typename T>
