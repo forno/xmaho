@@ -57,12 +57,18 @@ template<typename T>
 class valmatrix : std::valarray<T>
 {
 public:
-  using std::valarray<T>::value_type;
+  //! @brief Value type of valarray.
+  using value_type = typename std::valarray<T>::value_type;
+  //! @brief Size type for access to values.
   using size_type = std::size_t;
+  //! @brief Specific position type for two dimention.
   using position_type = std::pair<size_type, size_type>;
 
   /**
    * @brief Default constructor for empty valmatrix.
+   *
+   * @post row_size() == 0
+   * @post col_size() == 0
    */
   valmatrix() = default;
 
@@ -92,7 +98,7 @@ public:
    * @pre position.first < ros_size()
    * @pre position.second < col_size()
    * @param position Access point.
-   * @return Const reference of access point.
+   * @return Reference of access point.
    */
   T& operator[](position_type position);
 
@@ -124,10 +130,7 @@ public:
    */
   T* end() noexcept;
 
-  //! @brief Allow std::valarray access.
   using std::valarray<T>::operator[];
-
-  //! @brief Get element count.
   using std::valarray<T>::size;
 
 private:
