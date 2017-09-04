@@ -120,6 +120,14 @@ TEST_F(ValmatrixTest, ReadValueByPosition)
     }
 }
 
+TEST_F(ValmatrixTest, IteratorAccess)
+{
+  ASSERT_EQ(iota_matrix.begin(), begin(iota_matrix)); // ADL test
+  ASSERT_EQ(iota_matrix.begin(), std::begin(iota_matrix)); // std::begin test
+  ASSERT_EQ(iota_matrix.end(), end(iota_matrix)); // ALD test
+  ASSERT_EQ(iota_matrix.end(), std::end(iota_matrix)); // std::end test
+}
+
 TEST_F(ValmatrixTest, VoidSwap)
 {
   // std::swap test
