@@ -131,7 +131,17 @@ public:
   T* end() noexcept;
 
   using std::valarray<T>::operator[];
+  using std::valarray<T>::operator+;
+  using std::valarray<T>::operator-;
+  using std::valarray<T>::operator~;
+  using std::valarray<T>::operator!;
   using std::valarray<T>::size;
+  using std::valarray<T>::sum;
+  using std::valarray<T>::min;
+  using std::valarray<T>::max;
+  using std::valarray<T>::shift;
+  using std::valarray<T>::cshift;
+  using std::valarray<T>::apply;
 
 private:
   position_type size_;
