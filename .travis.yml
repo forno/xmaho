@@ -25,7 +25,7 @@ before_script:
 - cd build
 script:
 - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-- make
+- make $MAKEFLAGS
 - ctest
 after_failure:
 - cat Testing/Temporary/LastTest.log
