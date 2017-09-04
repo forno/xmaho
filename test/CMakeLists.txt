@@ -10,6 +10,9 @@ set(TEST_TARGETS
   test_gmock
 )
 
+# Add some test
+add_subdirectory(std_ext)
+
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG(-std=c++1z HAVE_FLAG_CXX17)
 if(HAVE_FLAG_CXX17)
