@@ -15,4 +15,6 @@ if(ENABLE_TEST)
   add_subdirectory(test)
 endif(ENABLE_TEST)
 
+add_subdirectory(doxygen)
+
 install(DIRECTORY "${PROJECT_NAME}" DESTINATION include)
