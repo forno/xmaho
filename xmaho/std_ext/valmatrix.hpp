@@ -82,6 +82,49 @@ public:
    */
   valmatrix(size_type row_size, size_type col_size);
 
+  //! @brief Default copy constructor for overload.
+  valmatrix(const valmatrix&) = default;
+  //! @brief Default move constructor for overload.
+  valmatrix(valmatrix&&) noexcept = default;
+  //! @brief Default copy assign for overload.
+  valmatrix& operator=(const valmatrix&) = default;
+  //! @brief Default move assign for overload.
+  valmatrix& operator=(valmatrix&&) noexcept = default;
+
+  /**
+   * @brief Assign to each element in the matrix.
+   *
+   * @pre size() == rhs.size()
+   * @param rhs Same size array.
+   * @return This reference.
+   */
+  valmatrix& operator=(const std::valarray<T>& rhs) &;
+
+  /**
+   * @brief Assign to each element in the matrix.
+   *
+   * @pre size() == rhs.size()
+   * @param rhs Same size array.
+   * @return This reference.
+   */
+  valmatrix& operator=(std::valarray<T>&& rhs) &;
+
+  /**
+   * @brief Assign to each element in the matrix.
+   *
+   * @param rhs Value.
+   * @return This reference.
+   */
+  valmatrix& operator=(const T& rhs) &;
+
+  /**
+   * @brief Assign to each element in the matrix.
+   *
+   * @param rhs Value.
+   * @return This reference.
+   */
+  valmatrix& operator=(T&& rhs) & noexcept;
+
   /**
    * @brief Access by position.
    *
@@ -124,7 +167,7 @@ public:
   /**
    * @brief Add assign to each element in the matrix.
    *
-   * @param rhs value.
+   * @param rhs Value.
    * @return This reference.
    */
   valmatrix& operator+=(const T& rhs) &;

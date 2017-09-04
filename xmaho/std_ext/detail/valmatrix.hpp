@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "../valmatrix.hpp"
 
 #include <cassert>
+#include <stdexcept>
 
 namespace xmaho
 {
@@ -60,6 +61,38 @@ xmaho::std_ext::valmatrix<T>::valmatrix(size_type row_size, size_type col_size)
   : std::valarray<T>(row_size * col_size),
     size_ {row_size, col_size}
 {
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator=(const std::valarray<T>& rhs) &
+{
+  if (size() != rhs.size())
+    throw std::out_of_range {"different size"};
+  std::valarray<T>::operator=(rhs);
+  return *this;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator=(std::valarray<T>&& rhs) &
+{
+  if (size() != rhs.size())
+    throw std::out_of_range {"different size"};
+  std::valarray<T>::operator=(std::move(rhs));
+  return *this;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator=(const T& rhs) &
+{
+  std::valarray<T>::operator=(rhs);
+  return *this;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator=(T&& rhs) & noexcept
+{
+  std::valarray<T>::operator=(std::move(rhs));
+  return *this;
 }
 
 template<typename T>
@@ -123,7 +156,9 @@ T* xmaho::std_ext::valmatrix<T>::end() noexcept
 template<typename T>
 void xmaho::std_ext::valmatrix<T>::swap(valmatrix& other) noexcept
 {
-  std::swap(*this, other);
+  valmatrix temp {std::move(other)};
+  other = std::move(*this);
+  *this = std::move(temp);
 }
 
 #endif
