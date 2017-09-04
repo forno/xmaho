@@ -22,6 +22,11 @@ constexpr std::size_t size(Size s)
 constexpr Size iota_size {10, 10};
 static_assert(size(iota_size) == 100, "Precondition: iota size by above value");
 
+constexpr Size assign_size {2, 2};
+static_assert(size(assign_size) == 4, "Preconfition: assign test size by above value");
+constexpr auto base_bias {1000};
+constexpr auto threshold {5};
+
 }
 
 class ValmatrixTest
@@ -39,6 +44,67 @@ protected:
     std::iota(std::begin(iota_array), std::end(iota_array), 0);
     for (auto i {0}; i < iota_array.size(); ++i)
       assert(iota_array[i] == i);
+  }
+};
+
+class ValmatrixOperatorWithValmatrixTest
+  : public ::testing::Test
+{
+protected:
+  Valmatrixi base_matrix {assign_size.first, assign_size.second};
+  Valmatrixi values;
+  Valarrayi base_array;
+
+  ValmatrixOperatorWithValmatrixTest()
+    : values(assign_size.first, assign_size.second),
+      base_array(size(assign_size))
+  {
+    for (auto& e : base_matrix)
+      e = base_bias;
+    base_array = base_bias;
+    std::default_random_engine rand {std::random_device{}()};
+    std::uniform_int_distribution<> dist {-threshold, threshold};
+    for (auto& e : values)
+      e = dist(rand);
+  }
+};
+
+class ValmatrixOperatorWithValarrayTest
+  : public ::testing::Test
+{
+protected:
+  Valmatrixi base_matrix {assign_size.first, assign_size.second};
+  Valarrayi values;
+  Valarrayi base_array;
+
+  ValmatrixOperatorWithValarrayTest()
+    : values(size(assign_size)),
+      base_array(size(assign_size))
+  {
+    for (auto& e : base_matrix)
+      e = base_bias;
+    base_array = base_bias;
+    std::default_random_engine rand {std::random_device{}()};
+    std::uniform_int_distribution<> dist {-5, 5};
+    for (auto& e : values)
+      e = dist(rand);
+  }
+};
+
+class ValmatrixOperatorWithValueTest
+  : public ::testing::Test
+{
+protected:
+  Valmatrixi base_matrix {assign_size.first, assign_size.second};
+  Valmatrixi::value_type value;
+  Valmatrixi::value_type base_value {base_bias};
+
+  ValmatrixOperatorWithValueTest()
+  {
+    for (auto& e : base_matrix)
+      e = base_bias;
+    std::random_device rand {};
+    value = std::uniform_int_distribution<>{-5, 5}(rand);
   }
 };
 
@@ -115,6 +181,29 @@ TEST_F(ValmatrixTest, ReadValueByPosition)
       const auto value {iota_matrix[Valmatrixi::position_type{i, j}]};
       ASSERT_EQ(value, iota_array[i * iota_size.second + j]);
     }
+}
+
+TEST_F(ValmatrixOperatorWithValmatrixTest, AddAssign)
+{
+  base_matrix += values;
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(base_matrix[i], base_array[i] + values[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValarrayTest, AddAssign)
+{
+  base_matrix += values;
+  base_array += values;
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(base_matrix[i], base_array[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValueTest, AddAssign)
+{
+  base_matrix += value;
+  const auto correct {base_value + value};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(base_matrix[i], correct);
 }
 
 TEST_F(ValmatrixTest, IteratorAccess)
