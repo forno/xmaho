@@ -99,10 +99,7 @@ TEST_F(ValmatrixTest, ReadArrayByIndirect)
   std::default_random_engine rand {std::random_device{}()};
   std::uniform_int_distribution<> size_dist {0, size(iota_size)};
   std::valarray<std::size_t> specification(size_dist(rand));
-
-  std::bernoulli_distribution dist {0.7};
-  for (auto& e : specification)
-    e = dist(rand);
+  std::sample(std::begin(iota_array), std::end(iota_array), std::begin(specification), specification.size(), rand);
 
   const Valarrayi value {iota_matrix[specification]};
   const Valarrayi correct_value {iota_array[specification]};
