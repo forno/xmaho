@@ -22,5 +22,6 @@ else(HAVE_FLAG_CXX17)
   set_property(TARGET ${TEST_TARGETS} PROPERTY CXX_EXTENSIONS False)
 endif(HAVE_FLAG_CXX17)
 
-add_test(NAME test_gtest COMMAND test_gtest)
-add_test(NAME test_gmock COMMAND test_gmock)
+foreach(i IN LISTS TEST_TARGETS)
+  add_test(NAME ${i} COMMAND ${i})
+endforeach(i IN LISTS TEST_TARGETS)
