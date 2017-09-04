@@ -155,6 +155,54 @@ private:
 };
 
 /**
+ * @brief Get begin iterator.
+ *
+ * @param v Target matrix.
+ * @return Const begin iterator.
+ */
+template<typename T>
+const T* begin(const valmatrix<T>& v) noexcept
+{
+  return v.begin();
+}
+
+/**
+ * @brief Get begin iterator.
+ *
+ * @param v Target matrix.
+ * @return Begin iterator.
+ */
+template<typename T>
+T* begin(valmatrix<T>& v) noexcept
+{
+  return v.begin();
+}
+
+/**
+ * @brief Get end iterator.
+ *
+ * @param v Target matrix.
+ * @return Const end iterator.
+ */
+template<typename T>
+const T* end(const valmatrix<T>& v) noexcept
+{
+  return v.end();
+}
+
+/**
+ * @brief Get end iterator.
+ *
+ * @param v Target matrix.
+ * @return End iterator.
+ */
+template<typename T>
+T* end(valmatrix<T>& v) noexcept
+{
+  return v.end();
+}
+
+/**
  * @brief Swap objects.
  *
  * @param a Swap target.
