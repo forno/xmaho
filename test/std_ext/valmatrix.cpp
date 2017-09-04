@@ -119,3 +119,23 @@ TEST_F(ValmatrixTest, ReadValueByPosition)
       ASSERT_EQ(value, iota_array[i * iota_size.second + j]);
     }
 }
+
+TEST_F(ValmatrixTest, VoidSwap)
+{
+  // std::swap test
+  Valmatrixi swap_target {};
+  std::swap(iota_matrix, swap_target);
+
+  ASSERT_FALSE(iota_matrix.size());
+  for (auto i {0}; i < size(iota_size); ++i)
+    ASSERT_EQ(swap_target[i], iota_array[i]);
+
+  // ADL test
+  swap(swap_target, swap_target);
+  for (auto i {0}; i < size(iota_size); ++i)
+    ASSERT_EQ(swap_target[i], iota_array[i]);
+
+  // member swap
+  Valmatrixi{}.swap(swap_target);
+  ASSERT_FALSE(swap_target.size());
+}
