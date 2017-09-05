@@ -73,8 +73,7 @@ xmaho::std_ext::valmatrix<T>::valmatrix(size_type row_size, size_type col_size, 
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator=(const std::valarray<T>& rhs) &
 {
-  if (size() != rhs.size())
-    throw std::out_of_range {"different size"};
+  assert(size() == rhs.size());
   std::valarray<T>::operator=(rhs);
   return *this;
 }
@@ -82,8 +81,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator=(const std:
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator=(std::valarray<T>&& rhs) &
 {
-  if (size() != rhs.size())
-    throw std::out_of_range {"different size"};
+  assert(size() == rhs.size());
   std::valarray<T>::operator=(std::move(rhs));
   return *this;
 }
@@ -105,12 +103,16 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator=(T&& rhs) &
 template<typename T>
 const T& xmaho::std_ext::valmatrix<T>::operator[](position_type position) const
 {
+  assert(position.first < size_.first);
+  assert(position.second < size_.second);
   return std::valarray<T>::operator[](detail::get_serial_index(position, size_.second));
 }
 
 template<typename T>
 T& xmaho::std_ext::valmatrix<T>::operator[](position_type position)
 {
+  assert(position.first < size_.first);
+  assert(position.second < size_.second);
   return std::valarray<T>::operator[](detail::get_serial_index(position, size_.second));
 }
 
