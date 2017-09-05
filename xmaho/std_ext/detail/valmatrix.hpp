@@ -108,6 +108,28 @@ T& xmaho::std_ext::valmatrix<T>::operator[](position_type position)
 }
 
 template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::operator+() const noexcept
+{
+  return *this;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::operator-() const noexcept
+{
+  valmatrix result {size_.first, size_.second};
+  result = std::valarray<T>::operator-();
+  return result;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::operator~() const noexcept
+{
+  valmatrix result {size_.first, size_.second};
+  result = std::valarray<T>::operator~();
+  return result;
+}
+
+template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator+=(const valmatrix& rhs) &
 {
   std::valarray<T>::operator+=(rhs);

@@ -146,6 +146,21 @@ public:
   T& operator[](position_type position);
 
   /**
+   * @brief Apply + operator to each elements in the matrix.
+   */
+  valmatrix operator+() const noexcept;
+
+  /**
+   * @brief Apply - operator to each elements in the matrix.
+   */
+  valmatrix operator-() const noexcept;
+
+  /**
+   * @brief Apply ~ operator to each elements in the matrix.
+   */
+  valmatrix operator~() const noexcept;
+
+  /**
    * @brief Add assign to each element in the matrix.
    *
    * @pre row_size() == rhs.row_size()
