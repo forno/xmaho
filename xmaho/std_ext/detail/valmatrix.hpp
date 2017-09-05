@@ -40,12 +40,12 @@ namespace std_ext
 namespace detail
 {
 
-std::size_t size(std::pair<std::size_t, std::size_t> pos)
+inline std::size_t size(std::pair<std::size_t, std::size_t> pos)
 {
   return pos.first * pos.second;
 }
 
-std::size_t get_serial_index(
+inline std::size_t get_serial_index(
   std::pair<std::size_t, std::size_t> pos,
   std::size_t col_size)
 {
