@@ -2,8 +2,10 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cstddef>
 #include <numeric>
 #include <random>
+#include <utility>
 
 #include <gtest/gtest.h>
 
@@ -12,7 +14,7 @@ namespace
 
 using Valmatrixi = xmaho::std_ext::valmatrix<int>;
 using Valarrayi = std::valarray<int>;
-using Size = Valmatrixi::position_type;
+using Size = std::pair<std::size_t, std::size_t>;
 
 constexpr std::size_t size(Size s)
 {
@@ -26,6 +28,13 @@ constexpr Size assign_size {2, 2};
 static_assert(size(assign_size) == 4, "Preconfition: assign test size by above value");
 constexpr auto base_bias {1000};
 constexpr auto threshold {5};
+
+class C
+{
+};
+
+using Valmatrixc = xmaho::std_ext::valmatrix<C>;
+using Valarrayc = std::valarray<C>;
 
 }
 
@@ -229,4 +238,12 @@ TEST_F(ValmatrixTest, VoidSwap)
   // member swap
   Valmatrixi{}.swap(swap_target);
   ASSERT_FALSE(swap_target.size());
+}
+
+TEST(ValmatrixcTest, Construct)
+{
+  Valmatrixc{};
+  Valmatrixc{1, 1};
+  Valmatrixc{2, 2};
+  Valmatrixc{10, 10};
 }
