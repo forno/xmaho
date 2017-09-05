@@ -231,10 +231,7 @@ private:
  * @return Const begin iterator.
  */
 template<typename T>
-const T* begin(const valmatrix<T>& v) noexcept
-{
-  return v.begin();
-}
+const T* begin(const valmatrix<T>& v) noexcept;
 
 /**
  * @brief Get begin iterator.
@@ -243,10 +240,7 @@ const T* begin(const valmatrix<T>& v) noexcept
  * @return Begin iterator.
  */
 template<typename T>
-T* begin(valmatrix<T>& v) noexcept
-{
-  return v.begin();
-}
+T* begin(valmatrix<T>& v) noexcept;
 
 /**
  * @brief Get end iterator.
@@ -255,10 +249,7 @@ T* begin(valmatrix<T>& v) noexcept
  * @return Const end iterator.
  */
 template<typename T>
-const T* end(const valmatrix<T>& v) noexcept
-{
-  return v.end();
-}
+const T* end(const valmatrix<T>& v) noexcept;
 
 /**
  * @brief Get end iterator.
@@ -267,10 +258,7 @@ const T* end(const valmatrix<T>& v) noexcept
  * @return End iterator.
  */
 template<typename T>
-T* end(valmatrix<T>& v) noexcept
-{
-  return v.end();
-}
+T* end(valmatrix<T>& v) noexcept;
 
 /**
  * @brief Swap objects.
@@ -279,10 +267,7 @@ T* end(valmatrix<T>& v) noexcept
  * @param b Swap target.
  */
 template<typename T>
-void swap(valmatrix<T>& a, valmatrix<T>& b) noexcept
-{
-  a.swap(b);
-}
+void swap(valmatrix<T>& a, valmatrix<T>& b) noexcept;
 
 }
 }

@@ -161,4 +161,34 @@ void xmaho::std_ext::valmatrix<T>::swap(valmatrix& other) noexcept
   *this = std::move(temp);
 }
 
+template<typename T>
+const T* xmaho::std_ext::begin(const valmatrix<T>& v) noexcept
+{
+  return v.begin();
+}
+
+template<typename T>
+T* xmaho::std_ext::begin(valmatrix<T>& v) noexcept
+{
+  return v.begin();
+}
+
+template<typename T>
+const T* xmaho::std_ext::end(const valmatrix<T>& v) noexcept
+{
+  return v.end();
+}
+
+template<typename T>
+T* xmaho::std_ext::end(valmatrix<T>& v) noexcept
+{
+  return v.end();
+}
+
+template<typename T>
+void xmaho::std_ext::swap(valmatrix<T>& a, valmatrix<T>& b) noexcept
+{
+  a.swap(b);
+}
+
 #endif
