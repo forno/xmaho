@@ -189,6 +189,29 @@ TEST_F(ValmatrixTest, ReadValueByPosition)
     }
 }
 
+TEST_F(ValmatrixTest, UnaryAddOperation)
+{
+  const Valmatrixi effected {+iota_matrix};
+  for (auto i {0}; i < size(iota_size); ++i)
+    ASSERT_EQ(effected[i], iota_array[i]);
+}
+
+TEST_F(ValmatrixTest, UnarySubOperation)
+{
+  const Valmatrixi effected {-iota_matrix};
+  const Valarrayi correct = -iota_array;
+  for (auto i {0}; i < size(iota_size); ++i)
+    ASSERT_EQ(effected[i], correct[i]);
+}
+
+TEST_F(ValmatrixTest, UnaryNegationOperation)
+{
+  const Valmatrixi effected {~iota_matrix};
+  const Valarrayi correct = ~iota_array;
+  for (auto i {0}; i < size(iota_size); ++i)
+    ASSERT_EQ(effected[i], correct[i]);
+}
+
 TEST_F(ValmatrixOperatorWithValmatrixTest, AddAssign)
 {
   base_matrix += values;
