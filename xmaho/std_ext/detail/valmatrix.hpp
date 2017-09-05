@@ -59,7 +59,14 @@ std::size_t get_serial_index(
 template<typename T>
 xmaho::std_ext::valmatrix<T>::valmatrix(size_type row_size, size_type col_size)
   : std::valarray<T>(row_size * col_size),
-    size_ {row_size, col_size}
+    size_ {col_size ? row_size : 0, row_size ? col_size : 0}
+{
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T>::valmatrix(size_type row_size, size_type col_size, std::valarray<T> values)
+  : std::valarray<T>(std::move(values)),
+    size_ {col_size ? row_size : 0, row_size ? col_size : 0}
 {
 }
 
