@@ -125,17 +125,13 @@ xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::operator+() const noe
 template<typename T>
 xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::operator-() const noexcept
 {
-  valmatrix result {size_.first, size_.second};
-  result = std::valarray<T>::operator-();
-  return result;
+  return valmatrix{size_.first, size_.second, std::valarray<T>::operator-()};
 }
 
 template<typename T>
 xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::operator~() const noexcept
 {
-  valmatrix result {size_.first, size_.second};
-  result = std::valarray<T>::operator~();
-  return result;
+  return valmatrix {size_.first, size_.second, std::valarray<T>::operator~()};
 }
 
 template<typename T>
