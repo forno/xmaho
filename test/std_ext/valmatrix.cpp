@@ -114,6 +114,30 @@ protected:
   }
 };
 
+TEST(ValmatrixConstruct, AllConstructors)
+{
+  const Valmatrixi zero {}; // Default construct
+  ASSERT_FALSE(zero.size());
+  const Valmatrixi one {1, 1}; // mim size
+  ASSERT_EQ(one.size(), 1);
+  ASSERT_EQ(one[0], 0);
+
+  constexpr Size diff_size {2, 5};
+  const Valmatrixi diffsize_mat {diff_size.first, diff_size.second}; // different size
+  ASSERT_EQ(diffsize_mat.size(), size(diff_size));
+
+  constexpr Size zero_size {100, 0};
+  const Valmatrixi zero_mat {zero_size.first, zero_size.second};
+  ASSERT_EQ(zero_mat.size(), size(zero_size));
+
+  Valarrayi values {5, 9, 2, 4, 6, 7};
+  constexpr Size def_size {3, 2};
+  const Valmatrixi mat_with_def {def_size.first, def_size.second, values};
+  ASSERT_EQ(mat_with_def.size(), size(def_size));
+  for (auto i {0}; i < size(def_size); ++i)
+    ASSERT_EQ(mat_with_def[i], values[i]);
+}
+
 TEST_F(ValmatrixTest, ReadValueByIndex)
 {
   for (auto i {0}; i < size(iota_size); ++i)
