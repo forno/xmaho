@@ -60,16 +60,14 @@ class ValmatrixOperatorWithValmatrixTest
   : public ::testing::Test
 {
 protected:
-  Valmatrixi base_matrix {assign_size.first, assign_size.second};
+  Valmatrixi base_matrix {base_bias, assign_size.first, assign_size.second};
   Valmatrixi values;
   Valarrayi base_array;
 
   ValmatrixOperatorWithValmatrixTest()
     : values(assign_size.first, assign_size.second),
-      base_array(size(assign_size))
+      base_array(base_bias, size(assign_size))
   {
-    base_matrix = base_bias;
-    base_array = base_bias;
     std::default_random_engine rand {std::random_device{}()};
     std::uniform_int_distribution<> dist {1, threshold};
     for (auto& e : values)
@@ -81,16 +79,14 @@ class ValmatrixOperatorWithValarrayTest
   : public ::testing::Test
 {
 protected:
-  Valmatrixi base_matrix {assign_size.first, assign_size.second};
+  Valmatrixi base_matrix {base_bias, assign_size.first, assign_size.second};
   Valarrayi values;
   Valarrayi base_array;
 
   ValmatrixOperatorWithValarrayTest()
     : values(size(assign_size)),
-      base_array(size(assign_size))
+      base_array(base_bias, size(assign_size))
   {
-    base_matrix = base_bias;
-    base_array = base_bias;
     std::default_random_engine rand {std::random_device{}()};
     std::uniform_int_distribution<> dist {1, threshold};
     for (auto& e : values)
@@ -102,7 +98,7 @@ class ValmatrixOperatorWithValueTest
   : public ::testing::Test
 {
 protected:
-  Valmatrixi base_matrix {assign_size.first, assign_size.second};
+  Valmatrixi base_matrix {base_bias, assign_size.first, assign_size.second};
   Valmatrixi::value_type value;
   Valmatrixi::value_type base_value {base_bias};
 
