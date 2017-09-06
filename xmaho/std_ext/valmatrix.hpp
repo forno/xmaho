@@ -475,6 +475,20 @@ public:
   valmatrix& operator>>=(const T& rhs) &;
 
   /**
+   * @brief Get row size.
+   *
+   * @return Count of row.
+   */
+  std::size_t row_size() const noexcept;
+
+  /**
+   * @brief Get column size.
+   *
+   * @return Count of column.
+   */
+  std::size_t col_size() const noexcept;
+
+  /**
    * @brief Get begin iterator.
    *
    * @return Const begin iterator.

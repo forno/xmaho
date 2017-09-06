@@ -389,6 +389,18 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator>>=(const T&
 }
 
 template<typename T>
+std::size_t xmaho::std_ext::valmatrix<T>::row_size() const noexcept
+{
+  return size_.first;
+}
+
+template<typename T>
+std::size_t xmaho::std_ext::valmatrix<T>::col_size() const noexcept
+{
+  return size_.second;
+}
+
+template<typename T>
 const T* xmaho::std_ext::valmatrix<T>::begin() const noexcept
 {
   return &std::valarray<T>::operator[](0);
