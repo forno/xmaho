@@ -532,6 +532,41 @@ TEST_F(ValmatrixTest, WriteColumn)
   }
 }
 
+TEST_F(ValmatrixTest, ReadBlock)
+{
+  constexpr Size index {1, 1};
+  constexpr Size block_size {2, 2};
+
+  Valmatrixi value {iota_matrix.block(index, block_size)};
+
+  const std::gslice specification {
+    index.first * iota_size.first + index.second,
+    {block_size.first, block_size.second},
+    {iota_size.first, 1}};
+  Valarrayi correct {iota_array[specification]};
+
+  for (auto i {0}; i < size(block_size); ++i)
+    ASSERT_EQ(value[i], correct[i]);
+}
+
+//TEST_F(ValmatrixTest, WriteBlock)
+//{
+//  constexpr Size index {2, 3};
+//  constexpr Size block_size {4, 3};
+//  constexpr auto new_value {1234};
+//
+//  iota_matrix.block(index, block_size) = new_value;
+//
+//  const std::gslice specification {
+//    index.first * iota_matrix.row_size() + index.second,
+//    {block_size.first, block_size.second},
+//    {iota_matrix.row_size(), 1}};
+//  iota_array[specification] = new_value;
+//
+//  for (auto i {0}; i < size(iota_size); ++i)
+//    ASSERT_EQ(iota_matrix[i], iota_array[i]);
+//}
+
 TEST_F(ValmatrixTest, IteratorAccess)
 {
   ASSERT_EQ(iota_matrix.begin(), begin(iota_matrix)); // ADL test
