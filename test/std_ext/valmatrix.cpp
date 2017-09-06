@@ -480,6 +480,58 @@ TEST_F(ValmatrixOperatorWithValueTest, CounterShiftAssign)
     ASSERT_EQ(base_matrix[i], correct);
 }
 
+TEST_F(ValmatrixTest, ReadRow)
+{
+  for (auto i {0}; i < iota_size.first; ++i) {
+    Valarrayi value {iota_matrix.row(i)};
+    Valarrayi correct {iota_array[std::slice{i * iota_size.second, iota_size.second, 1}]};
+    ASSERT_EQ(value.size(), correct.size());
+    for (auto j {0}; j < iota_size.second; ++j)
+      ASSERT_EQ(value[j], correct[j]);
+  }
+}
+
+TEST_F(ValmatrixTest, ReadColumn)
+{
+  for (auto i {0u}; i < iota_size.second; ++i) {
+    Valarrayi value {iota_matrix.col(i)};
+    Valarrayi correct {iota_array[std::slice{i, iota_size.first, iota_size.second}]};
+    ASSERT_EQ(value.size(), correct.size());
+    for (auto j {0}; j < iota_size.first; ++j)
+      ASSERT_EQ(value[j], correct[j]);
+  }
+}
+
+TEST_F(ValmatrixTest, WriteRow)
+{
+  constexpr auto new_value {5};
+  iota_matrix.row(iota_size.first - 1) = new_value;
+  iota_array[std::slice{iota_size.first * (iota_size.second - 1), iota_size.second, 1}] = new_value;
+
+  for (auto i {0}; i < iota_size.first; ++i) {
+    Valarrayi value {iota_matrix.row(i)};
+    Valarrayi correct {iota_array[std::slice{i * iota_size.second, iota_size.second, 1}]};
+    ASSERT_EQ(value.size(), correct.size());
+    for (auto j {0}; j < iota_size.second; ++j)
+      ASSERT_EQ(value[j], correct[j]);
+  }
+}
+
+TEST_F(ValmatrixTest, WriteColumn)
+{
+  constexpr auto new_value {5};
+  iota_matrix.col(iota_size.second - 1) = new_value;
+  iota_array[std::slice{iota_size.second - 1, iota_size.first, iota_size.second}] = new_value;
+
+  for (auto i {0u}; i < iota_size.second; ++i) {
+    Valarrayi value {iota_matrix.col(i)};
+    Valarrayi correct {iota_array[std::slice{i, iota_size.first, iota_size.second}]};
+    ASSERT_EQ(value.size(), correct.size());
+    for (auto j {0}; j < iota_size.first; ++j)
+      ASSERT_EQ(value[j], correct[j]);
+  }
+}
+
 TEST_F(ValmatrixTest, IteratorAccess)
 {
   ASSERT_EQ(iota_matrix.begin(), begin(iota_matrix)); // ADL test
