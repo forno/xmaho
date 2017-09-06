@@ -92,11 +92,11 @@ public:
    * @note If either value is 0, set 0 to both values.
    *
    * @pre row_size * col_size == values.size()
+   * @param[in] values Default values.
    * @param[in] row_size Row size.
    * @param[in] col_size Column size.
-   * @param[in] values Default values.
    */
-  valmatrix(size_type row_size, size_type col_size, std::valarray<T> values);
+  valmatrix(std::valarray<T> values, size_type row_size, size_type col_size);
 
   //! @brief Default copy constructor for overload.
   valmatrix(const valmatrix&) = default;

@@ -64,7 +64,7 @@ xmaho::std_ext::valmatrix<T>::valmatrix(size_type row_size, size_type col_size)
 }
 
 template<typename T>
-xmaho::std_ext::valmatrix<T>::valmatrix(size_type row_size, size_type col_size, std::valarray<T> values)
+xmaho::std_ext::valmatrix<T>::valmatrix(std::valarray<T> values, size_type row_size, size_type col_size)
   : std::valarray<T>(values.size() == row_size * col_size ? std::move(values) : std::valarray<T>(row_size * col_size)),
     size_ {col_size ? row_size : 0, row_size ? col_size : 0}
 {
@@ -125,13 +125,13 @@ xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::operator+() const noe
 template<typename T>
 xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::operator-() const noexcept
 {
-  return valmatrix{size_.first, size_.second, std::valarray<T>::operator-()};
+  return valmatrix{std::valarray<T>::operator-(), size_.first, size_.second};
 }
 
 template<typename T>
 xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::operator~() const noexcept
 {
-  return valmatrix {size_.first, size_.second, std::valarray<T>::operator~()};
+  return valmatrix{std::valarray<T>::operator~(), size_.first, size_.second};
 }
 
 template<typename T>

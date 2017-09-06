@@ -139,7 +139,7 @@ TEST(ValmatrixConstruct, AllConstructors)
 
   Valarrayi values {5, 9, 2, 4, 6, 7};
   constexpr Size def_size {3, 2};
-  const Valmatrixi mat_with_def {def_size.first, def_size.second, values};
+  const Valmatrixi mat_with_def {values, def_size.first, def_size.second};
   ASSERT_EQ(mat_with_def.size(), size(def_size));
   for (auto i {0}; i < size(def_size); ++i)
     ASSERT_EQ(mat_with_def[i], values[i]);
