@@ -141,6 +141,17 @@ TEST(ValmatrixConstruct, AllConstructors)
     ASSERT_EQ(mat_with_def[i], values[i]);
 }
 
+TEST(ValmatrixSize, RowAndColSizeCheck)
+{
+  const Valmatrixi zero {100, 0};
+  ASSERT_EQ(zero.row_size(), 0);
+  ASSERT_EQ(zero.col_size(), 0);
+
+  const Valmatrixi normal {5, 9};
+  ASSERT_EQ(normal.row_size(), 5);
+  ASSERT_EQ(normal.col_size(), 9);
+}
+
 TEST_F(ValmatrixTest, ReadValueByIndex)
 {
   for (auto i {0}; i < size(iota_size); ++i)
