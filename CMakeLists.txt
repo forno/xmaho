@@ -12,6 +12,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 option(ENABLE_TEST "Add build target for gtest" ON)
 
 if(ENABLE_TEST)
+  include_directories(.)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
   enable_testing()
   add_subdirectory(test)

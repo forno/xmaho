@@ -85,7 +85,7 @@ MAX_INITIALIZER_LINES  = 30
 SHOW_USED_FILES        = YES
 SHOW_FILES             = YES
 SHOW_NAMESPACES        = YES
-FILE_VERSION_FILTER    = "/bin/sh -c 'git log --pretty=\"format:%ci, author:%aN <%aE>, commit:%h\" -1 \"${1}\" || echo no git'"
+FILE_VERSION_FILTER    = "git log --oneline -1 -- \1"
 LAYOUT_FILE            =
 CITE_BIB_FILES         =
 
@@ -106,7 +106,7 @@ WARN_LOGFILE           =
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
 
-INPUT                  = xmaho
+INPUT                  = ${CMAKE_SOURCE_DIR}/xmaho
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          =
 RECURSIVE              = YES
