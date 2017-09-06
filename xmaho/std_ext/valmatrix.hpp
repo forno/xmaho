@@ -489,6 +489,42 @@ public:
   std::size_t col_size() const noexcept;
 
   /**
+   * @brief Get copy of row.
+   *
+   * @pre index < row_size()
+   * @param[in] index Row index.
+   * @return Copy of row array.
+   */
+  std::valarray<T> row(std::size_t index) const;
+
+  /**
+   * @brief Get access to row.
+   *
+   * @pre index < row_size()
+   * @param[in] index Row index.
+   * @return Row array reference.
+   */
+  std::slice_array<T> row(std::size_t index);
+
+  /**
+   * @brief Get copy of column.
+   *
+   * @pre index < col_size()
+   * @param[in] index Column index.
+   * @return Copy of column array.
+   */
+  std::valarray<T> col(std::size_t index) const;
+
+  /**
+   * @brief Get access to column.
+   *
+   * @pre index < col_size()
+   * @param[in] index Column index.
+   * @return Column array reference.
+   */
+  std::slice_array<T> col(std::size_t index);
+
+  /**
    * @brief Get begin iterator.
    *
    * @return Const begin iterator.

@@ -401,6 +401,34 @@ std::size_t xmaho::std_ext::valmatrix<T>::col_size() const noexcept
 }
 
 template<typename T>
+std::valarray<T> xmaho::std_ext::valmatrix<T>::row(std::size_t index) const
+{
+  assert(index < size_.first);
+  return std::valarray<T>::operator[](std::slice{index * size_.second, size_.second, 1});
+}
+
+template<typename T>
+std::slice_array<T> xmaho::std_ext::valmatrix<T>::row(std::size_t index)
+{
+  assert(index < size_.first);
+  return std::valarray<T>::operator[](std::slice{index * size_.second, size_.second, 1});
+}
+
+template<typename T>
+std::valarray<T> xmaho::std_ext::valmatrix<T>::col(std::size_t index) const
+{
+  assert(index < size_.second);
+  return std::valarray<T>::operator[](std::slice{index, size_.first, size_.second});
+}
+
+template<typename T>
+std::slice_array<T> xmaho::std_ext::valmatrix<T>::col(std::size_t index)
+{
+  assert(index < size_.second);
+  return std::valarray<T>::operator[](std::slice{index, size_.first, size_.second});
+}
+
+template<typename T>
 const T* xmaho::std_ext::valmatrix<T>::begin() const noexcept
 {
   return &std::valarray<T>::operator[](0);
