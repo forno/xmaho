@@ -525,6 +525,32 @@ public:
   std::slice_array<T> col(std::size_t index);
 
   /**
+   * @brief Get copy of block.
+   *
+   * @pre index.first + size.first < row_size()
+   * @pre index.first + size.first < row_size()
+   * @param[in] pos Block's top left index.
+   * @param[in] size Block's size.
+   * @return Copy of block.
+   */
+  valmatrix block(position_type pos, position_type size) const;
+
+  /*
+   * @brief Get access to block.
+   *
+   * @note This function's return type are no-stable.
+   *       It must have demention data.
+   *       I will maybe change return type.
+   *
+   * @pre index.first + size.first < row_size()
+   * @pre index.first + size.first < row_size()
+   * @param[in] pos Block's top left index.
+   * @param[in] size Block's size.
+   * @return Block reference.
+   */
+  //std::gslice_array<T> block(position_type pos, position_type size);
+
+  /**
    * @brief Get begin iterator.
    *
    * @return Const begin iterator.
