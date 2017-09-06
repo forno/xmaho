@@ -85,6 +85,20 @@ public:
   valmatrix(size_type row_size, size_type col_size);
 
   /**
+   * @brief Constrcut by matrix size with default value.
+   *
+   * Create valarray with detault value with matrix size.
+   *
+   * @note If either value is 0, set 0 to both values.
+   *
+   * @pre row_size * col_size == values.size()
+   * @param[in] value Default value.
+   * @param[in] row_size Row size.
+   * @param[in] col_size Column size.
+   */
+  valmatrix(const T& value, size_type row_size, size_type col_size);
+
+  /**
    * @brief Construct by matrix size with default values.
    *
    * Create valarray with default values.
@@ -96,7 +110,21 @@ public:
    * @param[in] row_size Row size.
    * @param[in] col_size Column size.
    */
-  valmatrix(std::valarray<T> values, size_type row_size, size_type col_size);
+  valmatrix(const std::valarray<T>& values, size_type row_size, size_type col_size);
+
+  /**
+   * @brief Construct by matrix size with default values.
+   *
+   * Create valarray with default values.
+   *
+   * @note If either value is 0, set 0 to both values.
+   *
+   * @pre row_size * col_size == values.size()
+   * @param[in] values Default values.
+   * @param[in] row_size Row size.
+   * @param[in] col_size Column size.
+   */
+  valmatrix(std::valarray<T>&& values, size_type row_size, size_type col_size);
 
   //! @brief Default copy constructor for overload.
   valmatrix(const valmatrix&) = default;

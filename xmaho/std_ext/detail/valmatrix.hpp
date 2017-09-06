@@ -64,7 +64,21 @@ xmaho::std_ext::valmatrix<T>::valmatrix(size_type row_size, size_type col_size)
 }
 
 template<typename T>
-xmaho::std_ext::valmatrix<T>::valmatrix(std::valarray<T> values, size_type row_size, size_type col_size)
+xmaho::std_ext::valmatrix<T>::valmatrix(const T& value, size_type row_size, size_type col_size)
+  : std::valarray<T>(value, row_size * col_size),
+    size_ {col_size ? row_size : 0, row_size ? col_size : 0}
+{
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T>::valmatrix(const std::valarray<T>& values, size_type row_size, size_type col_size)
+  : std::valarray<T>(values.size() == row_size * col_size ? values : std::valarray<T>(row_size * col_size)),
+    size_ {col_size ? row_size : 0, row_size ? col_size : 0}
+{
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T>::valmatrix(std::valarray<T>&& values, size_type row_size, size_type col_size)
   : std::valarray<T>(values.size() == row_size * col_size ? std::move(values) : std::valarray<T>(row_size * col_size)),
     size_ {col_size ? row_size : 0, row_size ? col_size : 0}
 {
