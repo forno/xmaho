@@ -139,7 +139,7 @@ public:
    * @brief Assign to each element in the matrix.
    *
    * @pre size() == rhs.size()
-   * @param rhs Same size array.
+   * @param[in] rhs Same size array.
    * @return This reference.
    */
   valmatrix& operator=(const std::valarray<T>& rhs) &;
@@ -148,7 +148,7 @@ public:
    * @brief Assign to each element in the matrix.
    *
    * @pre size() == rhs.size()
-   * @param rhs Same size array.
+   * @param[in] rhs Same size array.
    * @return This reference.
    */
   valmatrix& operator=(std::valarray<T>&& rhs) &;
@@ -156,7 +156,7 @@ public:
   /**
    * @brief Assign to each element in the matrix.
    *
-   * @param rhs Value.
+   * @param[in] rhs Value.
    * @return This reference.
    */
   valmatrix& operator=(const T& rhs) &;
@@ -164,7 +164,7 @@ public:
   /**
    * @brief Assign to each element in the matrix.
    *
-   * @param rhs Value.
+   * @param[in] rhs Value.
    * @return This reference.
    */
   valmatrix& operator=(T&& rhs) & noexcept;
@@ -174,7 +174,7 @@ public:
    *
    * @pre position.first < ros_size()
    * @pre position.second < col_size()
-   * @param position Access point.
+   * @param[in] position Access point.
    * @return Const reference of access point.
    */
   const T& operator[](position_type position) const;
@@ -184,7 +184,7 @@ public:
    *
    * @pre position.first < ros_size()
    * @pre position.second < col_size()
-   * @param position Access point.
+   * @param[in] position Access point.
    * @return Reference of access point.
    */
   T& operator[](position_type position);
@@ -209,7 +209,7 @@ public:
    *
    * @pre row_size() == rhs.row_size()
    * @pre col_size() == rhs.col_size()
-   * @param rhs Same dimention matrix.
+   * @param[in] rhs Same dimention matrix.
    * @return This reference.
    */
   valmatrix& operator+=(const valmatrix& rhs) &;
@@ -218,7 +218,7 @@ public:
    * @brief Addition assign to each element in the matrix.
    *
    * @pre size() == rhs.size()
-   * @param rhs Same size array.
+   * @param[in] rhs Same size array.
    * @return This reference.
    */
   valmatrix& operator+=(const std::valarray<T>& rhs) &;
@@ -226,7 +226,7 @@ public:
   /**
    * @brief Addition assign to each element in the matrix.
    *
-   * @param rhs Value.
+   * @param[in] rhs Value.
    * @return This reference.
    */
   valmatrix& operator+=(const T& rhs) &;
@@ -236,7 +236,7 @@ public:
    *
    * @pre row_size() == rhs.row_size()
    * @pre col_size() == rhs.col_size()
-   * @param rhs Same dimention matrix.
+   * @param[in] rhs Same dimention matrix.
    * @return This reference.
    */
   valmatrix& operator-=(const valmatrix& rhs) &;
@@ -245,7 +245,7 @@ public:
    * @brief Subtraction assign to each element in the matrix.
    *
    * @pre size() == rhs.size()
-   * @param rhs Same size array.
+   * @param[in] rhs Same size array.
    * @return This reference.
    */
   valmatrix& operator-=(const std::valarray<T>& rhs) &;
@@ -253,7 +253,7 @@ public:
   /**
    * @brief Subtraction assign to each element in the matrix.
    *
-   * @param rhs Value.
+   * @param[in] rhs Value.
    * @return This reference.
    */
   valmatrix& operator-=(const T& rhs) &;
@@ -263,7 +263,7 @@ public:
    *
    * @pre row_size() == rhs.row_size()
    * @pre col_size() == rhs.col_size()
-   * @param rhs Same dimention matrix.
+   * @param[in] rhs Same dimention matrix.
    * @return This reference.
    */
   valmatrix& operator*=(const valmatrix& rhs) &;
@@ -272,7 +272,7 @@ public:
    * @brief Multiplication assign to each element in the matrix.
    *
    * @pre size() == rhs.size()
-   * @param rhs Same size array.
+   * @param[in] rhs Same size array.
    * @return This reference.
    */
   valmatrix& operator*=(const std::valarray<T>& rhs) &;
@@ -280,7 +280,7 @@ public:
   /**
    * @brief Multiplication assign to each element in the matrix.
    *
-   * @param rhs Value.
+   * @param[in] rhs Value.
    * @return This reference.
    */
   valmatrix& operator*=(const T& rhs) &;
@@ -290,7 +290,7 @@ public:
    *
    * @pre row_size() == rhs.row_size()
    * @pre col_size() == rhs.col_size()
-   * @param rhs Same dimention matrix.
+   * @param[in] rhs Same dimention matrix.
    * @return This reference.
    */
   valmatrix& operator/=(const valmatrix& rhs) &;
@@ -299,7 +299,7 @@ public:
    * @brief Divition assign to each element in the matrix.
    *
    * @pre size() == rhs.size()
-   * @param rhs Same size array.
+   * @param[in] rhs Same size array.
    * @return This reference.
    */
   valmatrix& operator/=(const std::valarray<T>& rhs) &;
@@ -307,7 +307,7 @@ public:
   /**
    * @brief Divition assign to each element in the matrix.
    *
-   * @param rhs Value.
+   * @param[in] rhs Value.
    * @return This reference.
    */
   valmatrix& operator/=(const T& rhs) &;
@@ -317,7 +317,7 @@ public:
    *
    * @pre row_size() == rhs.row_size()
    * @pre col_size() == rhs.col_size()
-   * @param rhs Same dimention matrix.
+   * @param[in] rhs Same dimention matrix.
    * @return This reference.
    */
   valmatrix& operator%=(const valmatrix& rhs) &;
@@ -326,7 +326,7 @@ public:
    * @brief Residue assign to each element in the matrix.
    *
    * @pre size() == rhs.size()
-   * @param rhs Same size array.
+   * @param[in] rhs Same size array.
    * @return This reference.
    */
   valmatrix& operator%=(const std::valarray<T>& rhs) &;
@@ -334,7 +334,7 @@ public:
   /**
    * @brief Residue assign to each element in the matrix.
    *
-   * @param rhs Value.
+   * @param[in] rhs Value.
    * @return This reference.
    */
   valmatrix& operator%=(const T& rhs) &;
@@ -344,7 +344,7 @@ public:
    *
    * @pre row_size() == rhs.row_size()
    * @pre col_size() == rhs.col_size()
-   * @param rhs Same dimention matrix.
+   * @param[in] rhs Same dimention matrix.
    * @return This reference.
    */
   valmatrix& operator&=(const valmatrix& rhs) &;
@@ -353,7 +353,7 @@ public:
    * @brief Bitwise and assign to each element in the matrix.
    *
    * @pre size() == rhs.size()
-   * @param rhs Same size array.
+   * @param[in] rhs Same size array.
    * @return This reference.
    */
   valmatrix& operator&=(const std::valarray<T>& rhs) &;
@@ -361,7 +361,7 @@ public:
   /**
    * @brief Bitwise and assign to each element in the matrix.
    *
-   * @param rhs Value.
+   * @param[in] rhs Value.
    * @return This reference.
    */
   valmatrix& operator&=(const T& rhs) &;
@@ -371,7 +371,7 @@ public:
    *
    * @pre row_size() == rhs.row_size()
    * @pre col_size() == rhs.col_size()
-   * @param rhs Same dimention matrix.
+   * @param[in] rhs Same dimention matrix.
    * @return This reference.
    */
   valmatrix& operator|=(const valmatrix& rhs) &;
@@ -380,7 +380,7 @@ public:
    * @brief Bitwise or assign to each element in the matrix.
    *
    * @pre size() == rhs.size()
-   * @param rhs Same size array.
+   * @param[in] rhs Same size array.
    * @return This reference.
    */
   valmatrix& operator|=(const std::valarray<T>& rhs) &;
@@ -388,7 +388,7 @@ public:
   /**
    * @brief Bitwise or assign to each element in the matrix.
    *
-   * @param rhs Value.
+   * @param[in] rhs Value.
    * @return This reference.
    */
   valmatrix& operator|=(const T& rhs) &;
@@ -398,7 +398,7 @@ public:
    *
    * @pre row_size() == rhs.row_size()
    * @pre col_size() == rhs.col_size()
-   * @param rhs Same dimention matrix.
+   * @param[in] rhs Same dimention matrix.
    * @return This reference.
    */
   valmatrix& operator^=(const valmatrix& rhs) &;
@@ -407,7 +407,7 @@ public:
    * @brief Xor assign to each element in the matrix.
    *
    * @pre size() == rhs.size()
-   * @param rhs Same size array.
+   * @param[in] rhs Same size array.
    * @return This reference.
    */
   valmatrix& operator^=(const std::valarray<T>& rhs) &;
@@ -415,7 +415,7 @@ public:
   /**
    * @brief Xor assign to each element in the matrix.
    *
-   * @param rhs Value.
+   * @param[in] rhs Value.
    * @return This reference.
    */
   valmatrix& operator^=(const T& rhs) &;
@@ -425,7 +425,7 @@ public:
    *
    * @pre row_size() == rhs.row_size()
    * @pre col_size() == rhs.col_size()
-   * @param rhs Same dimention matrix.
+   * @param[in] rhs Same dimention matrix.
    * @return This reference.
    */
   valmatrix& operator<<=(const valmatrix& rhs) &;
@@ -434,7 +434,7 @@ public:
    * @brief Shift assign to each element in the matrix.
    *
    * @pre size() == rhs.size()
-   * @param rhs Same size array.
+   * @param[in] rhs Same size array.
    * @return This reference.
    */
   valmatrix& operator<<=(const std::valarray<T>& rhs) &;
@@ -442,7 +442,7 @@ public:
   /**
    * @brief Shift assign to each element in the matrix.
    *
-   * @param rhs Value.
+   * @param[in] rhs Value.
    * @return This reference.
    */
   valmatrix& operator<<=(const T& rhs) &;
@@ -452,7 +452,7 @@ public:
    *
    * @pre row_size() == rhs.row_size()
    * @pre col_size() == rhs.col_size()
-   * @param rhs Same dimention matrix.
+   * @param[in] rhs Same dimention matrix.
    * @return This reference.
    */
   valmatrix& operator>>=(const valmatrix& rhs) &;
@@ -461,7 +461,7 @@ public:
    * @brief Counter shift assign to each element in the matrix.
    *
    * @pre size() == rhs.size()
-   * @param rhs Same size array.
+   * @param[in] rhs Same size array.
    * @return This reference.
    */
   valmatrix& operator>>=(const std::valarray<T>& rhs) &;
@@ -469,7 +469,7 @@ public:
   /**
    * @brief Counter shift assign to each element in the matrix.
    *
-   * @param rhs Value.
+   * @param[in] rhs Value.
    * @return This reference.
    */
   valmatrix& operator>>=(const T& rhs) &;
@@ -555,7 +555,7 @@ public:
   /**
    * @brief Swap objects.
    *
-   * @param other Swap target.
+   * @param[in,out] other Swap target.
    */
   void swap(valmatrix& other) noexcept;
 
@@ -573,7 +573,7 @@ private:
 /**
  * @brief Get begin iterator.
  *
- * @param v Target matrix.
+ * @param[in] v Target matrix.
  * @return Const begin iterator.
  */
 template<typename T>
@@ -582,7 +582,7 @@ const T* begin(const valmatrix<T>& v) noexcept;
 /**
  * @brief Get begin iterator.
  *
- * @param v Target matrix.
+ * @param[in] v Target matrix.
  * @return Begin iterator.
  */
 template<typename T>
@@ -591,7 +591,7 @@ T* begin(valmatrix<T>& v) noexcept;
 /**
  * @brief Get end iterator.
  *
- * @param v Target matrix.
+ * @param[in] v Target matrix.
  * @return Const end iterator.
  */
 template<typename T>
@@ -600,7 +600,7 @@ const T* end(const valmatrix<T>& v) noexcept;
 /**
  * @brief Get end iterator.
  *
- * @param v Target matrix.
+ * @param[in] v Target matrix.
  * @return End iterator.
  */
 template<typename T>
@@ -609,8 +609,8 @@ T* end(valmatrix<T>& v) noexcept;
 /**
  * @brief Swap objects.
  *
- * @param a Swap target.
- * @param b Swap target.
+ * @param[in,out] a Swap target.
+ * @param[in,out] b Swap target.
  */
 template<typename T>
 void swap(valmatrix<T>& a, valmatrix<T>& b) noexcept;
