@@ -1,6 +1,8 @@
 # x.maho
 The c++ header only library for latest version.
 
+[![Build Status](https://travis-ci.org/forno/xmaho.svg?branch=master)](https://travis-ci.org/forno/xmaho)
+
 ## API
 API [here](https://forno.github.io/xmaho/annotated.html)
 
