@@ -524,7 +524,7 @@ TEST_F(ValmatrixOperatorWithValarrayTest, AdditionOperator)
 
 TEST_F(ValmatrixOperatorWithValueTest, AdditionOperator)
 {
-  const auto result {base_matrix += value};
+  const auto result {base_matrix + value};
   const auto correct {base_value + value};
   for (auto i {0}; i < size(assign_size); ++i)
     ASSERT_EQ(result[i], correct);
