@@ -507,6 +507,236 @@ TEST_F(ValmatrixOperatorWithValueTest, CounterShiftAssign)
     ASSERT_EQ(base_matrix[i], correct);
 }
 
+TEST_F(ValmatrixOperatorWithValmatrixTest, AdditionOperator)
+{
+  const auto result {base_matrix + values};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i] + values[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValarrayTest, AdditionOperator)
+{
+  const auto result {base_matrix + values};
+  base_array += values;
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValueTest, AdditionOperator)
+{
+  const auto result {base_matrix + value};
+  const auto correct {base_value + value};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], correct);
+}
+
+TEST_F(ValmatrixOperatorWithValmatrixTest, SubtractOperator)
+{
+  const auto result {base_matrix - values};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i] - values[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValarrayTest, SubtractOperator)
+{
+  const auto result {base_matrix - values};
+  base_array -= values;
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValueTest, SubtractOperator)
+{
+  const auto result {base_matrix - value};
+  const auto correct {base_value - value};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], correct);
+}
+
+TEST_F(ValmatrixOperatorWithValmatrixTest, MultiplicationOperator)
+{
+  const auto result {base_matrix * values};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i] * values[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValarrayTest, MultiplicationOperator)
+{
+  const auto result {base_matrix * values};
+  base_array *= values;
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValueTest, MultiplicationOperator)
+{
+  const auto result {base_matrix * value};
+  const auto correct {base_value * value};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], correct);
+}
+
+TEST_F(ValmatrixOperatorWithValmatrixTest, DivisionOperator)
+{
+  const auto result {base_matrix / values};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i] / values[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValarrayTest, DivisionOperator)
+{
+  const auto result {base_matrix / values};
+  base_array /= values;
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValueTest, DivisionOperator)
+{
+  const auto result {base_matrix / value};
+  const auto correct {base_value / value};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], correct);
+}
+
+TEST_F(ValmatrixOperatorWithValmatrixTest, ResidueOperator)
+{
+  const auto result {base_matrix % values};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i] % values[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValarrayTest, ResidueOperator)
+{
+  const auto result {base_matrix % values};
+  base_array %= values;
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValueTest, ResidueOperator)
+{
+  const auto result {base_matrix % value};
+  const auto correct {base_value % value};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], correct);
+}
+
+TEST_F(ValmatrixOperatorWithValmatrixTest, BitwiseAndOperator)
+{
+  const auto result {base_matrix & values};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i] & values[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValarrayTest, BitwiseAndOperator)
+{
+  const auto result {base_matrix & values};
+  base_array &= values;
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValueTest, BitwiseAndOperator)
+{
+  const auto result {base_matrix & value};
+  const auto correct {base_value & value};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], correct);
+}
+
+TEST_F(ValmatrixOperatorWithValmatrixTest, BitwiseOrOperator)
+{
+  const auto result {base_matrix | values};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i] | values[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValarrayTest, BitwiseOrOperator)
+{
+  const auto result {base_matrix | values};
+  base_array |= values;
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValueTest, BitwiseOrOperator)
+{
+  const auto result {base_matrix | value};
+  const auto correct {base_value | value};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], correct);
+}
+
+TEST_F(ValmatrixOperatorWithValmatrixTest, XorOperator)
+{
+  const auto result {base_matrix ^ values};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i] ^ values[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValarrayTest, XorOperator)
+{
+  const auto result {base_matrix ^ values};
+  base_array ^= values;
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValueTest, XorOperator)
+{
+  const auto result {base_matrix ^ value};
+  const auto correct {base_value ^ value};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], correct);
+}
+
+TEST_F(ValmatrixOperatorWithValmatrixTest, ShiftOperator)
+{
+  const auto result {base_matrix << values};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i] << values[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValarrayTest, ShiftOperator)
+{
+  const auto result {base_matrix << values};
+  base_array <<= values;
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValueTest, ShiftOperator)
+{
+  const auto result {base_matrix << value};
+  const auto correct {base_value << value};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], correct);
+}
+
+TEST_F(ValmatrixOperatorWithValmatrixTest, CounterShiftOperator)
+{
+  const auto result {base_matrix >> values};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i] >> values[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValarrayTest, CounterShiftOperator)
+{
+  const auto result {base_matrix >> values};
+  base_array >>= values;
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], base_array[i]);
+}
+
+TEST_F(ValmatrixOperatorWithValueTest, CounterShiftOperator)
+{
+  const auto result {base_matrix >> value};
+  const auto correct {base_value >> value};
+  for (auto i {0}; i < size(assign_size); ++i)
+    ASSERT_EQ(result[i], correct);
+}
+
 TEST_F(ValmatrixTest, ReadRow)
 {
   for (auto i {0}; i < iota_size.first; ++i) {
