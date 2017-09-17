@@ -528,7 +528,7 @@ public:
    * @brief Get copy of block.
    *
    * @pre index.first + size.first < row_size()
-   * @pre index.first + size.first < row_size()
+   * @pre index.second + size.second < col_size()
    * @param[in] pos Block's top left index.
    * @param[in] size Block's size.
    * @return Copy of block.
@@ -543,7 +543,7 @@ public:
    *       I will maybe change return type.
    *
    * @pre index.first + size.first < row_size()
-   * @pre index.first + size.first < row_size()
+   * @pre index.second + size.second < col_size()
    * @param[in] pos Block's top left index.
    * @param[in] size Block's size.
    * @return Block reference.
@@ -595,6 +595,336 @@ public:
 private:
   position_type size_;
 };
+
+/**
+ * @brief Addition operator for valmatrix.
+ *
+ * @pre lhs.row_size() == rhs.row_size()
+ * @pre lhs.col_size() == rhs.col_size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value.
+ * @return Result of addition.
+ */
+template<typename T>
+valmatrix<T> operator+(valmatrix<T> lhs, const valmatrix<T>& rhs);
+
+/**
+ * @brief Addition operator for valmatrix with valarray.
+ *
+ * @pre lhs.size() == rhs.size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is valarray.
+ * @return Result of addition.
+ */
+template<typename T>
+valmatrix<T> operator+(valmatrix<T> lhs, const std::valarray<T>& rhs);
+
+/**
+ * @brief Addition operator for valmatrix with value.
+ *
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is value.
+ * @return Result of addition.
+ */
+template<typename T>
+valmatrix<T> operator+(valmatrix<T> lhs, const T& rhs);
+
+/**
+ * @brief Subtraction operator for valmatrix.
+ *
+ * @pre lhs.row_size() == rhs.row_size()
+ * @pre lhs.col_size() == rhs.col_size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value.
+ * @return Result of subtraction.
+ */
+template<typename T>
+valmatrix<T> operator-(valmatrix<T> lhs, const valmatrix<T>& rhs);
+
+/**
+ * @brief Subtraction operator for valmatrix with valarray.
+ *
+ * @pre lsh.size() == rhs.size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is valarray.
+ * @return Result of subtraction.
+ */
+template<typename T>
+valmatrix<T> operator-(valmatrix<T> lhs, const std::valarray<T>& rhs);
+
+/**
+ * @brief Subtraction operator for valmatrix with value.
+ *
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is value.
+ * @return Result of subtraction.
+ */
+template<typename T>
+valmatrix<T> operator-(valmatrix<T> lhs, const T& rhs);
+
+/**
+ * @brief Multiplication operator for valmatrix.
+ *
+ * @pre lhs.row_size() == rhs.row_size()
+ * @pre lhs.col_size() == rhs.col_size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value.
+ * @return Result of multiplication.
+ */
+template<typename T>
+valmatrix<T> operator*(valmatrix<T> lhs, const valmatrix<T>& rhs);
+
+/**
+ * @brief Multiplication operator for valmatrix with valarray.
+ *
+ * @pre lhs.size() == rhs.size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is valarray.
+ * @return Result of multiplication.
+ */
+template<typename T>
+valmatrix<T> operator*(valmatrix<T> lhs, const std::valarray<T>& rhs);
+
+/**
+ * @brief Multiplication operator for valmatrix with value.
+ *
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is value.
+ * @return Result of multiplication.
+ */
+template<typename T>
+valmatrix<T> operator*(valmatrix<T> lhs, const T& rhs);
+
+/**
+ * @brief Divition operator for valmatrix.
+ *
+ * @pre lhs.row_size() == rhs.row_size()
+ * @pre lhs.col_size() == rhs.col_size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value.
+ * @return Result of divition.
+ */
+template<typename T>
+valmatrix<T> operator/(valmatrix<T> lhs, const valmatrix<T>& rhs);
+
+/**
+ * @brief Divition operator for valmatrix with valarray.
+ *
+ * @pre lhs.size() == rhs.size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is valarray.
+ * @return Result of divition.
+ */
+template<typename T>
+valmatrix<T> operator/(valmatrix<T> lhs, const std::valarray<T>& rhs);
+
+/**
+ * @brief Divition operator for valmatrix with value.
+ *
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is value.
+ * @return Result of divition.
+ */
+template<typename T>
+valmatrix<T> operator/(valmatrix<T> lhs, const T& rhs);
+
+/**
+ * @brief Residue operator for valmatrix.
+ *
+ * @pre lhs.row_size() == rhs.row_size()
+ * @pre lhs.col_size() == rhs.col_size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value.
+ * @return Result of residue.
+ */
+template<typename T>
+valmatrix<T> operator%(valmatrix<T> lhs, const valmatrix<T>& rhs);
+
+/**
+ * @brief Residue operator for valmatrix with valarray.
+ *
+ * @pre lhs.size() == rhs.size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is valarray.
+ * @return Result of residue.
+ */
+template<typename T>
+valmatrix<T> operator%(valmatrix<T> lhs, const std::valarray<T>& rhs);
+
+/**
+ * @brief Residue operator for valmatrix with value.
+ *
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is value.
+ * @return Result of residue.
+ */
+template<typename T>
+valmatrix<T> operator%(valmatrix<T> lhs, const T& rhs);
+
+/**
+ * @brief Bitwise and operator for valmatrix.
+ *
+ * @pre lhs.row_size() == rhs.row_size()
+ * @pre lhs.col_size() == rhs.col_size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value.
+ * @return Result of bitwise and.
+ */
+template<typename T>
+valmatrix<T> operator&(valmatrix<T> lhs, const valmatrix<T>& rhs);
+
+/**
+ * @brief Bitwise and operator for valmatrix with valarray.
+ *
+ * @pre lhs.size() == rhs.size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is valarray.
+ * @return Result of bitwise and.
+ */
+template<typename T>
+valmatrix<T> operator&(valmatrix<T> lhs, const std::valarray<T>& rhs);
+
+/**
+ * @brief Bitwise and operator for valmatrix with value.
+ *
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is value.
+ * @return Result of bitwise and.
+ */
+template<typename T>
+valmatrix<T> operator&(valmatrix<T> lhs, const T& rhs);
+
+/**
+ * @brief Bitwise or operator for valmatrix.
+ *
+ * @pre lhs.row_size() == rhs.row_size()
+ * @pre lhs.col_size() == rhs.col_size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value.
+ * @return Result of bitwise or.
+ */
+template<typename T>
+valmatrix<T> operator|(valmatrix<T> lhs, const valmatrix<T>& rhs);
+
+/**
+ * @brief Bitwise or operator for valmatrix with valarray.
+ *
+ * @pre lhs.size() == rhs.size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is valarray.
+ * @return Result of bitwise or.
+ */
+template<typename T>
+valmatrix<T> operator|(valmatrix<T> lhs, const std::valarray<T>& rhs);
+
+/**
+ * @brief Bitwise or operator for valmatrix with value.
+ *
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is value.
+ * @return Result of bitwise or.
+ */
+template<typename T>
+valmatrix<T> operator|(valmatrix<T> lhs, const T& rhs);
+
+/**
+ * @brief Xor operator for valmatrix.
+ *
+ * @pre lhs.row_size() == rhs.row_size()
+ * @pre lhs.col_size() == rhs.col_size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value.
+ * @return Result of xor.
+ */
+template<typename T>
+valmatrix<T> operator^(valmatrix<T> lhs, const valmatrix<T>& rhs);
+
+/**
+ * @brief Xor operator for valmatrix with valarray.
+ *
+ * @pre lhs.size() == rhs.size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is valarray.
+ * @return Result of xor.
+ */
+template<typename T>
+valmatrix<T> operator^(valmatrix<T> lhs, const std::valarray<T>& rhs);
+
+/**
+ * @brief Xor operator for valmatrix with value.
+ *
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is value.
+ * @return Result of xor.
+ */
+template<typename T>
+valmatrix<T> operator^(valmatrix<T> lhs, const T& rhs);
+
+/**
+ * @brief Shift operator for valmatrix.
+ *
+ * @pre lhs.row_size() == rhs.row_size()
+ * @pre lhs.col_size() == rhs.col_size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value.
+ * @return Result of shift.
+ */
+template<typename T>
+valmatrix<T> operator<<(valmatrix<T> lhs, const valmatrix<T>& rhs);
+
+/**
+ * @brief Shift operator for valmatrix with valarray.
+ *
+ * @pre lhs.size() == rhs.size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is valarray.
+ * @return Result of shift.
+ */
+template<typename T>
+valmatrix<T> operator<<(valmatrix<T> lhs, const std::valarray<T>& rhs);
+
+/**
+ * @brief Shift operator for valmatrix with value.
+ *
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is value.
+ * @return Result of shift.
+ */
+template<typename T>
+valmatrix<T> operator<<(valmatrix<T> lhs, const T& rhs);
+
+/**
+ * @brief Counter shift operator for valmatrix.
+ *
+ * @pre lhs.row_size() == rhs.row_size()
+ * @pre lhs.col_size() == rhs.col_size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value.
+ * @return Result of counter shift.
+ */
+template<typename T>
+valmatrix<T> operator>>(valmatrix<T> lhs, const valmatrix<T>& rhs);
+
+/**
+ * @brief Counter shift operator for valmatrix with valarray.
+ *
+ * @pre lhs.size() == rhs.size()
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is valarray.
+ * @return Result of counter shift.
+ */
+template<typename T>
+valmatrix<T> operator>>(valmatrix<T> lhs, const std::valarray<T>& rhs);
+
+/**
+ * @brief Counter shift operator for valmatrix with value.
+ *
+ * @param[in] lhs Left hand side value.
+ * @param[in] rhs Right hand side value that is value.
+ * @return Result of counter shift.
+ */
+template<typename T>
+valmatrix<T> operator>>(valmatrix<T> lhs, const T& rhs);
 
 /**
  * @brief Get begin iterator.
