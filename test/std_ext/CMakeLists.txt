@@ -4,4 +4,4 @@ add_test(NAME test_std_ext_valmatrix COMMAND test_std_ext_valmatrix)
 
 add_executable(test_std_ext_valarray valarray.cpp)
 target_link_libraries(test_std_ext_valarray gmock_main)
-add_test(NAME test_std_ext_valvalarray COMMAND test_std_ext_valvalarray)
+add_test(NAME test_std_ext_valarray COMMAND test_std_ext_valarray)
