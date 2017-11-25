@@ -5,10 +5,7 @@ cache: ccache
 addons:
   apt:
     sources: ubuntu-toolchain-r-test
-    packages:
-    - g++-7
-    - libboost-dev
-    - libboost-system-dev
+    packages: g++-7
 env:
   global:
   - ENV_EVAL="CXX=g++-7 CC=gcc-7"
@@ -27,7 +24,7 @@ before_script:
 - mkdir build
 - cd build
 script:
-- cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+- cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DENABLE_TEST=ON
 - make $MAKEFLAGS
 - ctest
 after_failure:

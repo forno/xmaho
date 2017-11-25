@@ -9,7 +9,7 @@ if(NOT CMAKE_BUILD_TYPE)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY VALUE RelWithDebInfo)
 endif(NOT CMAKE_BUILD_TYPE)
 
-option(ENABLE_TEST "Add build target for gtest" ON)
+option(ENABLE_TEST "Add build target for gtest" OFF)
 
 if(ENABLE_TEST)
   include_directories(.)
