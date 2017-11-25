@@ -22,7 +22,7 @@ before_install:
 - eval "${ENV_EVAL}"
 - travis_retry curl https://cmake.org/files/v3.10/cmake-3.10.0-Linux-x86_64.tar.gz > cmake.tar.gz
 - tar xf cmake.tar.gz
-- export PATH=${TRAVIS_BUILD_DIR}/cmake-3.10.0-Linux-x86_64/cmake/bin:${PATH}
+- export PATH=${TRAVIS_BUILD_DIR}/cmake-3.10.0-Linux-x86_64/bin:${PATH}
 before_script:
 - mkdir build
 - cd build
