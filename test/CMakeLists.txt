@@ -1,30 +1,18 @@
+cmake_minimum_required(VERSION 3.8.2)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_EXTENSIONS False)
+
 add_subdirectory(gtest)
 
 add_executable(test_gtest gtest.cpp)
 target_link_libraries(test_gtest gtest_main)
+add_test(NAME test_gtest COMMAND test_gtest)
+
 add_executable(test_gmock gmock.cpp)
 target_link_libraries(test_gmock gmock_main)
-
-set(TEST_TARGETS
-  test_gtest
-  test_gmock
-)
+add_test(NAME test_gmock COMMAND test_gmock)
 
 # Add some test
 add_subdirectory(std_ext)
-
-include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG(-std=c++1z HAVE_FLAG_CXX17)
-if(HAVE_FLAG_CXX17)
-  foreach(i IN LISTS TEST_TARGETS)
-    target_compile_options(${i} PRIVATE -std=c++1z)
-  endforeach(i IN LISTS TEST_TARGETS)
-else(HAVE_FLAG_CXX17)
-  set_property(TARGET ${TEST_TARGETS} PROPERTY CXX_STANDARD 14)
-  set_property(TARGET ${TEST_TARGETS} PROPERTY CXX_STANDARD_REQUIRED True)
-  set_property(TARGET ${TEST_TARGETS} PROPERTY CXX_EXTENSIONS False)
-endif(HAVE_FLAG_CXX17)
-
-foreach(i IN LISTS TEST_TARGETS)
-  add_test(NAME ${i} COMMAND ${i})
-endforeach(i IN LISTS TEST_TARGETS)
