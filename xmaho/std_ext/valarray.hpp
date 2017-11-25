@@ -41,14 +41,38 @@ namespace xmaho
 namespace std_ext
 {
 
+/**
+ * @brief Return inner product "a * b"
+ *
+ * @pre a.size() == b.size()
+ * @param[in] a lhs value.
+ * @param[in] b rhs value.
+ * @return The inner product by a and b.
+ */
 template<typename T>
 T inner_product(const std::valarray<T>& a, const std::valarray<T>& b);
 
+/**
+ * @brief Return vector product "a cross b"
+ *
+ * @pre a.size() == b.size()
+ * @param[in] a lhs value.
+ * @param[in] b rhs value.
+ * @return The vector product by a and b.
+ */
 template<typename T>
 std::valarray<T> vector_product(const std::valarray<T>& a, const std::valarray<T>& b);
 
+/**
+ * @brief Return size of vector.
+ *
+ * @tparam norm The norm of vector space.
+ * @tparam T The value type of valarray.
+ * @param[in] vector Input vector.
+ * @return The vector size.
+ */
 template<std::size_t norm = 2, typename T>
-T distance(const std::valarray<T>& a);
+T distance(const std::valarray<T>& vector);
 
 }
 }
