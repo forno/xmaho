@@ -5,10 +5,7 @@ cache: ccache
 addons:
   apt:
     sources: ubuntu-toolchain-r-test
-    packages:
-    - g++-7
-    - libboost-dev
-    - libboost-system-dev
+    packages: g++-7
 env:
   global:
   - ENV_EVAL="CXX=g++-7 CC=gcc-7"
@@ -20,11 +17,14 @@ env:
   - BUILD_TYPE=Release
 before_install:
 - eval "${ENV_EVAL}"
+- travis_retry curl https://cmake.org/files/v3.10/cmake-3.10.0-Linux-x86_64.tar.gz > cmake.tar.gz
+- tar xf cmake.tar.gz
+- export PATH=${TRAVIS_BUILD_DIR}/cmake-3.10.0-Linux-x86_64/bin:${PATH}
 before_script:
 - mkdir build
 - cd build
 script:
-- cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+- cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DENABLE_TEST=ON
 - make $MAKEFLAGS
 - ctest
 after_failure:
