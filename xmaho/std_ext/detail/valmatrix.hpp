@@ -440,25 +440,25 @@ xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::block(position_type p
 template<typename T>
 const T* xmaho::std_ext::valmatrix<T>::begin() const noexcept
 {
-  return &std::valarray<T>::operator[](0);
+  return std::begin(static_cast<const std::valarray<T>&>(*this));
 }
 
 template<typename T>
 T* xmaho::std_ext::valmatrix<T>::begin() noexcept
 {
-  return &std::valarray<T>::operator[](0);
+  return std::begin(static_cast<std::valarray<T>&>(*this));
 }
 
 template<typename T>
 const T* xmaho::std_ext::valmatrix<T>::end() const noexcept
 {
-  return (&std::valarray<T>::operator[](size() - 1)) + 1;
+  return std::end(static_cast<const std::valarray<T>&>(*this));
 }
 
 template<typename T>
 T* xmaho::std_ext::valmatrix<T>::end() noexcept
 {
-  return (&std::valarray<T>::operator[](size() - 1)) + 1;
+  return std::end(static_cast<std::valarray<T>&>(*this));
 }
 
 template<typename T>
