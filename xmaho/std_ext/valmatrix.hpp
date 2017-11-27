@@ -471,14 +471,14 @@ public:
    *
    * @return Count of column.
    */
-  std::size_t row_size() const noexcept;
+  size_type row_size() const noexcept;
 
   /**
    * @brief Get column size.
    *
    * @return Count of row.
    */
-  std::size_t col_size() const noexcept;
+  size_type col_size() const noexcept;
 
   /**
    * @brief Get copy of row.
@@ -487,7 +487,7 @@ public:
    * @param[in] index Row index.
    * @return Copy of row array.
    */
-  std::valarray<T> row(std::size_t index) const;
+  std::valarray<T> row(size_type index) const;
 
   /**
    * @brief Get access to row.
@@ -496,7 +496,7 @@ public:
    * @param[in] index Row index.
    * @return Row array reference.
    */
-  std::slice_array<T> row(std::size_t index);
+  std::slice_array<T> row(size_type index);
 
   /**
    * @brief Get copy of column.
@@ -505,7 +505,7 @@ public:
    * @param[in] index Column index.
    * @return Copy of column array.
    */
-  std::valarray<T> col(std::size_t index) const;
+  std::valarray<T> col(size_type index) const;
 
   /**
    * @brief Get access to column.
@@ -514,7 +514,7 @@ public:
    * @param[in] index Column index.
    * @return Column array reference.
    */
-  std::slice_array<T> col(std::size_t index);
+  std::slice_array<T> col(size_type index);
 
   /**
    * @brief Get copy of block.
