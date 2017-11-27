@@ -547,28 +547,28 @@ public:
    *
    * @return Const begin iterator.
    */
-  const T* begin() const noexcept;
+  const auto begin() const noexcept;
 
   /**
    * @brief Get begin iterator.
    *
    * @return Begin iterator.
    */
-  T* begin() noexcept;
+  auto begin() noexcept;
 
   /**
    * @brief Get end iterator.
    *
    * @return Const end iterator.
    */
-  const T* end() const noexcept;
+  const auto end() const noexcept;
 
   /**
    * @brief Get end iterator.
    *
    * @return End iterator.
    */
-  T* end() noexcept;
+  auto end() noexcept;
 
   /**
    * @brief Swap objects.
@@ -925,7 +925,7 @@ valmatrix<T> operator>>(valmatrix<T> lhs, const T& rhs);
  * @return Const begin iterator.
  */
 template<typename T>
-const T* begin(const valmatrix<T>& v) noexcept;
+const auto begin(const valmatrix<T>& v) noexcept;
 
 /**
  * @brief Get begin iterator.
@@ -934,7 +934,7 @@ const T* begin(const valmatrix<T>& v) noexcept;
  * @return Begin iterator.
  */
 template<typename T>
-T* begin(valmatrix<T>& v) noexcept;
+auto begin(valmatrix<T>& v) noexcept;
 
 /**
  * @brief Get end iterator.
@@ -943,7 +943,7 @@ T* begin(valmatrix<T>& v) noexcept;
  * @return Const end iterator.
  */
 template<typename T>
-const T* end(const valmatrix<T>& v) noexcept;
+const auto end(const valmatrix<T>& v) noexcept;
 
 /**
  * @brief Get end iterator.
@@ -952,7 +952,7 @@ const T* end(const valmatrix<T>& v) noexcept;
  * @return End iterator.
  */
 template<typename T>
-T* end(valmatrix<T>& v) noexcept;
+auto end(valmatrix<T>& v) noexcept;
 
 /**
  * @brief Swap objects.

@@ -426,25 +426,25 @@ xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::block(position_type p
 }
 
 template<typename T>
-const T* xmaho::std_ext::valmatrix<T>::begin() const noexcept
+const auto xmaho::std_ext::valmatrix<T>::begin() const noexcept
 {
   return std::begin(static_cast<const std::valarray<T>&>(*this));
 }
 
 template<typename T>
-T* xmaho::std_ext::valmatrix<T>::begin() noexcept
+auto xmaho::std_ext::valmatrix<T>::begin() noexcept
 {
   return std::begin(static_cast<std::valarray<T>&>(*this));
 }
 
 template<typename T>
-const T* xmaho::std_ext::valmatrix<T>::end() const noexcept
+const auto xmaho::std_ext::valmatrix<T>::end() const noexcept
 {
   return std::end(static_cast<const std::valarray<T>&>(*this));
 }
 
 template<typename T>
-T* xmaho::std_ext::valmatrix<T>::end() noexcept
+auto xmaho::std_ext::valmatrix<T>::end() noexcept
 {
   return std::end(static_cast<std::valarray<T>&>(*this));
 }
@@ -640,25 +640,25 @@ xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator>>(valmatrix<T> lhs, const 
 
 
 template<typename T>
-const T* xmaho::std_ext::begin(const valmatrix<T>& v) noexcept
+const auto xmaho::std_ext::begin(const valmatrix<T>& v) noexcept
 {
   return v.begin();
 }
 
 template<typename T>
-T* xmaho::std_ext::begin(valmatrix<T>& v) noexcept
+auto xmaho::std_ext::begin(valmatrix<T>& v) noexcept
 {
   return v.begin();
 }
 
 template<typename T>
-const T* xmaho::std_ext::end(const valmatrix<T>& v) noexcept
+const auto xmaho::std_ext::end(const valmatrix<T>& v) noexcept
 {
   return v.end();
 }
 
 template<typename T>
-T* xmaho::std_ext::end(valmatrix<T>& v) noexcept
+auto xmaho::std_ext::end(valmatrix<T>& v) noexcept
 {
   return v.end();
 }
