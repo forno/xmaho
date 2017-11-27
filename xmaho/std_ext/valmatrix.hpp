@@ -162,14 +162,6 @@ public:
   valmatrix& operator=(const T& rhs) &;
 
   /**
-   * @brief Assign to each element in the matrix.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  valmatrix& operator=(T&& rhs) & noexcept;
-
-  /**
    * @brief Access by position.
    *
    * @pre position.first < ros_size()

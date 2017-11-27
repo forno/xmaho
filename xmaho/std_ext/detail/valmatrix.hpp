@@ -108,13 +108,6 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator=(const T& r
 }
 
 template<typename T>
-xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator=(T&& rhs) & noexcept
-{
-  std::valarray<T>::operator=(std::move(rhs));
-  return *this;
-}
-
-template<typename T>
 const T& xmaho::std_ext::valmatrix<T>::operator[](position_type position) const
 {
   assert(position.first < size_.first);
