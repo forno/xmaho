@@ -87,7 +87,7 @@ public:
   /**
    * @brief Constrcut by matrix size with default value.
    *
-   * Create valarray with detault value with matrix size.
+   * Create valarray with default value with matrix size.
    *
    * @note If either value is 0, set 0 to both values.
    *
