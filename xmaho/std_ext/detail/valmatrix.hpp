@@ -115,17 +115,17 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator=(const T& r
 template<typename T>
 const T& xmaho::std_ext::valmatrix<T>::operator[](position_type position) const
 {
-  assert(position.first < size_.first);
-  assert(position.second < size_.second);
-  return std::valarray<T>::operator[](detail::get_serial_index(position, size_.second));
+  assert(position.first < row_size());
+  assert(position.second < col_size());
+  return std::valarray<T>::operator[](detail::get_serial_index(position, col_size()));
 }
 
 template<typename T>
 T& xmaho::std_ext::valmatrix<T>::operator[](position_type position)
 {
-  assert(position.first < size_.first);
-  assert(position.second < size_.second);
-  return std::valarray<T>::operator[](detail::get_serial_index(position, size_.second));
+  assert(position.first < row_size());
+  assert(position.second < col_size());
+  return std::valarray<T>::operator[](detail::get_serial_index(position, col_size()));
 }
 
 template<typename T>
@@ -137,13 +137,13 @@ xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::operator+() const noe
 template<typename T>
 xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::operator-() const noexcept
 {
-  return valmatrix{std::valarray<T>::operator-(), size_.first, size_.second};
+  return valmatrix{std::valarray<T>::operator-(), row_size(), col_size()};
 }
 
 template<typename T>
 xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::operator~() const noexcept
 {
-  return valmatrix{std::valarray<T>::operator~(), size_.first, size_.second};
+  return valmatrix{std::valarray<T>::operator~(), row_size(), col_size()};
 }
 
 template<typename T>
@@ -419,9 +419,9 @@ std::slice_array<T> xmaho::std_ext::valmatrix<T>::col(std::size_t index)
 template<typename T>
 xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::block(position_type pos, position_type size) const
 {
-  assert(pos.first + size.first < size_.first);
-  assert(pos.second + size.second < size_.second);
-  const std::gslice block_gslice {detail::get_serial_index(pos, size_.second), {size.first, size.second}, {size_.second, 1}};
+  assert(pos.first + size.first < row_size());
+  assert(pos.second + size.second < col_size());
+  const std::gslice block_gslice {detail::get_serial_index(pos, col_size()), {size.first, size.second}, {col_size(), 1}};
   return valmatrix{std::valarray<T>::operator[](block_gslice), size.first, size.second};
 }
 
