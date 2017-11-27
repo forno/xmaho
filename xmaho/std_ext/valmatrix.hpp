@@ -477,21 +477,21 @@ public:
   /**
    * @brief Get row size.
    *
-   * @return Count of row.
+   * @return Count of column.
    */
   std::size_t row_size() const noexcept;
 
   /**
    * @brief Get column size.
    *
-   * @return Count of column.
+   * @return Count of row.
    */
   std::size_t col_size() const noexcept;
 
   /**
    * @brief Get copy of row.
    *
-   * @pre index < row_size()
+   * @pre index < col_size()
    * @param[in] index Row index.
    * @return Copy of row array.
    */
@@ -500,7 +500,7 @@ public:
   /**
    * @brief Get access to row.
    *
-   * @pre index < row_size()
+   * @pre index < col_size()
    * @param[in] index Row index.
    * @return Row array reference.
    */
@@ -509,7 +509,7 @@ public:
   /**
    * @brief Get copy of column.
    *
-   * @pre index < col_size()
+   * @pre index < row_size()
    * @param[in] index Column index.
    * @return Copy of column array.
    */
@@ -518,7 +518,7 @@ public:
   /**
    * @brief Get access to column.
    *
-   * @pre index < col_size()
+   * @pre index < row_size()
    * @param[in] index Column index.
    * @return Column array reference.
    */
