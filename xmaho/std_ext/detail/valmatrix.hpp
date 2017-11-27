@@ -31,7 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "../valmatrix.hpp"
 
 #include <cassert>
-#include <stdexcept>
 
 namespace xmaho
 {
@@ -40,11 +39,6 @@ namespace std_ext
 namespace detail
 {
 
-constexpr std::size_t size(std::pair<std::size_t, std::size_t> pos)
-{
-  return pos.first * pos.second;
-}
-
 constexpr std::size_t get_serial_index(
   std::pair<std::size_t, std::size_t> pos,
   std::size_t col_size)
@@ -52,7 +46,7 @@ constexpr std::size_t get_serial_index(
   return pos.first * col_size + pos.second;
 }
 
-constexpr std::pair<std::size_t, std::size_t> get_matrix_size(std::size_t row_size, std::size_t col_size)
+constexpr std::pair<std::size_t, std::size_t> get_init_size(std::size_t row_size, std::size_t col_size)
 {
   return {col_size ? row_size : 0 , row_size ? col_size : 0};
 }
@@ -64,28 +58,28 @@ constexpr std::pair<std::size_t, std::size_t> get_matrix_size(std::size_t row_si
 template<typename T>
 xmaho::std_ext::valmatrix<T>::valmatrix(size_type row_size, size_type col_size)
   : std::valarray<T>(row_size * col_size),
-    size_ {detail::get_matrix_size(row_size, col_size)}
+    size_ {detail::get_init_size(row_size, col_size)}
 {
 }
 
 template<typename T>
 xmaho::std_ext::valmatrix<T>::valmatrix(const T& value, size_type row_size, size_type col_size)
   : std::valarray<T>(value, row_size * col_size),
-    size_ {detail::get_matrix_size(row_size, col_size)}
+    size_ {detail::get_init_size(row_size, col_size)}
 {
 }
 
 template<typename T>
 xmaho::std_ext::valmatrix<T>::valmatrix(const std::valarray<T>& values, size_type row_size, size_type col_size)
   : std::valarray<T>(values.size() == row_size * col_size ? values : std::valarray<T>(row_size * col_size)),
-    size_ {detail::get_matrix_size(row_size, col_size)}
+    size_ {detail::get_init_size(row_size, col_size)}
 {
 }
 
 template<typename T>
 xmaho::std_ext::valmatrix<T>::valmatrix(std::valarray<T>&& values, size_type row_size, size_type col_size)
   : std::valarray<T>(values.size() == row_size * col_size ? std::move(values) : std::valarray<T>(row_size * col_size)),
-    size_ {detail::get_matrix_size(row_size, col_size)}
+    size_ {detail::get_init_size(row_size, col_size)}
 {
 }
 
