@@ -155,7 +155,7 @@ TYPED_TEST(ValmatrixTest, ReadArrayBySlice)
 
 TYPED_TEST(ValmatrixTest, ReadArrayByGslice)
 {
-  constexpr auto start {0};
+  constexpr auto start {1};
   const std::valarray<std::size_t> length {2, 2};
   const std::valarray<std::size_t> stride {3, 1};
   assert(start + (length[0] - 1) * stride[0] + (length[1] - 1) * stride[1] < size_of(TestFixture::size));
@@ -744,14 +744,14 @@ TYPED_TEST(ValmatrixTest, WriteColumn)
 
 TYPED_TEST(ValmatrixTest, ReadBlock)
 {
-  constexpr Size index {1, 1};
+  constexpr Size index {1, 0};
   constexpr Size block_size {2, 2};
 
   typename TestFixture::Valmatrix value {this->iota_matrix.block(index, block_size)};
 
   const std::gslice specification {
-    index.first * TestFixture::size.first + index.second,
-    {block_size.first, block_size.second},
+    index.first + index.second * TestFixture::size.first,
+    {block_size.second, block_size.first},
     {TestFixture::size.first, 1}};
   typename TestFixture::Valarray correct {this->iota_array[specification]};
 
