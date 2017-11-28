@@ -413,9 +413,9 @@ std::slice_array<T> xmaho::std_ext::valmatrix<T>::col(size_type index)
 template<typename T>
 xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::block(position_type pos, position_type size) const
 {
-  assert(pos.first + size.first < row_size());
-  assert(pos.second + size.second < col_size());
-  const std::gslice block_gslice {detail::get_serial_index(pos, col_size()), {size.first, size.second}, {col_size(), 1}};
+  assert(pos.first + (size.first - 1) < row_size());
+  assert(pos.second + (size.second - 1) < col_size());
+  const std::gslice block_gslice {detail::get_serial_index(pos, col_size()), {size.second, size.first}, {row_size(), 1}};
   return valmatrix{std::valarray<T>::operator[](block_gslice), size.first, size.second};
 }
 
