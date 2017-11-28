@@ -189,7 +189,8 @@ TYPED_TEST(ValmatrixTest, ReadArrayByIndirect)
   std::default_random_engine rand {std::random_device{}()};
   std::uniform_int_distribution<> size_dist {0, size_of(TestFixture::size)};
   std::valarray<std::size_t> specification(size_dist(rand));
-  std::sample(std::begin(this->iota_array), std::end(this->iota_array), std::begin(specification), specification.size(), rand);
+  std::uniform_int_distribution<> index_dist {0, size_of(TestFixture::size) - 1};
+  std::generate(std::begin(specification), std::end(specification), [&index_dist, &rand]{return index_dist(rand);});
 
   const typename TestFixture::Valarray value {this->iota_matrix[specification]};
   const typename TestFixture::Valarray correct_value {this->iota_array[specification]};
