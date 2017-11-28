@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['col',['col',['../classxmaho_1_1std__ext_1_1valmatrix.html#a0fddcf6fc98ef1094e258c8c47c19a8e',1,'xmaho::std_ext::valmatrix::col(std::size_t index) const '],['../classxmaho_1_1std__ext_1_1valmatrix.html#abc685bf332952e21732da58ed840faea',1,'xmaho::std_ext::valmatrix::col(std::size_t index)']]],
-  ['col_5fsize',['col_size',['../classxmaho_1_1std__ext_1_1valmatrix.html#a517bc51e03cb510e59fe77e27393712d',1,'xmaho::std_ext::valmatrix']]]
+  ['col',['col',['../classxmaho_1_1std__ext_1_1valmatrix.html#a10fa6b0daf16a9221bdebe7afee1857a',1,'xmaho::std_ext::valmatrix::col(size_type index) const '],['../classxmaho_1_1std__ext_1_1valmatrix.html#af97c907350c35b0a91533c7a9f227611',1,'xmaho::std_ext::valmatrix::col(size_type index)']]],
+  ['col_5fsize',['col_size',['../classxmaho_1_1std__ext_1_1valmatrix.html#a070a5c2970e7a290c94cebb3b25b58ae',1,'xmaho::std_ext::valmatrix']]]
 ];
