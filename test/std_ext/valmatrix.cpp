@@ -692,22 +692,22 @@ TYPED_TEST(ValmatrixTest, ValueCounterShiftOperator)
 
 TYPED_TEST(ValmatrixTest, ReadRow)
 {
-  for (auto i {0}; i < TestFixture::size.first; ++i) {
+  for (auto i {0}; i < TestFixture::size.second; ++i) {
     typename TestFixture::Valarray value {this->iota_matrix.row(i)};
     typename TestFixture::Valarray correct {this->iota_array[std::slice{i * TestFixture::size.first, TestFixture::size.first, 1}]};
     ASSERT_EQ(value.size(), correct.size());
-    for (auto j {0}; j < TestFixture::size.second; ++j)
+    for (auto j {0}; j < TestFixture::size.first; ++j)
       ASSERT_EQ(value[j], correct[j]);
   }
 }
 
 TYPED_TEST(ValmatrixTest, ReadColumn)
 {
-  for (auto i {0u}; i < TestFixture::size.second; ++i) {
+  for (auto i {0u}; i < TestFixture::size.first; ++i) {
     typename TestFixture::Valarray value {this->iota_matrix.col(i)};
     typename TestFixture::Valarray correct {this->iota_array[std::slice{i, TestFixture::size.second, TestFixture::size.first}]};
     ASSERT_EQ(value.size(), correct.size());
-    for (auto j {0}; j < TestFixture::size.first; ++j)
+    for (auto j {0}; j < TestFixture::size.second; ++j)
       ASSERT_EQ(value[j], correct[j]);
   }
 }
@@ -715,14 +715,14 @@ TYPED_TEST(ValmatrixTest, ReadColumn)
 TYPED_TEST(ValmatrixTest, WriteRow)
 {
   constexpr auto new_value {5};
-  this->iota_matrix.row(TestFixture::size.first - 1) = new_value;
-  this->iota_array[std::slice{TestFixture::size.first * (TestFixture::size.second - 1), TestFixture::size.second, 1}] = new_value;
+  this->iota_matrix.row(TestFixture::size.second - 1) = new_value;
+  this->iota_array[std::slice{TestFixture::size.first * (TestFixture::size.second - 1), TestFixture::size.first, 1}] = new_value;
 
-  for (auto i {0}; i < TestFixture::size.first; ++i) {
+  for (auto i {0}; i < TestFixture::size.second; ++i) {
     typename TestFixture::Valarray value {this->iota_matrix.row(i)};
     typename TestFixture::Valarray correct {this->iota_array[std::slice{i * TestFixture::size.first, TestFixture::size.first, 1}]};
     ASSERT_EQ(value.size(), correct.size());
-    for (auto j {0}; j < TestFixture::size.second; ++j)
+    for (auto j {0}; j < TestFixture::size.first; ++j)
       ASSERT_EQ(value[j], correct[j]);
   }
 }
@@ -730,14 +730,14 @@ TYPED_TEST(ValmatrixTest, WriteRow)
 TYPED_TEST(ValmatrixTest, WriteColumn)
 {
   constexpr auto new_value {5};
-  this->iota_matrix.col(TestFixture::size.second - 1) = new_value;
-  this->iota_array[std::slice{TestFixture::size.second - 1, TestFixture::size.first, TestFixture::size.second}] = new_value;
+  this->iota_matrix.col(TestFixture::size.first - 1) = new_value;
+  this->iota_array[std::slice{TestFixture::size.first - 1, TestFixture::size.second, TestFixture::size.first}] = new_value;
 
-  for (auto i {0u}; i < TestFixture::size.second; ++i) {
+  for (auto i {0u}; i < TestFixture::size.first; ++i) {
     typename TestFixture::Valarray value {this->iota_matrix.col(i)};
     typename TestFixture::Valarray correct {this->iota_array[std::slice{i, TestFixture::size.second, TestFixture::size.first}]};
     ASSERT_EQ(value.size(), correct.size());
-    for (auto j {0}; j < TestFixture::size.first; ++j)
+    for (auto j {0}; j < TestFixture::size.second; ++j)
       ASSERT_EQ(value[j], correct[j]);
   }
 }
