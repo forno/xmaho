@@ -24,3 +24,11 @@ add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
 
 target_include_directories(gmock_main SYSTEM BEFORE INTERFACE
   "${gtest_SOURCE_DIR}/include" "${gmock_SOURCE_DIR}/include")
+
+add_executable(test_gtest gtest.cpp)
+target_link_libraries(test_gtest gtest_main)
+add_test(NAME test_gtest COMMAND test_gtest)
+
+add_executable(test_gmock gmock.cpp)
+target_link_libraries(test_gmock gmock_main)
+add_test(NAME test_gmock COMMAND test_gmock)
