@@ -71,8 +71,8 @@ protected:
   void SetUp()
   {
     EXPECT_EQ(iota_matrix.size(), iota_array.size());
-    std::iota(std::begin(iota_matrix), std::end(iota_matrix), 0);
-    std::iota(std::begin(iota_array), std::end(iota_array), 0);
+    std::iota(std::begin(iota_matrix), std::end(iota_matrix), 1);
+    std::iota(std::begin(iota_array), std::end(iota_array), 1);
 
     std::default_random_engine rand {std::random_device{}()};
     std::uniform_int_distribution<> dist {1, 5};
