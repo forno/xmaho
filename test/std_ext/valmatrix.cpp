@@ -27,835 +27,797 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include "xmaho/std_ext/valmatrix.hpp"
 
-#include <algorithm>
-#include <cassert>
 #include <cstddef>
 #include <numeric>
 #include <random>
-#include <utility>
 
 #include <gtest/gtest.h>
 
 namespace
 {
 
-using Valmatrixi = xmaho::std_ext::valmatrix<int>;
-using Valarrayi = std::valarray<int>;
 using Size = std::pair<std::size_t, std::size_t>;
 
-constexpr std::size_t size(Size s)
+constexpr std::size_t size_of(const Size& size)
 {
-  return s.first * s.second;
+  return size.first * size.second;
 }
-
-constexpr Size iota_size {10, 10};
-static_assert(size(iota_size) == 100, "Precondition: iota size by above value");
-
-constexpr Size assign_size {2, 2};
-static_assert(size(assign_size) == 4, "Preconfition: assign test size by above value");
-constexpr auto base_bias {1000};
-constexpr auto threshold {5};
-
-class C
-{
-};
-
-using Valmatrixc = xmaho::std_ext::valmatrix<C>;
-using Valarrayc = std::valarray<C>;
 
 }
 
+template<typename T>
 class ValmatrixTest
   : public ::testing::Test
 {
 protected:
-  Valmatrixi iota_matrix {iota_size.first, iota_size.second};
-  Valarrayi iota_array;
+  using Valmatrix = xmaho::std_ext::valmatrix<T>;
+  using Valarray = std::valarray<T>;
+
+  static constexpr Size size {3, 2};
+  static_assert(size_of(size) == 3 * 2, "Precondition: iota size by above value");
+
+  Valmatrix iota_matrix {size.first, size.second};
+  Valarray iota_array;
+  Valmatrix operation_matrix {size.first, size.second};
+  Valarray operation_array;
+  T operation_value;
 
   ValmatrixTest()
-    : iota_array(size(iota_size))
+    : iota_array(size_of(size)),
+      operation_array(size_of(size))
   {
-    assert(iota_matrix.size() == iota_array.size());
+  }
+
+  void SetUp()
+  {
+    EXPECT_EQ(iota_matrix.size(), iota_array.size());
     std::iota(std::begin(iota_matrix), std::end(iota_matrix), 0);
     std::iota(std::begin(iota_array), std::end(iota_array), 0);
-    for (auto i {0}; i < iota_array.size(); ++i)
-      assert(iota_array[i] == i);
-  }
-};
 
-class ValmatrixOperatorWithValmatrixTest
-  : public ::testing::Test
-{
-protected:
-  Valmatrixi base_matrix {base_bias, assign_size.first, assign_size.second};
-  Valmatrixi values;
-  Valarrayi base_array;
-
-  ValmatrixOperatorWithValmatrixTest()
-    : values(assign_size.first, assign_size.second),
-      base_array(base_bias, size(assign_size))
-  {
     std::default_random_engine rand {std::random_device{}()};
-    std::uniform_int_distribution<> dist {1, threshold};
-    for (auto& e : values)
+    std::uniform_int_distribution<> dist {1, 5};
+    for (auto& e : operation_matrix)
       e = dist(rand);
-  }
-};
-
-class ValmatrixOperatorWithValarrayTest
-  : public ::testing::Test
-{
-protected:
-  Valmatrixi base_matrix {base_bias, assign_size.first, assign_size.second};
-  Valarrayi values;
-  Valarrayi base_array;
-
-  ValmatrixOperatorWithValarrayTest()
-    : values(size(assign_size)),
-      base_array(base_bias, size(assign_size))
-  {
-    std::default_random_engine rand {std::random_device{}()};
-    std::uniform_int_distribution<> dist {1, threshold};
-    for (auto& e : values)
+    for (auto& e : operation_array)
       e = dist(rand);
+    operation_value = dist(rand);
   }
 };
 
-class ValmatrixOperatorWithValueTest
-  : public ::testing::Test
-{
-protected:
-  Valmatrixi base_matrix {base_bias, assign_size.first, assign_size.second};
-  Valmatrixi::value_type value;
-  Valmatrixi::value_type base_value {base_bias};
+using ValmatrixTypes = ::testing::Types<int, unsigned int, std::size_t>;
+TYPED_TEST_CASE(ValmatrixTest, ValmatrixTypes);
 
-  ValmatrixOperatorWithValueTest()
-  {
-    base_matrix = base_bias;
-    std::random_device rand {};
-    value = std::uniform_int_distribution<>{1, threshold}(rand);
-  }
-};
+template<typename T>
+constexpr Size ValmatrixTest<T>::size;
 
-TEST(ValmatrixConstruct, AllConstructors)
+TEST(ValmatrixConstructTest, AllConstructors)
 {
-  const Valmatrixi zero {}; // Default construct
+  const xmaho::std_ext::valmatrix<int> zero {}; // Default construct
   ASSERT_FALSE(zero.size());
-  const Valmatrixi one {1, 1}; // mim size
+  const xmaho::std_ext::valmatrix<int> one {1, 1}; // mim size
   ASSERT_EQ(one.size(), 1);
   ASSERT_EQ(one[0], 0);
 
   constexpr Size diff_size {2, 5};
-  const Valmatrixi diffsize_mat {diff_size.first, diff_size.second}; // different size
-  ASSERT_EQ(diffsize_mat.size(), size(diff_size));
+  const xmaho::std_ext::valmatrix<int> diffsize_mat {diff_size.first, diff_size.second}; // different size
+  ASSERT_EQ(diffsize_mat.size(), size_of(diff_size));
 
   constexpr Size zero_size {100, 0};
-  const Valmatrixi zero_mat {zero_size.first, zero_size.second};
-  ASSERT_EQ(zero_mat.size(), size(zero_size));
+  const xmaho::std_ext::valmatrix<int> zero_mat {zero_size.first, zero_size.second};
+  ASSERT_EQ(zero_mat.size(), size_of(zero_size));
 
   constexpr Size square_size {2, 2};
   constexpr auto default_val {250};
-  const Valmatrixi def_val_mat {default_val, square_size.first, square_size.second};
-  ASSERT_EQ(def_val_mat.size(), size(square_size));
-  for (auto i {0}; i < size(square_size); ++i)
+  const xmaho::std_ext::valmatrix<int> def_val_mat {default_val, square_size.first, square_size.second};
+  ASSERT_EQ(def_val_mat.size(), size_of(square_size));
+  for (auto i {0}; i < size_of(square_size); ++i)
     ASSERT_EQ(def_val_mat[i], default_val);
 
-  Valarrayi values {5, 9, 2, 4, 6, 7};
+  std::valarray<int> values {5, 9, 2, 4, 6, 7};
   constexpr Size def_size {3, 2};
-  const Valmatrixi mat_with_def {values, def_size.first, def_size.second};
-  ASSERT_EQ(mat_with_def.size(), size(def_size));
-  for (auto i {0}; i < size(def_size); ++i)
+  const xmaho::std_ext::valmatrix<int> mat_with_def {values, def_size.first, def_size.second};
+  ASSERT_EQ(mat_with_def.size(), size_of(def_size));
+  for (auto i {0}; i < size_of(def_size); ++i)
     ASSERT_EQ(mat_with_def[i], values[i]);
 }
 
-TEST(ValmatrixSize, RowAndColSizeCheck)
+TEST(ValmatrixSizeTest, RowAndColSizeCheck)
 {
-  const Valmatrixi zero {100, 0};
+  const xmaho::std_ext::valmatrix<int> zero {100, 0};
   ASSERT_EQ(zero.row_size(), 0);
   ASSERT_EQ(zero.col_size(), 0);
 
-  const Valmatrixi normal {5, 9};
+  const xmaho::std_ext::valmatrix<int> normal {5, 9};
   ASSERT_EQ(normal.row_size(), 5);
   ASSERT_EQ(normal.col_size(), 9);
 }
 
-TEST_F(ValmatrixTest, ReadValueByIndex)
+TYPED_TEST(ValmatrixTest, ReadValueByIndex)
 {
-  for (auto i {0}; i < size(iota_size); ++i)
-    ASSERT_EQ(iota_matrix[i], iota_array[i]);
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixTest, ReadArrayBySlice)
+TYPED_TEST(ValmatrixTest, ReadArrayBySlice)
 {
   constexpr auto start {0};
-  constexpr auto length {12};
-  constexpr auto stride {7};
-  static_assert(start + length * stride < size(iota_size));
+  constexpr auto length {3};
+  constexpr auto stride {2};
+  static_assert(start + (length - 1) * stride < size_of(TestFixture::size), "Over size");
   std::slice specification {start, length, stride};
 
-  const Valarrayi value {iota_matrix[specification]};
-  const Valarrayi correct_value {iota_array[specification]};
+  const typename TestFixture::Valarray value {this->iota_matrix[specification]};
+  const typename TestFixture::Valarray correct_value {this->iota_array[specification]};
   ASSERT_EQ(value.size(), correct_value.size());
   for (auto i {0}; i < value.size(); ++i)
     ASSERT_EQ(value[i], correct_value[i]);
 }
 
-TEST_F(ValmatrixTest, ReadArrayByGslice)
+TYPED_TEST(ValmatrixTest, ReadArrayByGslice)
 {
-  constexpr auto start {3};
-  const std::valarray<std::size_t> length {4, 4};
-  const std::valarray<std::size_t> stride {iota_size.second, 1};
-  assert(start + length[0] * stride[0] + length[1] * stride[1] < size(iota_size));
+  constexpr auto start {0};
+  const std::valarray<std::size_t> length {2, 2};
+  const std::valarray<std::size_t> stride {3, 1};
+  assert(start + (length[0] - 1) * stride[0] + (length[1] - 1) * stride[1] < size_of(TestFixture::size));
   std::gslice specification {start, length, stride};
 
-  const Valarrayi value {iota_matrix[specification]};
-  const Valarrayi correct_value {iota_array[specification]};
+  const typename TestFixture::Valarray value {this->iota_matrix[specification]};
+  const typename TestFixture::Valarray correct_value {this->iota_array[specification]};
   ASSERT_EQ(value.size(), correct_value.size());
   for (auto i {0}; i < value.size(); ++i)
     ASSERT_EQ(value[i], correct_value[i]);
 }
 
-TEST_F(ValmatrixTest, ReadArrayByMask)
+TYPED_TEST(ValmatrixTest, ReadArrayByMask)
 {
-  std::valarray<bool> specification(size(iota_size));
+  std::valarray<bool> specification(size_of(TestFixture::size));
 
   std::default_random_engine rand {std::random_device{}()};
   std::bernoulli_distribution dist {0.7};
   for (auto& e : specification)
     e = dist(rand);
 
-  const Valarrayi value {iota_matrix[specification]};
-  const Valarrayi correct_value {iota_array[specification]};
+  const typename TestFixture::Valarray value {this->iota_matrix[specification]};
+  const typename TestFixture::Valarray correct_value {this->iota_array[specification]};
   ASSERT_EQ(value.size(), correct_value.size());
   for (auto i {0}; i < value.size(); ++i)
     ASSERT_EQ(value[i], correct_value[i]);
 }
 
-TEST_F(ValmatrixTest, ReadArrayByIndirect)
+TYPED_TEST(ValmatrixTest, ReadArrayByIndirect)
 {
   std::default_random_engine rand {std::random_device{}()};
-  std::uniform_int_distribution<> size_dist {0, size(iota_size)};
+  std::uniform_int_distribution<> size_dist {0, size_of(TestFixture::size)};
   std::valarray<std::size_t> specification(size_dist(rand));
-  std::sample(std::begin(iota_array), std::end(iota_array), std::begin(specification), specification.size(), rand);
+  std::sample(std::begin(this->iota_array), std::end(this->iota_array), std::begin(specification), specification.size(), rand);
 
-  const Valarrayi value {iota_matrix[specification]};
-  const Valarrayi correct_value {iota_array[specification]};
+  const typename TestFixture::Valarray value {this->iota_matrix[specification]};
+  const typename TestFixture::Valarray correct_value {this->iota_array[specification]};
   ASSERT_EQ(value.size(), correct_value.size());
   for (auto i {0}; i < value.size(); ++i)
     ASSERT_EQ(value[i], correct_value[i]);
 }
 
-TEST_F(ValmatrixTest, ReadValueByPosition)
+TYPED_TEST(ValmatrixTest, ReadValueByPosition)
 {
-  for (auto i {0}; i < iota_size.first; ++i)
-    for (auto j {0}; j < iota_size.second; ++j) {
-      const auto value {iota_matrix[Valmatrixi::position_type{i, j}]};
-      ASSERT_EQ(value, iota_array[i * iota_size.second + j]);
+  for (auto i {0}; i < TestFixture::size.first; ++i)
+    for (auto j {0}; j < TestFixture::size.second; ++j) {
+      const auto value {this->iota_matrix[typename TestFixture::Valmatrix::position_type{i, j}]};
+      ASSERT_EQ(value, this->iota_array[i * TestFixture::size.second + j]);
     }
 }
 
-TEST_F(ValmatrixTest, UnaryAddOperation)
+TYPED_TEST(ValmatrixTest, UnaryAddOperation)
 {
-  const Valmatrixi effected {+iota_matrix};
-  for (auto i {0}; i < size(iota_size); ++i)
-    ASSERT_EQ(effected[i], iota_array[i]);
+  const typename TestFixture::Valmatrix effected {+this->iota_matrix};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(effected[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixTest, UnarySubOperation)
+TYPED_TEST(ValmatrixTest, UnarySubOperation)
 {
-  const Valmatrixi effected {-iota_matrix};
-  const Valarrayi correct = -iota_array;
-  for (auto i {0}; i < size(iota_size); ++i)
+  const typename TestFixture::Valmatrix effected {-this->iota_matrix};
+  const typename TestFixture::Valarray correct = -this->iota_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(effected[i], correct[i]);
 }
 
-TEST_F(ValmatrixTest, UnaryNegationOperation)
+TYPED_TEST(ValmatrixTest, UnaryNegationOperation)
 {
-  const Valmatrixi effected {~iota_matrix};
-  const Valarrayi correct = ~iota_array;
-  for (auto i {0}; i < size(iota_size); ++i)
+  const typename TestFixture::Valmatrix effected {~this->iota_matrix};
+  const typename TestFixture::Valarray correct = ~this->iota_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(effected[i], correct[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, AdditionAssign)
+TYPED_TEST(ValmatrixTest, AdditionAssign)
 {
-  base_matrix += values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i] + values[i]);
+  this->iota_matrix += this->operation_matrix;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] + this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, AdditionAssign)
+TYPED_TEST(ValmatrixTest, ArrayAdditionAssign)
 {
-  base_matrix += values;
-  base_array += values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i]);
+  this->iota_matrix += this->operation_array;
+  this->iota_array += this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, AdditionAssign)
+TYPED_TEST(ValmatrixTest, ValueAdditionAssign)
 {
-  base_matrix += value;
-  const auto correct {base_value + value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], correct);
+  this->iota_matrix += this->operation_value;
+  this->iota_array += this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, SubtractAssign)
+TYPED_TEST(ValmatrixTest, MatrixSubtractAssign)
 {
-  base_matrix -= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i] - values[i]);
+  this->iota_matrix -= this->operation_matrix;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] - this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, SubtractAssign)
+TYPED_TEST(ValmatrixTest, ArraySubtractAssign)
 {
-  base_matrix -= values;
-  base_array -= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i]);
+  this->iota_matrix -= this->operation_array;
+  this->iota_array -= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, SubtractAssign)
+TYPED_TEST(ValmatrixTest, ValueSubtractAssign)
 {
-  base_matrix -= value;
-  const auto correct {base_value - value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], correct);
+  this->iota_matrix -= this->operation_value;
+  this->iota_array = this->iota_array - this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, MultiplicationAssign)
+TYPED_TEST(ValmatrixTest, MatrixMultiplicationAssign)
 {
-  base_matrix *= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i] * values[i]);
+  this->iota_matrix *= this->operation_matrix;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] * this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, MultiplicationAssign)
+TYPED_TEST(ValmatrixTest, ArrayMultiplicationAssign)
 {
-  base_matrix *= values;
-  base_array *= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i]);
+  this->iota_matrix *= this->operation_array;
+  this->iota_array *= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, MultiplicationAssign)
+TYPED_TEST(ValmatrixTest, ValueMultiplicationAssign)
 {
-  base_matrix *= value;
-  const auto correct {base_value * value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], correct);
+  this->iota_matrix *= this->operation_value;
+  this->iota_array = this->iota_array * this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, DivisionAssign)
+TYPED_TEST(ValmatrixTest, MatrixDivisionAssign)
 {
-  base_matrix /= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i] / values[i]);
+  this->iota_matrix /= this->operation_matrix;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] / this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, DivisionAssign)
+TYPED_TEST(ValmatrixTest, ArrayDivisionAssign)
 {
-  base_matrix /= values;
-  base_array /= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i]);
+  this->iota_matrix /= this->operation_array;
+  this->iota_array /= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, DivisionAssign)
+TYPED_TEST(ValmatrixTest, ValueDivisionAssign)
 {
-  base_matrix /= value;
-  const auto correct {base_value / value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], correct);
+  this->iota_matrix /= this->operation_value;
+  this->iota_array = this->iota_array / this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, ResidueAssign)
+TYPED_TEST(ValmatrixTest, MatrixResidueAssign)
 {
-  base_matrix %= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i] % values[i]);
+  this->iota_matrix %= this->operation_matrix;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] % this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, ResidueAssign)
+TYPED_TEST(ValmatrixTest, ArrayResidueAssign)
 {
-  base_matrix %= values;
-  base_array %= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i]);
+  this->iota_matrix %= this->operation_array;
+  this->iota_array %= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, ResidueAssign)
+TYPED_TEST(ValmatrixTest, ValueResidueAssign)
 {
-  base_matrix %= value;
-  const auto correct {base_value % value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], correct);
+  this->iota_matrix %= this->operation_value;
+  this->iota_array = this->iota_array % this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, BitwiseAndAssign)
+TYPED_TEST(ValmatrixTest, MatrixBitwiseAndAssign)
 {
-  base_matrix &= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i] & values[i]);
+  this->iota_matrix &= this->operation_matrix;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] & this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, BitwiseAndAssign)
+TYPED_TEST(ValmatrixTest, ArrayBitwiseAndAssign)
 {
-  base_matrix &= values;
-  base_array &= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i]);
+  this->iota_matrix &= this->operation_array;
+  this->iota_array &= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, BitwiseAndAssign)
+TYPED_TEST(ValmatrixTest, ValueBitwiseAndAssign)
 {
-  base_matrix &= value;
-  const auto correct {base_value & value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], correct);
+  this->iota_matrix &= this->operation_value;
+  this->iota_array = this->iota_array & this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, BitwiseOrAssign)
+TYPED_TEST(ValmatrixTest, MatrixBitwiseOrAssign)
 {
-  base_matrix |= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i] | values[i]);
+  this->iota_matrix |= this->operation_matrix;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] | this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, BitwiseOrAssign)
+TYPED_TEST(ValmatrixTest, ArrayBitwiseOrAssign)
 {
-  base_matrix |= values;
-  base_array |= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i]);
+  this->iota_matrix |= this->operation_array;
+  this->iota_array |= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, BitwiseOrAssign)
+TYPED_TEST(ValmatrixTest, ValueBitwiseOrAssign)
 {
-  base_matrix |= value;
-  const auto correct {base_value | value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], correct);
+  this->iota_matrix |= this->operation_value;
+  this->iota_array = this->iota_array | this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, XorAssign)
+TYPED_TEST(ValmatrixTest, MatrixXorAssign)
 {
-  base_matrix ^= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i] ^ values[i]);
+  this->iota_matrix ^= this->operation_matrix;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] ^ this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, XorAssign)
+TYPED_TEST(ValmatrixTest, ArrayXorAssign)
 {
-  base_matrix ^= values;
-  base_array ^= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i]);
+  this->iota_matrix ^= this->operation_array;
+  this->iota_array ^= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, XorAssign)
+TYPED_TEST(ValmatrixTest, ValueXorAssign)
 {
-  base_matrix ^= value;
-  const auto correct {base_value ^ value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], correct);
+  this->iota_matrix ^= this->operation_value;
+  this->iota_array = this->iota_array ^ this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, ShiftAssign)
+TYPED_TEST(ValmatrixTest, MatrixShiftAssign)
 {
-  base_matrix <<= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i] << values[i]);
+  this->iota_matrix <<= this->operation_matrix;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] << this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, ShiftAssign)
+TYPED_TEST(ValmatrixTest, ArrayShiftAssign)
 {
-  base_matrix <<= values;
-  base_array <<= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i]);
+  this->iota_matrix <<= this->operation_array;
+  this->iota_array <<= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, ShiftAssign)
+TYPED_TEST(ValmatrixTest, ValueShiftAssign)
 {
-  base_matrix <<= value;
-  const auto correct {base_value << value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], correct);
+  this->iota_matrix <<= this->operation_value;
+  this->iota_array = this->iota_array << this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, CounterShiftAssign)
+TYPED_TEST(ValmatrixTest, MatrixCounterShiftAssign)
 {
-  base_matrix >>= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i] >> values[i]);
+  this->iota_matrix >>= this->operation_matrix;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] >> this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, CounterShiftAssign)
+TYPED_TEST(ValmatrixTest, ArrayCounterShiftAssign)
 {
-  base_matrix >>= values;
-  base_array >>= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], base_array[i]);
+  this->iota_matrix >>= this->operation_array;
+  this->iota_array >>= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, CounterShiftAssign)
+TYPED_TEST(ValmatrixTest, ValueCounterShiftAssign)
 {
-  base_matrix >>= value;
-  const auto correct {base_value >> value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(base_matrix[i], correct);
+  this->iota_matrix >>= this->operation_value;
+  this->iota_array = this->iota_array >> this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, AdditionOperator)
+TYPED_TEST(ValmatrixTest, MatrixAdditionOperator)
 {
-  const auto result {base_matrix + values};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i] + values[i]);
+  const auto result {this->iota_matrix + this->operation_matrix};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i] + this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, AdditionOperator)
+TYPED_TEST(ValmatrixTest, ArrayAdditionOperator)
 {
-  const auto result {base_matrix + values};
-  base_array += values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i]);
+  const auto result {this->iota_matrix + this->operation_array};
+  this->iota_array += this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, AdditionOperator)
+TYPED_TEST(ValmatrixTest, ValueAdditionOperator)
 {
-  const auto result {base_matrix + value};
-  const auto correct {base_value + value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], correct);
+  const auto result {this->iota_matrix + this->operation_value};
+  this->iota_array = this->iota_array + this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, SubtractOperator)
+TYPED_TEST(ValmatrixTest, MatrixSubtractOperator)
 {
-  const auto result {base_matrix - values};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i] - values[i]);
+  const auto result {this->iota_matrix - this->operation_matrix};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i] - this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, SubtractOperator)
+TYPED_TEST(ValmatrixTest, ArraySubtractOperator)
 {
-  const auto result {base_matrix - values};
-  base_array -= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i]);
+  const auto result {this->iota_matrix - this->operation_array};
+  this->iota_array -= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, SubtractOperator)
+TYPED_TEST(ValmatrixTest, ValueSubtractOperator)
 {
-  const auto result {base_matrix - value};
-  const auto correct {base_value - value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], correct);
+  const auto result {this->iota_matrix - this->operation_value};
+  this->iota_array = this->iota_array - this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, MultiplicationOperator)
+TYPED_TEST(ValmatrixTest, MatrixMultiplicationOperator)
 {
-  const auto result {base_matrix * values};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i] * values[i]);
+  const auto result {this->iota_matrix * this->operation_matrix};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i] * this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, MultiplicationOperator)
+TYPED_TEST(ValmatrixTest, ArrayMultiplicationOperator)
 {
-  const auto result {base_matrix * values};
-  base_array *= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i]);
+  const auto result {this->iota_matrix * this->operation_array};
+  this->iota_array *= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, MultiplicationOperator)
+TYPED_TEST(ValmatrixTest, ValueMultiplicationOperator)
 {
-  const auto result {base_matrix * value};
-  const auto correct {base_value * value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], correct);
+  const auto result {this->iota_matrix * this->operation_value};
+  this->iota_array = this->iota_array * this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, DivisionOperator)
+TYPED_TEST(ValmatrixTest, MatrixDivisionOperator)
 {
-  const auto result {base_matrix / values};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i] / values[i]);
+  const auto result {this->iota_matrix / this->operation_matrix};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i] / this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, DivisionOperator)
+TYPED_TEST(ValmatrixTest, ArrayDivisionOperator)
 {
-  const auto result {base_matrix / values};
-  base_array /= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i]);
+  const auto result {this->iota_matrix / this->operation_array};
+  this->iota_array /= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, DivisionOperator)
+TYPED_TEST(ValmatrixTest, ValueDivisionOperator)
 {
-  const auto result {base_matrix / value};
-  const auto correct {base_value / value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], correct);
+  const auto result {this->iota_matrix / this->operation_value};
+  this->iota_array = this->iota_array / this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, ResidueOperator)
+TYPED_TEST(ValmatrixTest, MatrixResidueOperator)
 {
-  const auto result {base_matrix % values};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i] % values[i]);
+  const auto result {this->iota_matrix % this->operation_matrix};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i] % this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, ResidueOperator)
+TYPED_TEST(ValmatrixTest, ArrayResidueOperator)
 {
-  const auto result {base_matrix % values};
-  base_array %= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i]);
+  const auto result {this->iota_matrix % this->operation_array};
+  this->iota_array %= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, ResidueOperator)
+TYPED_TEST(ValmatrixTest, ValueResidueOperator)
 {
-  const auto result {base_matrix % value};
-  const auto correct {base_value % value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], correct);
+  const auto result {this->iota_matrix % this->operation_value};
+  this->iota_array = this->iota_array % this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, BitwiseAndOperator)
+TYPED_TEST(ValmatrixTest, MatrixBitwiseAndOperator)
 {
-  const auto result {base_matrix & values};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i] & values[i]);
+  const auto result {this->iota_matrix & this->operation_matrix};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i] & this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, BitwiseAndOperator)
+TYPED_TEST(ValmatrixTest, ArrayBitwiseAndOperator)
 {
-  const auto result {base_matrix & values};
-  base_array &= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i]);
+  const auto result {this->iota_matrix & this->operation_array};
+  this->iota_array &= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, BitwiseAndOperator)
+TYPED_TEST(ValmatrixTest, ValueBitwiseAndOperator)
 {
-  const auto result {base_matrix & value};
-  const auto correct {base_value & value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], correct);
+  const auto result {this->iota_matrix & this->operation_value};
+  this->iota_array = this->iota_array & this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, BitwiseOrOperator)
+TYPED_TEST(ValmatrixTest, MatrixBitwiseOrOperator)
 {
-  const auto result {base_matrix | values};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i] | values[i]);
+  const auto result {this->iota_matrix | this->operation_matrix};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i] | this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, BitwiseOrOperator)
+TYPED_TEST(ValmatrixTest, ArrayBitwiseOrOperator)
 {
-  const auto result {base_matrix | values};
-  base_array |= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i]);
+  const auto result {this->iota_matrix | this->operation_array};
+  this->iota_array |= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, BitwiseOrOperator)
+TYPED_TEST(ValmatrixTest, ValueBitwiseOrOperator)
 {
-  const auto result {base_matrix | value};
-  const auto correct {base_value | value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], correct);
+  const auto result {this->iota_matrix | this->operation_value};
+  this->iota_array = this->iota_array | this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, XorOperator)
+TYPED_TEST(ValmatrixTest, MatrixXorOperator)
 {
-  const auto result {base_matrix ^ values};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i] ^ values[i]);
+  const auto result {this->iota_matrix ^ this->operation_matrix};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i] ^ this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, XorOperator)
+TYPED_TEST(ValmatrixTest, ArrayXorOperator)
 {
-  const auto result {base_matrix ^ values};
-  base_array ^= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i]);
+  const auto result {this->iota_matrix ^ this->operation_array};
+  this->iota_array ^= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, XorOperator)
+TYPED_TEST(ValmatrixTest, ValueXorOperator)
 {
-  const auto result {base_matrix ^ value};
-  const auto correct {base_value ^ value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], correct);
+  const auto result {this->iota_matrix ^ this->operation_value};
+  this->iota_array = this->iota_array ^ this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, ShiftOperator)
+TYPED_TEST(ValmatrixTest, MatrixShiftOperator)
 {
-  const auto result {base_matrix << values};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i] << values[i]);
+  const auto result {this->iota_matrix << this->operation_matrix};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i] << this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, ShiftOperator)
+TYPED_TEST(ValmatrixTest, ArrayShiftOperator)
 {
-  const auto result {base_matrix << values};
-  base_array <<= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i]);
+  const auto result {this->iota_matrix << this->operation_array};
+  this->iota_array <<= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, ShiftOperator)
+TYPED_TEST(ValmatrixTest, ValueShiftOperator)
 {
-  const auto result {base_matrix << value};
-  const auto correct {base_value << value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], correct);
+  const auto result {this->iota_matrix << this->operation_value};
+  this->iota_array = this->iota_array << this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValmatrixTest, CounterShiftOperator)
+TYPED_TEST(ValmatrixTest, MatrixCounterShiftOperator)
 {
-  const auto result {base_matrix >> values};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i] >> values[i]);
+  const auto result {this->iota_matrix >> this->operation_matrix};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i] >> this->operation_matrix[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValarrayTest, CounterShiftOperator)
+TYPED_TEST(ValmatrixTest, ArrayCounterShiftOperator)
 {
-  const auto result {base_matrix >> values};
-  base_array >>= values;
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], base_array[i]);
+  const auto result {this->iota_matrix >> this->operation_array};
+  this->iota_array >>= this->operation_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixOperatorWithValueTest, CounterShiftOperator)
+TYPED_TEST(ValmatrixTest, ValueCounterShiftOperator)
 {
-  const auto result {base_matrix >> value};
-  const auto correct {base_value >> value};
-  for (auto i {0}; i < size(assign_size); ++i)
-    ASSERT_EQ(result[i], correct);
+  const auto result {this->iota_matrix >> this->operation_value};
+  this->iota_array = this->iota_array >> this->operation_value;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->iota_array[i]);
 }
 
-TEST_F(ValmatrixTest, ReadRow)
+TYPED_TEST(ValmatrixTest, ReadRow)
 {
-  for (auto i {0}; i < iota_size.first; ++i) {
-    Valarrayi value {iota_matrix.row(i)};
-    Valarrayi correct {iota_array[std::slice{i * iota_size.second, iota_size.second, 1}]};
+  for (auto i {0}; i < TestFixture::size.first; ++i) {
+    typename TestFixture::Valarray value {this->iota_matrix.row(i)};
+    typename TestFixture::Valarray correct {this->iota_array[std::slice{i * TestFixture::size.first, TestFixture::size.first, 1}]};
     ASSERT_EQ(value.size(), correct.size());
-    for (auto j {0}; j < iota_size.second; ++j)
+    for (auto j {0}; j < TestFixture::size.second; ++j)
       ASSERT_EQ(value[j], correct[j]);
   }
 }
 
-TEST_F(ValmatrixTest, ReadColumn)
+TYPED_TEST(ValmatrixTest, ReadColumn)
 {
-  for (auto i {0u}; i < iota_size.second; ++i) {
-    Valarrayi value {iota_matrix.col(i)};
-    Valarrayi correct {iota_array[std::slice{i, iota_size.first, iota_size.second}]};
+  for (auto i {0u}; i < TestFixture::size.second; ++i) {
+    typename TestFixture::Valarray value {this->iota_matrix.col(i)};
+    typename TestFixture::Valarray correct {this->iota_array[std::slice{i, TestFixture::size.second, TestFixture::size.first}]};
     ASSERT_EQ(value.size(), correct.size());
-    for (auto j {0}; j < iota_size.first; ++j)
+    for (auto j {0}; j < TestFixture::size.first; ++j)
       ASSERT_EQ(value[j], correct[j]);
   }
 }
 
-TEST_F(ValmatrixTest, WriteRow)
+TYPED_TEST(ValmatrixTest, WriteRow)
 {
   constexpr auto new_value {5};
-  iota_matrix.row(iota_size.first - 1) = new_value;
-  iota_array[std::slice{iota_size.first * (iota_size.second - 1), iota_size.second, 1}] = new_value;
+  this->iota_matrix.row(TestFixture::size.first - 1) = new_value;
+  this->iota_array[std::slice{TestFixture::size.first * (TestFixture::size.second - 1), TestFixture::size.second, 1}] = new_value;
 
-  for (auto i {0}; i < iota_size.first; ++i) {
-    Valarrayi value {iota_matrix.row(i)};
-    Valarrayi correct {iota_array[std::slice{i * iota_size.second, iota_size.second, 1}]};
+  for (auto i {0}; i < TestFixture::size.first; ++i) {
+    typename TestFixture::Valarray value {this->iota_matrix.row(i)};
+    typename TestFixture::Valarray correct {this->iota_array[std::slice{i * TestFixture::size.first, TestFixture::size.first, 1}]};
     ASSERT_EQ(value.size(), correct.size());
-    for (auto j {0}; j < iota_size.second; ++j)
+    for (auto j {0}; j < TestFixture::size.second; ++j)
       ASSERT_EQ(value[j], correct[j]);
   }
 }
 
-TEST_F(ValmatrixTest, WriteColumn)
+TYPED_TEST(ValmatrixTest, WriteColumn)
 {
   constexpr auto new_value {5};
-  iota_matrix.col(iota_size.second - 1) = new_value;
-  iota_array[std::slice{iota_size.second - 1, iota_size.first, iota_size.second}] = new_value;
+  this->iota_matrix.col(TestFixture::size.second - 1) = new_value;
+  this->iota_array[std::slice{TestFixture::size.second - 1, TestFixture::size.first, TestFixture::size.second}] = new_value;
 
-  for (auto i {0u}; i < iota_size.second; ++i) {
-    Valarrayi value {iota_matrix.col(i)};
-    Valarrayi correct {iota_array[std::slice{i, iota_size.first, iota_size.second}]};
+  for (auto i {0u}; i < TestFixture::size.second; ++i) {
+    typename TestFixture::Valarray value {this->iota_matrix.col(i)};
+    typename TestFixture::Valarray correct {this->iota_array[std::slice{i, TestFixture::size.second, TestFixture::size.first}]};
     ASSERT_EQ(value.size(), correct.size());
-    for (auto j {0}; j < iota_size.first; ++j)
+    for (auto j {0}; j < TestFixture::size.first; ++j)
       ASSERT_EQ(value[j], correct[j]);
   }
 }
 
-TEST_F(ValmatrixTest, ReadBlock)
+TYPED_TEST(ValmatrixTest, ReadBlock)
 {
   constexpr Size index {1, 1};
   constexpr Size block_size {2, 2};
 
-  Valmatrixi value {iota_matrix.block(index, block_size)};
+  typename TestFixture::Valmatrix value {this->iota_matrix.block(index, block_size)};
 
   const std::gslice specification {
-    index.first * iota_size.first + index.second,
+    index.first * TestFixture::size.first + index.second,
     {block_size.first, block_size.second},
-    {iota_size.first, 1}};
-  Valarrayi correct {iota_array[specification]};
+    {TestFixture::size.first, 1}};
+  typename TestFixture::Valarray correct {this->iota_array[specification]};
 
-  for (auto i {0}; i < size(block_size); ++i)
+  for (auto i {0}; i < size_of(block_size); ++i)
     ASSERT_EQ(value[i], correct[i]);
 }
 
-//TEST_F(ValmatrixTest, WriteBlock)
+//TYPED_TEST(ValmatrixTest, WriteBlock)
 //{
 //  constexpr Size index {2, 3};
 //  constexpr Size block_size {4, 3};
 //  constexpr auto new_value {1234};
 //
-//  iota_matrix.block(index, block_size) = new_value;
+//  this->iota_matrix.block(index, block_size) = new_value;
 //
 //  const std::gslice specification {
-//    index.first * iota_matrix.row_size() + index.second,
+//    index.first * this->iota_matrix.row_size() + index.second,
 //    {block_size.first, block_size.second},
-//    {iota_matrix.row_size(), 1}};
-//  iota_array[specification] = new_value;
+//    {this->iota_matrix.row_size(), 1}};
+//  this->iota_array[specification] = new_value;
 //
-//  for (auto i {0}; i < size(iota_size); ++i)
-//    ASSERT_EQ(iota_matrix[i], iota_array[i]);
+//  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+//    ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 //}
 
-TEST_F(ValmatrixTest, IteratorAccess)
+TYPED_TEST(ValmatrixTest, IteratorAccess)
 {
-  ASSERT_EQ(iota_matrix.begin(), begin(iota_matrix)); // ADL test
-  ASSERT_EQ(iota_matrix.begin(), std::begin(iota_matrix)); // std::begin test
-  ASSERT_EQ(iota_matrix.end(), end(iota_matrix)); // ALD test
-  ASSERT_EQ(iota_matrix.end(), std::end(iota_matrix)); // std::end test
+  ASSERT_EQ(this->iota_matrix.begin(), begin(this->iota_matrix)); // ADL test
+  ASSERT_EQ(this->iota_matrix.begin(), std::begin(this->iota_matrix)); // std::begin test
+  ASSERT_EQ(this->iota_matrix.end(), end(this->iota_matrix)); // ALD test
+  ASSERT_EQ(this->iota_matrix.end(), std::end(this->iota_matrix)); // std::end test
 }
 
-TEST_F(ValmatrixTest, VoidSwap)
+TYPED_TEST(ValmatrixTest, VoidSwap)
 {
   // std::swap test
-  Valmatrixi swap_target {};
-  std::swap(iota_matrix, swap_target);
+  typename TestFixture::Valmatrix swap_target {};
+  std::swap(this->iota_matrix, swap_target);
 
-  ASSERT_FALSE(iota_matrix.size());
-  for (auto i {0}; i < size(iota_size); ++i)
-    ASSERT_EQ(swap_target[i], iota_array[i]);
+  ASSERT_FALSE(this->iota_matrix.size());
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(swap_target[i], this->iota_array[i]);
 
   // ADL test
   swap(swap_target, swap_target);
-  for (auto i {0}; i < size(iota_size); ++i)
-    ASSERT_EQ(swap_target[i], iota_array[i]);
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(swap_target[i], this->iota_array[i]);
 
   // member swap
-  Valmatrixi{}.swap(swap_target);
+  typename TestFixture::Valmatrix{}.swap(swap_target);
   ASSERT_FALSE(swap_target.size());
 }
 
-TEST(ValmatrixcTest, Construct)
+namespace
 {
-  Valmatrixc{};
-  Valmatrixc{1, 1};
-  Valmatrixc{2, 2};
-  Valmatrixc{10, 10};
+
+class C
+{
+};
+
+}
+
+TEST(ValmatrixUserClassTest, Construct)
+{
+  xmaho::std_ext::valmatrix<C>{};
+  xmaho::std_ext::valmatrix<C>{1, 1};
+  xmaho::std_ext::valmatrix<C>{2, 2};
+  xmaho::std_ext::valmatrix<C>{10, 10};
 }
