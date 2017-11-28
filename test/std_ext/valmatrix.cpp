@@ -271,7 +271,7 @@ TYPED_TEST(ValmatrixTest, ArraySubtractAssign)
 TYPED_TEST(ValmatrixTest, ValueSubtractAssign)
 {
   this->iota_matrix -= this->operation_value;
-  this->iota_array = this->iota_array - this->operation_value;
+  this->iota_array -= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
@@ -294,7 +294,7 @@ TYPED_TEST(ValmatrixTest, ArrayMultiplicationAssign)
 TYPED_TEST(ValmatrixTest, ValueMultiplicationAssign)
 {
   this->iota_matrix *= this->operation_value;
-  this->iota_array = this->iota_array * this->operation_value;
+  this->iota_array *= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
@@ -317,7 +317,7 @@ TYPED_TEST(ValmatrixTest, ArrayDivisionAssign)
 TYPED_TEST(ValmatrixTest, ValueDivisionAssign)
 {
   this->iota_matrix /= this->operation_value;
-  this->iota_array = this->iota_array / this->operation_value;
+  this->iota_array /= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
@@ -340,7 +340,7 @@ TYPED_TEST(ValmatrixTest, ArrayResidueAssign)
 TYPED_TEST(ValmatrixTest, ValueResidueAssign)
 {
   this->iota_matrix %= this->operation_value;
-  this->iota_array = this->iota_array % this->operation_value;
+  this->iota_array %= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
@@ -363,7 +363,7 @@ TYPED_TEST(ValmatrixTest, ArrayBitwiseAndAssign)
 TYPED_TEST(ValmatrixTest, ValueBitwiseAndAssign)
 {
   this->iota_matrix &= this->operation_value;
-  this->iota_array = this->iota_array & this->operation_value;
+  this->iota_array &= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
@@ -386,7 +386,7 @@ TYPED_TEST(ValmatrixTest, ArrayBitwiseOrAssign)
 TYPED_TEST(ValmatrixTest, ValueBitwiseOrAssign)
 {
   this->iota_matrix |= this->operation_value;
-  this->iota_array = this->iota_array | this->operation_value;
+  this->iota_array |= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
@@ -409,7 +409,7 @@ TYPED_TEST(ValmatrixTest, ArrayXorAssign)
 TYPED_TEST(ValmatrixTest, ValueXorAssign)
 {
   this->iota_matrix ^= this->operation_value;
-  this->iota_array = this->iota_array ^ this->operation_value;
+  this->iota_array ^= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
@@ -432,7 +432,7 @@ TYPED_TEST(ValmatrixTest, ArrayShiftAssign)
 TYPED_TEST(ValmatrixTest, ValueShiftAssign)
 {
   this->iota_matrix <<= this->operation_value;
-  this->iota_array = this->iota_array << this->operation_value;
+  this->iota_array <<= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
@@ -455,7 +455,7 @@ TYPED_TEST(ValmatrixTest, ArrayCounterShiftAssign)
 TYPED_TEST(ValmatrixTest, ValueCounterShiftAssign)
 {
   this->iota_matrix >>= this->operation_value;
-  this->iota_array = this->iota_array >> this->operation_value;
+  this->iota_array >>= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(this->iota_matrix[i], this->iota_array[i]);
 }
@@ -478,9 +478,25 @@ TYPED_TEST(ValmatrixTest, ArrayAdditionOperator)
 TYPED_TEST(ValmatrixTest, ValueAdditionOperator)
 {
   const auto result {this->iota_matrix + this->operation_value};
-  this->iota_array = this->iota_array + this->operation_value;
+  this->iota_array += this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(result[i], this->iota_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ArrayInverseAdditionOperator)
+{
+  const auto result {this->operation_array + this->iota_matrix};
+  this->operation_array += this->iota_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->operation_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ValueInverseAdditionOperator)
+{
+  const auto result {this->operation_value + this->iota_matrix};
+  const auto correct {this->operation_value + this->iota_array};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], correct[i]);
 }
 
 TYPED_TEST(ValmatrixTest, MatrixSubtractOperator)
@@ -501,9 +517,25 @@ TYPED_TEST(ValmatrixTest, ArraySubtractOperator)
 TYPED_TEST(ValmatrixTest, ValueSubtractOperator)
 {
   const auto result {this->iota_matrix - this->operation_value};
-  this->iota_array = this->iota_array - this->operation_value;
+  this->iota_array -= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(result[i], this->iota_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ArrayInverseSubtractOperator)
+{
+  const auto result {this->operation_array - this->iota_matrix};
+  this->operation_array -= this->iota_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->operation_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ValueInverseSubtractOperator)
+{
+  const auto result {this->operation_value - this->iota_matrix };
+  const auto correct {this->operation_value - this->iota_array};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], correct[i]);
 }
 
 TYPED_TEST(ValmatrixTest, MatrixMultiplicationOperator)
@@ -524,9 +556,25 @@ TYPED_TEST(ValmatrixTest, ArrayMultiplicationOperator)
 TYPED_TEST(ValmatrixTest, ValueMultiplicationOperator)
 {
   const auto result {this->iota_matrix * this->operation_value};
-  this->iota_array = this->iota_array * this->operation_value;
+  this->iota_array *= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(result[i], this->iota_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ArrayInverseMultiplicationOperator)
+{
+  const auto result {this->operation_array * this->iota_matrix};
+  this->operation_array *= this->iota_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->operation_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ValueInverseMultiplicationOperator)
+{
+  const auto result {this->operation_value * this->iota_matrix};
+  const auto correct {this->operation_value * this->iota_array};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], correct[i]);
 }
 
 TYPED_TEST(ValmatrixTest, MatrixDivisionOperator)
@@ -547,9 +595,25 @@ TYPED_TEST(ValmatrixTest, ArrayDivisionOperator)
 TYPED_TEST(ValmatrixTest, ValueDivisionOperator)
 {
   const auto result {this->iota_matrix / this->operation_value};
-  this->iota_array = this->iota_array / this->operation_value;
+  this->iota_array /= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(result[i], this->iota_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ArrayInverseDivisionOperator)
+{
+  const auto result {this->operation_array / this->iota_matrix};
+  this->operation_array /= this->iota_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->operation_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ValueInverseDivisionOperator)
+{
+  const auto result {this->operation_value / this->iota_matrix};
+  const auto correct {this->operation_value / this->iota_array};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], correct[i]);
 }
 
 TYPED_TEST(ValmatrixTest, MatrixResidueOperator)
@@ -570,9 +634,25 @@ TYPED_TEST(ValmatrixTest, ArrayResidueOperator)
 TYPED_TEST(ValmatrixTest, ValueResidueOperator)
 {
   const auto result {this->iota_matrix % this->operation_value};
-  this->iota_array = this->iota_array % this->operation_value;
+  this->iota_array %= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(result[i], this->iota_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ArrayInverseResidueOperator)
+{
+  const auto result {this->operation_array % this->iota_matrix};
+  this->operation_array %= this->iota_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->operation_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ValueInverseResidueOperator)
+{
+  const auto result {this->operation_value % this->iota_matrix};
+  const auto correct {this->operation_value % this->iota_array};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], correct[i]);
 }
 
 TYPED_TEST(ValmatrixTest, MatrixBitwiseAndOperator)
@@ -593,9 +673,25 @@ TYPED_TEST(ValmatrixTest, ArrayBitwiseAndOperator)
 TYPED_TEST(ValmatrixTest, ValueBitwiseAndOperator)
 {
   const auto result {this->iota_matrix & this->operation_value};
-  this->iota_array = this->iota_array & this->operation_value;
+  this->iota_array &= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(result[i], this->iota_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ArrayInverseBitwiseAndOperator)
+{
+  const auto result {this->operation_array & this->iota_matrix};
+  this->operation_array &= this->iota_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->operation_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ValueInverseBitwiseAndOperator)
+{
+  const auto result {this->operation_value & this->iota_matrix};
+  const auto correct {this->operation_value & this->iota_array};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], correct[i]);
 }
 
 TYPED_TEST(ValmatrixTest, MatrixBitwiseOrOperator)
@@ -616,9 +712,25 @@ TYPED_TEST(ValmatrixTest, ArrayBitwiseOrOperator)
 TYPED_TEST(ValmatrixTest, ValueBitwiseOrOperator)
 {
   const auto result {this->iota_matrix | this->operation_value};
-  this->iota_array = this->iota_array | this->operation_value;
+  this->iota_array |= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(result[i], this->iota_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ArrayInverseBitwiseOrOperator)
+{
+  const auto result {this->operation_array | this->iota_matrix};
+  this->operation_array |= this->iota_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->operation_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ValueInverseBitwiseOrOperator)
+{
+  const auto result {this->operation_value | this->iota_matrix};
+  const auto correct {this->operation_value | this->iota_array};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], correct[i]);
 }
 
 TYPED_TEST(ValmatrixTest, MatrixXorOperator)
@@ -639,9 +751,25 @@ TYPED_TEST(ValmatrixTest, ArrayXorOperator)
 TYPED_TEST(ValmatrixTest, ValueXorOperator)
 {
   const auto result {this->iota_matrix ^ this->operation_value};
-  this->iota_array = this->iota_array ^ this->operation_value;
+  this->iota_array ^= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(result[i], this->iota_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ArrayInverseXorOperator)
+{
+  const auto result {this->operation_array ^ this->iota_matrix};
+  this->operation_array ^= this->iota_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->operation_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ValueInverseXorOperator)
+{
+  const auto result {this->operation_value ^ this->iota_matrix};
+  const auto correct {this->operation_value ^ this->iota_array};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], correct[i]);
 }
 
 TYPED_TEST(ValmatrixTest, MatrixShiftOperator)
@@ -662,9 +790,25 @@ TYPED_TEST(ValmatrixTest, ArrayShiftOperator)
 TYPED_TEST(ValmatrixTest, ValueShiftOperator)
 {
   const auto result {this->iota_matrix << this->operation_value};
-  this->iota_array = this->iota_array << this->operation_value;
+  this->iota_array <<= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(result[i], this->iota_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ArrayInverseShiftOperator)
+{
+  const auto result {this->operation_array << this->iota_matrix};
+  this->operation_array <<= this->iota_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->operation_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ValueInverseShiftOperator)
+{
+  const auto result {this->operation_value << this->iota_matrix};
+  const auto correct {this->operation_value << this->iota_array};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], correct[i]);
 }
 
 TYPED_TEST(ValmatrixTest, MatrixCounterShiftOperator)
@@ -685,9 +829,25 @@ TYPED_TEST(ValmatrixTest, ArrayCounterShiftOperator)
 TYPED_TEST(ValmatrixTest, ValueCounterShiftOperator)
 {
   const auto result {this->iota_matrix >> this->operation_value};
-  this->iota_array = this->iota_array >> this->operation_value;
+  this->iota_array >>= this->operation_value;
   for (auto i {0}; i < size_of(TestFixture::size); ++i)
     ASSERT_EQ(result[i], this->iota_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ArrayInverseCounterShiftOperator)
+{
+  const auto result {this->operation_array >> this->iota_matrix};
+  this->operation_array >>= this->iota_array;
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], this->operation_array[i]);
+}
+
+TYPED_TEST(ValmatrixTest, ValueInverseCounterShiftOperator)
+{
+  const auto result {this->operation_value >> this->iota_matrix};
+  const auto correct {this->operation_value >> this->iota_array};
+  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+    ASSERT_EQ(result[i], correct[i]);
 }
 
 TYPED_TEST(ValmatrixTest, ReadRow)
