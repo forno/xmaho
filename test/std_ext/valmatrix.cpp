@@ -203,7 +203,7 @@ TYPED_TEST(ValmatrixTest, ReadValueByPosition)
   for (auto i {0}; i < TestFixture::size.first; ++i)
     for (auto j {0}; j < TestFixture::size.second; ++j) {
       const auto value {this->iota_matrix[typename TestFixture::Valmatrix::position_type{i, j}]};
-      ASSERT_EQ(value, this->iota_array[i * TestFixture::size.second + j]);
+      ASSERT_EQ(value, this->iota_array[i + TestFixture::size.second * j]);
     }
 }
 

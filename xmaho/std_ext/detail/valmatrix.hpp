@@ -43,7 +43,7 @@ constexpr std::size_t get_serial_index(
   std::pair<std::size_t, std::size_t> pos,
   std::size_t col_size)
 {
-  return pos.first * col_size + pos.second;
+  return pos.first + col_size * pos.second;
 }
 
 constexpr std::pair<std::size_t, std::size_t> get_init_size(std::size_t row_size, std::size_t col_size)
