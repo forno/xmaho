@@ -55,7 +55,6 @@ protected:
   using Valarray = std::valarray<T>;
 
   static constexpr Size size {3, 2};
-  static_assert(size_of(size) == 3 * 2, "Precondition: iota size by above value");
 
   Valmatrix iota_matrix {size.first, size.second};
   Valarray iota_array;
