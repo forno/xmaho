@@ -27,6 +27,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include "xmaho/std_ext/valmatrix.hpp"
 
+#include <algorithm>
 #include <cstddef>
 #include <numeric>
 #include <random>
