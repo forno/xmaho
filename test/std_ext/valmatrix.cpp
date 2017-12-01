@@ -217,10 +217,12 @@ TYPED_TEST(ValmatrixTest, UnaryAddOperation)
 
 TYPED_TEST(ValmatrixTest, UnarySubOperation)
 {
-  const typename TestFixture::Valmatrix effected {-this->iota_matrix};
-  const typename TestFixture::Valarray correct = -this->iota_array;
-  for (auto i {0}; i < size_of(TestFixture::size); ++i)
-    ASSERT_EQ(effected[i], correct[i]);
+  if constexpr (std::is_signed_v<TypeParam>) {
+    const typename TestFixture::Valmatrix effected{ -this->iota_matrix };
+    const typename TestFixture::Valarray correct = -this->iota_array;
+    for (auto i{ 0 }; i < size_of(TestFixture::size); ++i)
+      ASSERT_EQ(effected[i], correct[i]);
+  }
 }
 
 TYPED_TEST(ValmatrixTest, UnaryNegationOperation)
