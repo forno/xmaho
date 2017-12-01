@@ -3,11 +3,8 @@ project(xmaho
   VERSION 0.1.0
   LANGUAGES CXX
 )
-
+set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Build type for only meaningful to single-configuration generators")
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS RelWithDebInfo Release Debug MinSizeRel)
-if(NOT CMAKE_BUILD_TYPE)
-  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY VALUE RelWithDebInfo)
-endif(NOT CMAKE_BUILD_TYPE)
 
 option(ENABLE_TEST "Add build target for gtest" OFF)
 
