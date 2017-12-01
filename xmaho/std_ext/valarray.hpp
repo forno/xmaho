@@ -72,7 +72,7 @@ std::valarray<T> vector_product(const std::valarray<T>& a, const std::valarray<T
  * @return The vector size.
  */
 template<std::size_t norm = 2, typename T>
-T distance(const std::valarray<T>& vector);
+auto distance(const std::valarray<T>& vector);
 
 }
 }

@@ -45,7 +45,7 @@ template<std::size_t norm>
 struct distance_impl
 {
   template<typename T>
-  T operator()(const std::valarray<T>& vector)
+  auto operator()(const std::valarray<T>& vector)
   {
     return std::pow(std::pow(vector, norm).sum(), 1. / norm);
   }
@@ -53,28 +53,28 @@ struct distance_impl
 
 template<>
 template<typename T>
-T distance_impl<1u>::operator()(const std::valarray<T>& vector)
+auto distance_impl<1u>::operator()(const std::valarray<T>& vector)
 {
   return std::abs(vector).sum();
 }
 
 template<>
 template<typename T>
-T distance_impl<2u>::operator()(const std::valarray<T>& vector)
+auto distance_impl<2u>::operator()(const std::valarray<T>& vector)
 {
   return std::sqrt((vector * vector).sum());
 }
 
 template<>
 template<typename T>
-T distance_impl<3u>::operator()(const std::valarray<T>& vector)
+auto distance_impl<3u>::operator()(const std::valarray<T>& vector)
 {
   return std::cbrt((vector * vector * vector).sum());
 }
 
 template<>
 template<typename T>
-T distance_impl<std::numeric_limits<std::size_t>::max()>::operator()(const std::valarray<T>& vector)
+auto distance_impl<std::numeric_limits<std::size_t>::max()>::operator()(const std::valarray<T>& vector)
 {
   return std::abs(vector).max();
 }
@@ -96,7 +96,7 @@ inline std::valarray<T> xmaho::std_ext::vector_product(const std::valarray<T>& a
 }
 
 template<std::size_t norm, typename T>
-T xmaho::std_ext::distance(const std::valarray<T>& vector)
+auto xmaho::std_ext::distance(const std::valarray<T>& vector)
 {
   return detail::distance_impl<norm>{}(vector);
 }
