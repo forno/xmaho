@@ -7,4 +7,5 @@ set(CMAKE_CXX_EXTENSIONS False)
 add_subdirectory(gtest)
 
 # Add some test
+add_subdirectory(point)
 add_subdirectory(std_ext)
