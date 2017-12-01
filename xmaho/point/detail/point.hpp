@@ -118,15 +118,11 @@ struct norm_impl<3u>
   template<typename T>
   auto operator()(const BasicPoint<T>& point)
   {
-    [[deprecated]]
-    const auto [a, b] {[&]() -> BasicPoint<T> {
-      if constexpr (std::is_unsigned_v<T>) {
-        return {point.first, point.second};
-      } else {
-        return {std::abs(point.first), std::abs(point.second)};
-      }
-    }()};
-    return std::cbrt(std::pow(a, 3) + std::pow(b, 3));
+    if constexpr (std::disjunction_v<std::is_floating_point<T>, std::is_unsigned<T>>) {
+      return std::cbrt(std::pow(point.first, 3) + std::pow(point.second, 3));
+    } else {
+      return std::cbrt(std::pow(std::abs(point.first), 3) + std::pow(std::abs(point.second), 3));
+    }
   }
 };
 
