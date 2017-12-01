@@ -4,7 +4,7 @@ project(xmaho
   LANGUAGES CXX
 )
 
-set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS RelWithDebInfo Release Debug MinSizeRel None)
+set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS RelWithDebInfo Release Debug MinSizeRel)
 if(NOT CMAKE_BUILD_TYPE)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY VALUE RelWithDebInfo)
 endif(NOT CMAKE_BUILD_TYPE)
