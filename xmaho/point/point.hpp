@@ -34,7 +34,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include <cstddef>
-#include <type_traits>
 #include <utility>
 
 namespace xmaho
@@ -96,6 +95,17 @@ constexpr BasicPoint<T> up(BasicPoint<T> point);
  */
 template<typename T>
 constexpr BasicPoint<T> down(BasicPoint<T> point);
+
+/**
+ * @brief Calculate norm of Point.
+ *
+ * @tparam ordinal The norm of vector space.
+ * @tparam T Point type.
+ * @param[in] point The pair of elements as vector.
+ * @return The norm of the pair as vector.
+ */
+template<std::size_t ordinal = 2, typename T>
+constexpr auto norm(const BasicPoint<T>& point);
 
 }
 }
