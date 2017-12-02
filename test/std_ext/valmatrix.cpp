@@ -217,7 +217,7 @@ TYPED_TEST(ValmatrixTest, UnaryAddOperation)
 
 TYPED_TEST(ValmatrixTest, UnarySubOperation)
 {
-  if constexpr (std::is_signed_v<TypeParam>) {
+  if constexpr (!std::is_unsigned_v<TypeParam>) {
     const typename TestFixture::Valmatrix effected{ -this->iota_matrix };
     const typename TestFixture::Valarray correct = -this->iota_array;
     for (auto i{ 0 }; i < size_of(TestFixture::size); ++i)
@@ -227,7 +227,7 @@ TYPED_TEST(ValmatrixTest, UnarySubOperation)
 
 TYPED_TEST(ValmatrixTest, UnaryNegationOperation)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const typename TestFixture::Valmatrix effected {~this->iota_matrix};
     const typename TestFixture::Valarray correct = ~this->iota_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -329,7 +329,7 @@ TYPED_TEST(ValmatrixTest, ValueDivisionAssign)
 
 TYPED_TEST(ValmatrixTest, MatrixResidueAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix %= this->operation_matrix;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
       ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] % this->operation_matrix[i]);
@@ -338,7 +338,7 @@ TYPED_TEST(ValmatrixTest, MatrixResidueAssign)
 
 TYPED_TEST(ValmatrixTest, ArrayResidueAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix %= this->operation_array;
     this->iota_array %= this->operation_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -348,7 +348,7 @@ TYPED_TEST(ValmatrixTest, ArrayResidueAssign)
 
 TYPED_TEST(ValmatrixTest, ValueResidueAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix %= this->operation_value;
     this->iota_array %= this->operation_value;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -358,7 +358,7 @@ TYPED_TEST(ValmatrixTest, ValueResidueAssign)
 
 TYPED_TEST(ValmatrixTest, MatrixBitwiseAndAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix &= this->operation_matrix;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
       ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] & this->operation_matrix[i]);
@@ -367,7 +367,7 @@ TYPED_TEST(ValmatrixTest, MatrixBitwiseAndAssign)
 
 TYPED_TEST(ValmatrixTest, ArrayBitwiseAndAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix &= this->operation_array;
     this->iota_array &= this->operation_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -377,7 +377,7 @@ TYPED_TEST(ValmatrixTest, ArrayBitwiseAndAssign)
 
 TYPED_TEST(ValmatrixTest, ValueBitwiseAndAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix &= this->operation_value;
     this->iota_array &= this->operation_value;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -387,7 +387,7 @@ TYPED_TEST(ValmatrixTest, ValueBitwiseAndAssign)
 
 TYPED_TEST(ValmatrixTest, MatrixBitwiseOrAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix |= this->operation_matrix;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
       ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] | this->operation_matrix[i]);
@@ -396,7 +396,7 @@ TYPED_TEST(ValmatrixTest, MatrixBitwiseOrAssign)
 
 TYPED_TEST(ValmatrixTest, ArrayBitwiseOrAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix |= this->operation_array;
     this->iota_array |= this->operation_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -406,7 +406,7 @@ TYPED_TEST(ValmatrixTest, ArrayBitwiseOrAssign)
 
 TYPED_TEST(ValmatrixTest, ValueBitwiseOrAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix |= this->operation_value;
     this->iota_array |= this->operation_value;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -416,7 +416,7 @@ TYPED_TEST(ValmatrixTest, ValueBitwiseOrAssign)
 
 TYPED_TEST(ValmatrixTest, MatrixXorAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix ^= this->operation_matrix;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
       ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] ^ this->operation_matrix[i]);
@@ -425,7 +425,7 @@ TYPED_TEST(ValmatrixTest, MatrixXorAssign)
 
 TYPED_TEST(ValmatrixTest, ArrayXorAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix ^= this->operation_array;
     this->iota_array ^= this->operation_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -435,7 +435,7 @@ TYPED_TEST(ValmatrixTest, ArrayXorAssign)
 
 TYPED_TEST(ValmatrixTest, ValueXorAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix ^= this->operation_value;
     this->iota_array ^= this->operation_value;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -445,7 +445,7 @@ TYPED_TEST(ValmatrixTest, ValueXorAssign)
 
 TYPED_TEST(ValmatrixTest, MatrixShiftAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix <<= this->operation_matrix;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
       ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] << this->operation_matrix[i]);
@@ -454,7 +454,7 @@ TYPED_TEST(ValmatrixTest, MatrixShiftAssign)
 
 TYPED_TEST(ValmatrixTest, ArrayShiftAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix <<= this->operation_array;
     this->iota_array <<= this->operation_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -464,7 +464,7 @@ TYPED_TEST(ValmatrixTest, ArrayShiftAssign)
 
 TYPED_TEST(ValmatrixTest, ValueShiftAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix <<= this->operation_value;
     this->iota_array <<= this->operation_value;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -474,7 +474,7 @@ TYPED_TEST(ValmatrixTest, ValueShiftAssign)
 
 TYPED_TEST(ValmatrixTest, MatrixCounterShiftAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix >>= this->operation_matrix;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
       ASSERT_EQ(this->iota_matrix[i], this->iota_array[i] >> this->operation_matrix[i]);
@@ -483,7 +483,7 @@ TYPED_TEST(ValmatrixTest, MatrixCounterShiftAssign)
 
 TYPED_TEST(ValmatrixTest, ArrayCounterShiftAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix >>= this->operation_array;
     this->iota_array >>= this->operation_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -493,7 +493,7 @@ TYPED_TEST(ValmatrixTest, ArrayCounterShiftAssign)
 
 TYPED_TEST(ValmatrixTest, ValueCounterShiftAssign)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     this->iota_matrix >>= this->operation_value;
     this->iota_array >>= this->operation_value;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -659,7 +659,7 @@ TYPED_TEST(ValmatrixTest, ValueInverseDivisionOperator)
 
 TYPED_TEST(ValmatrixTest, MatrixResidueOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix % this->operation_matrix};
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
       ASSERT_EQ(result[i], this->iota_array[i] % this->operation_matrix[i]);
@@ -668,7 +668,7 @@ TYPED_TEST(ValmatrixTest, MatrixResidueOperator)
 
 TYPED_TEST(ValmatrixTest, ArrayResidueOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix % this->operation_array};
     this->iota_array %= this->operation_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -678,7 +678,7 @@ TYPED_TEST(ValmatrixTest, ArrayResidueOperator)
 
 TYPED_TEST(ValmatrixTest, ValueResidueOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix % this->operation_value};
     this->iota_array %= this->operation_value;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -688,7 +688,7 @@ TYPED_TEST(ValmatrixTest, ValueResidueOperator)
 
 TYPED_TEST(ValmatrixTest, ArrayInverseResidueOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->operation_array % this->iota_matrix};
     this->operation_array %= this->iota_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -698,7 +698,7 @@ TYPED_TEST(ValmatrixTest, ArrayInverseResidueOperator)
 
 TYPED_TEST(ValmatrixTest, ValueInverseResidueOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->operation_value % this->iota_matrix};
     const auto correct {this->operation_value % this->iota_array};
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -708,7 +708,7 @@ TYPED_TEST(ValmatrixTest, ValueInverseResidueOperator)
 
 TYPED_TEST(ValmatrixTest, MatrixBitwiseAndOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix & this->operation_matrix};
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
       ASSERT_EQ(result[i], this->iota_array[i] & this->operation_matrix[i]);
@@ -717,7 +717,7 @@ TYPED_TEST(ValmatrixTest, MatrixBitwiseAndOperator)
 
 TYPED_TEST(ValmatrixTest, ArrayBitwiseAndOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix & this->operation_array};
     this->iota_array &= this->operation_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -727,7 +727,7 @@ TYPED_TEST(ValmatrixTest, ArrayBitwiseAndOperator)
 
 TYPED_TEST(ValmatrixTest, ValueBitwiseAndOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix & this->operation_value};
     this->iota_array &= this->operation_value;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -737,7 +737,7 @@ TYPED_TEST(ValmatrixTest, ValueBitwiseAndOperator)
 
 TYPED_TEST(ValmatrixTest, ArrayInverseBitwiseAndOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->operation_array & this->iota_matrix};
     this->operation_array &= this->iota_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -747,7 +747,7 @@ TYPED_TEST(ValmatrixTest, ArrayInverseBitwiseAndOperator)
 
 TYPED_TEST(ValmatrixTest, ValueInverseBitwiseAndOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->operation_value & this->iota_matrix};
     const auto correct {this->operation_value & this->iota_array};
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -757,7 +757,7 @@ TYPED_TEST(ValmatrixTest, ValueInverseBitwiseAndOperator)
 
 TYPED_TEST(ValmatrixTest, MatrixBitwiseOrOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix | this->operation_matrix};
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
       ASSERT_EQ(result[i], this->iota_array[i] | this->operation_matrix[i]);
@@ -766,7 +766,7 @@ TYPED_TEST(ValmatrixTest, MatrixBitwiseOrOperator)
 
 TYPED_TEST(ValmatrixTest, ArrayBitwiseOrOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix | this->operation_array};
     this->iota_array |= this->operation_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -776,7 +776,7 @@ TYPED_TEST(ValmatrixTest, ArrayBitwiseOrOperator)
 
 TYPED_TEST(ValmatrixTest, ValueBitwiseOrOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix | this->operation_value};
     this->iota_array |= this->operation_value;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -786,7 +786,7 @@ TYPED_TEST(ValmatrixTest, ValueBitwiseOrOperator)
 
 TYPED_TEST(ValmatrixTest, ArrayInverseBitwiseOrOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->operation_array | this->iota_matrix};
     this->operation_array |= this->iota_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -796,7 +796,7 @@ TYPED_TEST(ValmatrixTest, ArrayInverseBitwiseOrOperator)
 
 TYPED_TEST(ValmatrixTest, ValueInverseBitwiseOrOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->operation_value | this->iota_matrix};
     const auto correct {this->operation_value | this->iota_array};
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -806,7 +806,7 @@ TYPED_TEST(ValmatrixTest, ValueInverseBitwiseOrOperator)
 
 TYPED_TEST(ValmatrixTest, MatrixXorOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix ^ this->operation_matrix};
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
       ASSERT_EQ(result[i], this->iota_array[i] ^ this->operation_matrix[i]);
@@ -815,7 +815,7 @@ TYPED_TEST(ValmatrixTest, MatrixXorOperator)
 
 TYPED_TEST(ValmatrixTest, ArrayXorOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix ^ this->operation_array};
     this->iota_array ^= this->operation_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -825,7 +825,7 @@ TYPED_TEST(ValmatrixTest, ArrayXorOperator)
 
 TYPED_TEST(ValmatrixTest, ValueXorOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix ^ this->operation_value};
     this->iota_array ^= this->operation_value;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -835,7 +835,7 @@ TYPED_TEST(ValmatrixTest, ValueXorOperator)
 
 TYPED_TEST(ValmatrixTest, ArrayInverseXorOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->operation_array ^ this->iota_matrix};
     this->operation_array ^= this->iota_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -845,7 +845,7 @@ TYPED_TEST(ValmatrixTest, ArrayInverseXorOperator)
 
 TYPED_TEST(ValmatrixTest, ValueInverseXorOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->operation_value ^ this->iota_matrix};
     const auto correct {this->operation_value ^ this->iota_array};
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -855,7 +855,7 @@ TYPED_TEST(ValmatrixTest, ValueInverseXorOperator)
 
 TYPED_TEST(ValmatrixTest, MatrixShiftOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix << this->operation_matrix};
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
       ASSERT_EQ(result[i], this->iota_array[i] << this->operation_matrix[i]);
@@ -864,7 +864,7 @@ TYPED_TEST(ValmatrixTest, MatrixShiftOperator)
 
 TYPED_TEST(ValmatrixTest, ArrayShiftOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix << this->operation_array};
     this->iota_array <<= this->operation_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -874,7 +874,7 @@ TYPED_TEST(ValmatrixTest, ArrayShiftOperator)
 
 TYPED_TEST(ValmatrixTest, ValueShiftOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix << this->operation_value};
     this->iota_array <<= this->operation_value;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -884,7 +884,7 @@ TYPED_TEST(ValmatrixTest, ValueShiftOperator)
 
 TYPED_TEST(ValmatrixTest, ArrayInverseShiftOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->operation_array << this->iota_matrix};
     this->operation_array <<= this->iota_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -894,7 +894,7 @@ TYPED_TEST(ValmatrixTest, ArrayInverseShiftOperator)
 
 TYPED_TEST(ValmatrixTest, ValueInverseShiftOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->operation_value << this->iota_matrix};
     const auto correct {this->operation_value << this->iota_array};
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -904,7 +904,7 @@ TYPED_TEST(ValmatrixTest, ValueInverseShiftOperator)
 
 TYPED_TEST(ValmatrixTest, MatrixCounterShiftOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix >> this->operation_matrix};
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
       ASSERT_EQ(result[i], this->iota_array[i] >> this->operation_matrix[i]);
@@ -913,7 +913,7 @@ TYPED_TEST(ValmatrixTest, MatrixCounterShiftOperator)
 
 TYPED_TEST(ValmatrixTest, ArrayCounterShiftOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix >> this->operation_array};
     this->iota_array >>= this->operation_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -923,7 +923,7 @@ TYPED_TEST(ValmatrixTest, ArrayCounterShiftOperator)
 
 TYPED_TEST(ValmatrixTest, ValueCounterShiftOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->iota_matrix >> this->operation_value};
     this->iota_array >>= this->operation_value;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -933,7 +933,7 @@ TYPED_TEST(ValmatrixTest, ValueCounterShiftOperator)
 
 TYPED_TEST(ValmatrixTest, ArrayInverseCounterShiftOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->operation_array >> this->iota_matrix};
     this->operation_array >>= this->iota_array;
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
@@ -943,7 +943,7 @@ TYPED_TEST(ValmatrixTest, ArrayInverseCounterShiftOperator)
 
 TYPED_TEST(ValmatrixTest, ValueInverseCounterShiftOperator)
 {
-  if constexpr (std::is_integral_v<TypeParam>) {
+  if constexpr (!std::is_floating_point_v<TypeParam>) {
     const auto result {this->operation_value >> this->iota_matrix};
     const auto correct {this->operation_value >> this->iota_array};
     for (auto i {0}; i < size_of(TestFixture::size); ++i)
