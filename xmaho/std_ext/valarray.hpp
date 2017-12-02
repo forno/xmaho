@@ -66,13 +66,13 @@ std::valarray<T> vector_product(const std::valarray<T>& a, const std::valarray<T
 /**
  * @brief Return size of vector.
  *
- * @tparam norm The norm of vector space.
+ * @tparam ordinal The norm of vector space.
  * @tparam T The value type of valarray.
  * @param[in] vector Input vector.
  * @return The vector size.
  */
-template<std::size_t norm = 2, typename T>
-auto distance(const std::valarray<T>& vector);
+template<std::size_t ordinal = 2, typename T>
+auto norm(const std::valarray<T>& vector);
 
 }
 }
