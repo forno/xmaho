@@ -34,67 +34,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <limits>
 #include <type_traits>
 
-namespace xmaho
-{
-namespace std_ext
-{
-namespace detail
-{
-
-template<std::size_t norm>
-struct distance_impl
-{
-  template<typename T>
-  auto operator()(const std::valarray<T>& vector)
-  {
-    return std::pow(std::pow(vector, norm).sum(), 1. / norm);
-  }
-};
-
-template<>
-struct distance_impl<1u>
-{
-  template<typename T>
-  auto operator()(const std::valarray<T>& vector)
-  {
-    return std::abs(vector).sum();
-  }
-};
-
-template<>
-struct distance_impl<2u>
-{
-  template<typename T>
-  auto operator()(const std::valarray<T>& vector)
-  {
-    return std::sqrt((vector * vector).sum());
-  }
-};
-
-template<>
-struct distance_impl<3u>
-{
-  template<typename T>
-  auto operator()(const std::valarray<T>& vector)
-  {
-    return std::cbrt((vector * vector * vector).sum());
-  }
-};
-
-template<>
-struct distance_impl<std::numeric_limits<std::size_t>::max()>
-{
-  template<typename T>
-  auto operator()(const std::valarray<T>& vector)
-  {
-    return std::abs(vector).max();
-  }
-};
-
-}
-}
-}
-
 template<typename T>
 inline T xmaho::std_ext::inner_product(const std::valarray<T>& a, const std::valarray<T>& b)
 {
@@ -107,10 +46,90 @@ inline std::valarray<T> xmaho::std_ext::vector_product(const std::valarray<T>& a
   return a.cshift(1) * b.cshift(-1) - a.cshift(-1) * b.cshift(1);
 }
 
-template<std::size_t norm, typename T>
-auto xmaho::std_ext::distance(const std::valarray<T>& vector)
+namespace xmaho
 {
-  return detail::distance_impl<norm>{}(vector);
+namespace std_ext
+{
+namespace detail
+{
+
+template<std::size_t ordinal>
+struct norm_impl
+{
+  static_assert(ordinal > 0, "The norm of vector space is over 0.");
+
+  template<typename T>
+  auto operator()(const std::valarray<T>& vector)
+  {
+    constexpr auto reciprocal {1. / ordinal};
+    if constexpr (std::is_unsigned_v<T>)
+      return std::pow(std::pow(vector, ordinal).sum(), reciprocal);
+    else if constexpr (ordinal % 2)
+      return std::pow(std::pow(std::abs(vector), ordinal).sum(), reciprocal);
+    else
+      return std::pow(std::pow(vector, ordinal).sum(), reciprocal);
+  }
+};
+
+template<>
+struct norm_impl<1u>
+{
+  template<typename T>
+  auto operator()(const std::valarray<T>& vector)
+  {
+    if constexpr (std::is_unsigned_v<T>)
+      return vector.sum();
+    else
+      return std::abs(vector).sum();
+  }
+};
+
+template<>
+struct norm_impl<2u>
+{
+  template<typename T>
+  auto operator()(const std::valarray<T>& vector)
+  {
+    return std::sqrt((vector * vector).sum());
+  }
+};
+
+template<>
+struct norm_impl<3u>
+{
+  template<typename T>
+  auto operator()(const std::valarray<T>& vector)
+  {
+    if constexpr (std::is_unsigned_v<T>)
+      return std::cbrt((vector * vector * vector).sum());
+    else {
+      const auto abs_vec {std::abs(vector)};
+      return std::cbrt((abs_vec * abs_vec * abs_vec).sum());
+    }
+  }
+};
+
+template<>
+struct norm_impl<std::numeric_limits<std::size_t>::max()>
+{
+  template<typename T>
+  auto operator()(const std::valarray<T>& vector)
+  {
+    if constexpr (std::is_unsigned_v<T>)
+      return vector.max();
+    else
+      return std::abs(vector).max();
+  }
+};
+
+}
+}
+}
+
+template<std::size_t ordinal, typename T>
+auto xmaho::std_ext::norm(const std::valarray<T>& vector)
+{
+  return detail::norm_impl<ordinal>{}(vector);
 }
 
 #endif

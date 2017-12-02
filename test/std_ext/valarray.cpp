@@ -191,120 +191,120 @@ TEST_F(ValarrayRealMultiplesTest, VectorProduct)
 
 TEST_F(ValarrayIntegerEmptysTest, DistanceNorm1)
 {
-  ASSERT_EQ(xmaho::std_ext::distance<1>(a), distance_a_norm1_correct);
+  ASSERT_EQ(xmaho::std_ext::norm<1>(a), distance_a_norm1_correct);
 }
 
 TEST_F(ValarrayIntegerSinglesTest, DistanceNorm1)
 {
-  ASSERT_EQ(xmaho::std_ext::distance<1>(a), distance_a_norm1_correct);
+  ASSERT_EQ(xmaho::std_ext::norm<1>(a), distance_a_norm1_correct);
 }
 
 TEST_F(ValarrayIntegerMultiplesTest, DistanceNorm1)
 {
-  ASSERT_EQ(xmaho::std_ext::distance<1>(a), distance_a_norm1_correct);
+  ASSERT_EQ(xmaho::std_ext::norm<1>(a), distance_a_norm1_correct);
 }
 
 TEST_F(ValarrayRealEmptysTest, DistanceNorm1)
 {
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::distance<1>(a), distance_a_norm1_correct);
+  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<1>(a), distance_a_norm1_correct);
 }
 
 TEST_F(ValarrayRealSinglesTest, DistanceNorm1)
 {
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::distance<1>(a), distance_a_norm1_correct);
+  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<1>(a), distance_a_norm1_correct);
 }
 
 TEST_F(ValarrayRealMultiplesTest, DistanceNorm1)
 {
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::distance<1>(a), distance_a_norm1_correct);
+  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<1>(a), distance_a_norm1_correct);
 }
 
 TEST_F(ValarrayIntegerEmptysTest, DistanceNorm2)
 {
-  ASSERT_EQ(xmaho::std_ext::distance<2>(a), distance_a_norm2_correct);
+  ASSERT_EQ(xmaho::std_ext::norm<2>(a), distance_a_norm2_correct);
 }
 
 TEST_F(ValarrayIntegerSinglesTest, DistanceNorm2)
 {
-  ASSERT_EQ(xmaho::std_ext::distance<2>(a), distance_a_norm2_correct);
+  ASSERT_EQ(xmaho::std_ext::norm<2>(a), distance_a_norm2_correct);
 }
 
 TEST_F(ValarrayIntegerMultiplesTest, DistanceNorm2)
 {
-  ASSERT_EQ(xmaho::std_ext::distance<2>(a), distance_a_norm2_correct);
+  ASSERT_EQ(xmaho::std_ext::norm<2>(a), distance_a_norm2_correct);
 }
 
 TEST_F(ValarrayRealEmptysTest, DistanceNorm2)
 {
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::distance<2>(a), distance_a_norm2_correct);
+  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<2>(a), distance_a_norm2_correct);
 }
 
 TEST_F(ValarrayRealSinglesTest, DistanceNorm2)
 {
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::distance<2>(a), distance_a_norm2_correct);
+  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<2>(a), distance_a_norm2_correct);
 }
 
 TEST_F(ValarrayRealMultiplesTest, DistanceNorm2)
 {
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::distance<2>(a), distance_a_norm2_correct);
+  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<2>(a), distance_a_norm2_correct);
 }
 
 TEST_F(ValarrayIntegerEmptysTest, DistanceNorm3)
 {
-  ASSERT_EQ(xmaho::std_ext::distance<3>(a), distance_a_norm3_correct);
+  ASSERT_EQ(xmaho::std_ext::norm<3>(a), distance_a_norm3_correct);
 }
 
 TEST_F(ValarrayIntegerSinglesTest, DistanceNorm3)
 {
-  ASSERT_EQ(xmaho::std_ext::distance<3>(a), distance_a_norm3_correct);
+  ASSERT_EQ(xmaho::std_ext::norm<3>(a), distance_a_norm3_correct);
 }
 
 TEST_F(ValarrayIntegerMultiplesTest, DistanceNorm3)
 {
-  ASSERT_EQ(xmaho::std_ext::distance<3>(a), distance_a_norm3_correct);
+  ASSERT_EQ(xmaho::std_ext::norm<3>(a), distance_a_norm3_correct);
 }
 
 TEST_F(ValarrayRealEmptysTest, DistanceNorm3)
 {
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::distance<3>(a), distance_a_norm3_correct);
+  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<3>(a), distance_a_norm3_correct);
 }
 
 TEST_F(ValarrayRealSinglesTest, DistanceNorm3)
 {
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::distance<3>(a), distance_a_norm3_correct);
+  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<3>(a), distance_a_norm3_correct);
 }
 
 TEST_F(ValarrayRealMultiplesTest, DistanceNorm3)
 {
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::distance<3>(a), distance_a_norm3_correct);
+  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<3>(a), distance_a_norm3_correct);
 }
 
 TEST_F(ValarrayIntegerEmptysTest, DistanceNormMax)
 {
-  ASSERT_EQ(xmaho::std_ext::distance<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
+  ASSERT_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
 }
 
 TEST_F(ValarrayIntegerSinglesTest, DistanceNormMax)
 {
-  ASSERT_EQ(xmaho::std_ext::distance<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
+  ASSERT_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
 }
 
 TEST_F(ValarrayIntegerMultiplesTest, DistanceNormMax)
 {
-  ASSERT_EQ(xmaho::std_ext::distance<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
+  ASSERT_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
 }
 
 TEST_F(ValarrayRealEmptysTest, DistanceNormMax)
 {
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::distance<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
+  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
 }
 
 TEST_F(ValarrayRealSinglesTest, DistanceNormMax)
 {
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::distance<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
+  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
 }
 
 TEST_F(ValarrayRealMultiplesTest, DistanceNormMax)
 {
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::distance<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
+  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
 }
