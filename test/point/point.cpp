@@ -43,7 +43,7 @@ auto get_uniform_distribution()
   else if constexpr (std::is_integral_v<T>)
     return std::uniform_int_distribution<T>{-static_cast<T>(std::pow(std::abs(std::numeric_limits<T>::min() + 1), 1. / 5)), static_cast<T>(std::pow(std::numeric_limits<T>::max(), 1. / 5))};
   else
-    return std::uniform_real_distribution<T>{-std::pow(std::abs(std::numeric_limits<T>::min()), 1. / 5), std::pow(std::numeric_limits<T>::max(), 1. / 5)};
+    return std::uniform_real_distribution<T>{-std::pow(std::abs(std::numeric_limits<T>::max()), 1. / 5), std::pow(std::numeric_limits<T>::max(), 1. / 5)};
 }
 
 }
