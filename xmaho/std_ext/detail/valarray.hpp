@@ -52,32 +52,44 @@ struct distance_impl
 };
 
 template<>
-template<typename T>
-auto distance_impl<1u>::operator()(const std::valarray<T>& vector)
+struct distance_impl<1u>
 {
-  return std::abs(vector).sum();
-}
+  template<typename T>
+  auto operator()(const std::valarray<T>& vector)
+  {
+    return std::abs(vector).sum();
+  }
+};
 
 template<>
-template<typename T>
-auto distance_impl<2u>::operator()(const std::valarray<T>& vector)
+struct distance_impl<2u>
 {
-  return std::sqrt((vector * vector).sum());
-}
+  template<typename T>
+  auto operator()(const std::valarray<T>& vector)
+  {
+    return std::sqrt((vector * vector).sum());
+  }
+};
 
 template<>
-template<typename T>
-auto distance_impl<3u>::operator()(const std::valarray<T>& vector)
+struct distance_impl<3u>
 {
-  return std::cbrt((vector * vector * vector).sum());
-}
+  template<typename T>
+  auto operator()(const std::valarray<T>& vector)
+  {
+    return std::cbrt((vector * vector * vector).sum());
+  }
+};
 
 template<>
-template<typename T>
-auto distance_impl<std::numeric_limits<std::size_t>::max()>::operator()(const std::valarray<T>& vector)
+struct distance_impl<std::numeric_limits<std::size_t>::max()>
 {
-  return std::abs(vector).max();
-}
+  template<typename T>
+  auto operator()(const std::valarray<T>& vector)
+  {
+    return std::abs(vector).max();
+  }
+};
 
 }
 }
