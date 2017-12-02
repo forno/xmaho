@@ -29,282 +29,118 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <cmath>
 #include <limits>
+#include <random>
 #include <vector>
 
 #include <gtest/gtest.h>
 
-class ValarrayIntegerEmptysTest
+namespace
+{
+
+constexpr std::size_t testing_max_norm {5};
+
+template<typename T>
+auto get_uniform_distribution(std::size_t data_count)
+{
+  constexpr auto reciprocal {1. / (testing_max_norm + 1)};
+  const auto max_value {std::pow(std::numeric_limits<T>::max() / data_count, reciprocal)};
+  EXPECT_GT(std::pow(std::numeric_limits<T>::max(), reciprocal), 2);
+  EXPECT_GT(max_value, 1);
+
+  if constexpr (std::is_unsigned_v<T>)
+    return std::uniform_int_distribution<T>{0u, static_cast<T>(max_value)};
+  else if constexpr (std::is_integral_v<T>)
+    return std::uniform_int_distribution<T>{-static_cast<T>(max_value), static_cast<T>(max_value)};
+  else
+    return std::uniform_real_distribution<T>{-max_value, max_value};
+}
+
+}
+
+template<typename T>
+class ValarrayTest
   : public ::testing::Test
 {
 protected:
-  std::valarray<int> a {};
-  std::valarray<int> b {};
-  const int inner_product_correct {0};
-  const std::vector<int> vector_product_correct {};
-  const int distance_a_norm1_correct {0};
-  const int distance_a_norm2_correct {0};
-  const int distance_a_norm3_correct {0};
-  const int distance_a_norm_max_correct {0};
+  using Valarray = std::valarray<T>;
+  using ValidatorType = std::vector<T>;
+
+  std::size_t size;
+  Valarray a;
+  Valarray b;
+
+  void SetUp()
+  {
+    std::default_random_engine rand {std::random_device{}()};
+
+    std::uniform_int_distribution<std::size_t> size_dist {1u, 4u};
+    size = size_dist(rand);
+    a.resize(size);
+    b.resize(size);
+
+    auto dist {get_uniform_distribution<T>(size)};
+    for (auto& e : a) e = dist(rand);
+    for (auto& e : b) e = dist(rand);
+  }
 };
 
-class ValarrayIntegerSinglesTest
-  : public ::testing::Test
-{
-protected:
-  std::valarray<int> a {7};
-  std::valarray<int> b {5};
-  const int inner_product_correct {7 * 5};
-  const std::vector<int> vector_product_correct {0};
-  const int distance_a_norm1_correct {7};
-  const int distance_a_norm2_correct {7};
-  const int distance_a_norm3_correct {7};
-  const int distance_a_norm_max_correct {7};
-};
+using ValarrayTypes = ::testing::Types<int, unsigned int, std::size_t, long long, double>;
+TYPED_TEST_CASE(ValarrayTest, ValarrayTypes);
 
-class ValarrayIntegerMultiplesTest
-  : public ::testing::Test
+TYPED_TEST(ValarrayTest, InnerProduct)
 {
-protected:
-  std::valarray<int> a {2, 4, 6};
-  std::valarray<int> b {1, 3, 5};
-  const int inner_product_correct {2*1 + 4*3 + 6*5};
-  const std::vector<int> vector_product_correct {4*5-6*3, 6*1-2*5, 2*3-4*1};
-  const int distance_a_norm1_correct {12};
-  const double distance_a_norm2_correct {std::hypot(2, std::hypot(4, 6))};
-  const double distance_a_norm3_correct {std::cbrt(2*2*2 + 4*4*4 + 6*6*6)};
-  const int distance_a_norm_max_correct {6};
-};
-
-class ValarrayRealEmptysTest
-  : public ::testing::Test
-{
-protected:
-  std::valarray<double> a {};
-  std::valarray<double> b {};
-  const double inner_product_correct {0};
-  const std::vector<double> vector_product_correct {};
-  const double distance_a_norm1_correct {0};
-  const double distance_a_norm2_correct {0};
-  const double distance_a_norm3_correct {0};
-  const double distance_a_norm_max_correct {0};
-};
-
-class ValarrayRealSinglesTest
-  : public ::testing::Test
-{
-protected:
-  std::valarray<double> a {7};
-  std::valarray<double> b {5};
-  const double inner_product_correct {7 * 5};
-  const std::vector<double> vector_product_correct {0};
-  const double distance_a_norm1_correct {7};
-  const double distance_a_norm2_correct {7};
-  const double distance_a_norm3_correct {7};
-  const double distance_a_norm_max_correct {7};
-};
-
-class ValarrayRealMultiplesTest
-  : public ::testing::Test
-{
-protected:
-  std::valarray<double> a {2, 4, 6};
-  std::valarray<double> b {1, 3, 5};
-  const double inner_product_correct {2*1 + 3*4 + 6*5};
-  const std::vector<double> vector_product_correct {4*5-6*3, 6*1-2*5, 2*3-4*1};
-  const double distance_a_norm1_correct {2 + 4 + 6};
-  const double distance_a_norm2_correct {std::hypot(2, std::hypot(4, 6))};
-  const double distance_a_norm3_correct {std::cbrt(2*2*2 + 4*4*4 + 6*6*6)};
-  const double distance_a_norm_max_correct {6};
-};
-
-TEST_F(ValarrayIntegerEmptysTest, InnerProduct)
-{
-  ASSERT_EQ(xmaho::std_ext::inner_product(a, b), inner_product_correct);
+  ASSERT_EQ(xmaho::std_ext::inner_product(this->a, this->b), (this->a * this->b).sum());
 }
 
-TEST_F(ValarrayIntegerSinglesTest, InnerProduct)
+TYPED_TEST(ValarrayTest, VectorProduct)
 {
-  ASSERT_EQ(xmaho::std_ext::inner_product(a, b), inner_product_correct);
+  const auto res {xmaho::std_ext::vector_product(this->a, this->b)};
+  const typename TestFixture::ValidatorType ans(std::begin(res), std::end(res));
+  const typename TestFixture::Valarray correct_raw {this->a.cshift(1) * this->b.cshift(-1) - this->a.cshift(-1) * this->b.cshift(1)};
+  const typename TestFixture::ValidatorType correct(std::begin(correct_raw), std::end(correct_raw));
+  ASSERT_EQ(ans, correct);
 }
 
-TEST_F(ValarrayIntegerMultiplesTest, InnerProduct)
+TYPED_TEST(ValarrayTest, DistanceNorm1)
 {
-  ASSERT_EQ(xmaho::std_ext::inner_product(a, b), inner_product_correct);
+  const auto ans {xmaho::std_ext::norm<1>(this->a)};
+  if constexpr (std::is_unsigned_v<TypeParam>)
+    ASSERT_EQ(ans, this->a.sum());
+  else
+    ASSERT_EQ(ans, std::abs(this->a).sum());
 }
 
-TEST_F(ValarrayRealEmptysTest, InnerProduct)
+TYPED_TEST(ValarrayTest, DistanceNorm2)
 {
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::inner_product(a, b), inner_product_correct);
+  ASSERT_EQ(std::sqrt(std::pow<TypeParam>(this->a, 2).sum()), xmaho::std_ext::norm<2>(this->a));
 }
 
-TEST_F(ValarrayRealSinglesTest, InnerProduct)
+TYPED_TEST(ValarrayTest, DistanceNorm3)
 {
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::inner_product(a, b), inner_product_correct);
+  const auto ans {xmaho::std_ext::norm<3>(this->a)};
+  if constexpr (std::is_unsigned_v<TypeParam>)
+    ASSERT_EQ(std::cbrt(std::pow<TypeParam>(this->a, 3).sum()), ans);
+  else
+    ASSERT_EQ(std::cbrt(std::pow(std::abs(this->a), 3).sum()), ans);
 }
 
-TEST_F(ValarrayRealMultiplesTest, InnerProduct)
+TYPED_TEST(ValarrayTest, DistanceNorm4)
 {
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::inner_product(a, b), inner_product_correct);
+  ASSERT_EQ(xmaho::std_ext::norm<4>(this->a), std::pow(std::pow<TypeParam>(this->a, 4).sum(), 1. / 4));
 }
 
-TEST_F(ValarrayIntegerEmptysTest, VectorProduct)
+TYPED_TEST(ValarrayTest, DistanceNorm5)
 {
-  const auto res {xmaho::std_ext::vector_product(a, b)};
-  const std::vector<decltype(res)::value_type> ans(std::begin(res), std::end(res));
-  ASSERT_EQ(ans, vector_product_correct);
+  if constexpr (std::is_unsigned_v<TypeParam>)
+    ASSERT_EQ(xmaho::std_ext::norm<5>(this->a), std::pow(std::pow<TypeParam>(this->a, 5).sum(), 1. / 5));
+  else
+    ASSERT_EQ(xmaho::std_ext::norm<5>(this->a), std::pow(std::pow(std::abs(this->a), 5).sum(), 1. / 5));
 }
 
-TEST_F(ValarrayIntegerSinglesTest, VectorProduct)
+TYPED_TEST(ValarrayTest, DistanceNormMax)
 {
-  const auto res {xmaho::std_ext::vector_product(a, b)};
-  const std::vector<decltype(res)::value_type> ans(std::begin(res), std::end(res));
-  ASSERT_EQ(ans, vector_product_correct);
-}
-
-TEST_F(ValarrayIntegerMultiplesTest, VectorProduct)
-{
-  const auto res {xmaho::std_ext::vector_product(a, b)};
-  const std::vector<decltype(res)::value_type> ans(std::begin(res), std::end(res));
-  ASSERT_EQ(ans, vector_product_correct);
-}
-
-TEST_F(ValarrayRealEmptysTest, VectorProduct)
-{
-  const auto res {xmaho::std_ext::vector_product(a, b)};
-  const std::vector<decltype(res)::value_type> ans(std::begin(res), std::end(res));
-  ASSERT_EQ(ans, vector_product_correct);
-}
-
-TEST_F(ValarrayRealSinglesTest, VectorProduct)
-{
-  const auto res {xmaho::std_ext::vector_product(a, b)};
-  const std::vector<decltype(res)::value_type> ans(std::begin(res), std::end(res));
-  ASSERT_EQ(ans, vector_product_correct);
-}
-
-TEST_F(ValarrayRealMultiplesTest, VectorProduct)
-{
-  const auto res {xmaho::std_ext::vector_product(a, b)};
-  const std::vector<decltype(res)::value_type> ans(std::begin(res), std::end(res));
-  ASSERT_EQ(ans, vector_product_correct);
-}
-
-TEST_F(ValarrayIntegerEmptysTest, DistanceNorm1)
-{
-  ASSERT_EQ(xmaho::std_ext::norm<1>(a), distance_a_norm1_correct);
-}
-
-TEST_F(ValarrayIntegerSinglesTest, DistanceNorm1)
-{
-  ASSERT_EQ(xmaho::std_ext::norm<1>(a), distance_a_norm1_correct);
-}
-
-TEST_F(ValarrayIntegerMultiplesTest, DistanceNorm1)
-{
-  ASSERT_EQ(xmaho::std_ext::norm<1>(a), distance_a_norm1_correct);
-}
-
-TEST_F(ValarrayRealEmptysTest, DistanceNorm1)
-{
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<1>(a), distance_a_norm1_correct);
-}
-
-TEST_F(ValarrayRealSinglesTest, DistanceNorm1)
-{
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<1>(a), distance_a_norm1_correct);
-}
-
-TEST_F(ValarrayRealMultiplesTest, DistanceNorm1)
-{
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<1>(a), distance_a_norm1_correct);
-}
-
-TEST_F(ValarrayIntegerEmptysTest, DistanceNorm2)
-{
-  ASSERT_EQ(xmaho::std_ext::norm<2>(a), distance_a_norm2_correct);
-}
-
-TEST_F(ValarrayIntegerSinglesTest, DistanceNorm2)
-{
-  ASSERT_EQ(xmaho::std_ext::norm<2>(a), distance_a_norm2_correct);
-}
-
-TEST_F(ValarrayIntegerMultiplesTest, DistanceNorm2)
-{
-  ASSERT_EQ(xmaho::std_ext::norm<2>(a), distance_a_norm2_correct);
-}
-
-TEST_F(ValarrayRealEmptysTest, DistanceNorm2)
-{
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<2>(a), distance_a_norm2_correct);
-}
-
-TEST_F(ValarrayRealSinglesTest, DistanceNorm2)
-{
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<2>(a), distance_a_norm2_correct);
-}
-
-TEST_F(ValarrayRealMultiplesTest, DistanceNorm2)
-{
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<2>(a), distance_a_norm2_correct);
-}
-
-TEST_F(ValarrayIntegerEmptysTest, DistanceNorm3)
-{
-  ASSERT_EQ(xmaho::std_ext::norm<3>(a), distance_a_norm3_correct);
-}
-
-TEST_F(ValarrayIntegerSinglesTest, DistanceNorm3)
-{
-  ASSERT_EQ(xmaho::std_ext::norm<3>(a), distance_a_norm3_correct);
-}
-
-TEST_F(ValarrayIntegerMultiplesTest, DistanceNorm3)
-{
-  ASSERT_EQ(xmaho::std_ext::norm<3>(a), distance_a_norm3_correct);
-}
-
-TEST_F(ValarrayRealEmptysTest, DistanceNorm3)
-{
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<3>(a), distance_a_norm3_correct);
-}
-
-TEST_F(ValarrayRealSinglesTest, DistanceNorm3)
-{
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<3>(a), distance_a_norm3_correct);
-}
-
-TEST_F(ValarrayRealMultiplesTest, DistanceNorm3)
-{
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<3>(a), distance_a_norm3_correct);
-}
-
-TEST_F(ValarrayIntegerEmptysTest, DistanceNormMax)
-{
-  ASSERT_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
-}
-
-TEST_F(ValarrayIntegerSinglesTest, DistanceNormMax)
-{
-  ASSERT_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
-}
-
-TEST_F(ValarrayIntegerMultiplesTest, DistanceNormMax)
-{
-  ASSERT_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
-}
-
-TEST_F(ValarrayRealEmptysTest, DistanceNormMax)
-{
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
-}
-
-TEST_F(ValarrayRealSinglesTest, DistanceNormMax)
-{
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
-}
-
-TEST_F(ValarrayRealMultiplesTest, DistanceNormMax)
-{
-  ASSERT_DOUBLE_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(a), distance_a_norm_max_correct);
+  if constexpr (std::is_unsigned_v<TypeParam>)
+    ASSERT_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(this->a), this->a.max());
+  else
+    ASSERT_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(this->a), std::abs(this->a).max());
 }
