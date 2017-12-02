@@ -63,11 +63,11 @@ struct norm_impl
   {
     constexpr auto reciprocal {1. / ordinal};
     if constexpr (std::is_unsigned_v<T>)
-      return std::pow(std::pow(vector, ordinal).sum(), reciprocal);
+      return std::pow(std::pow<T>(vector, ordinal).sum(), reciprocal);
     else if constexpr (ordinal % 2)
       return std::pow(std::pow(std::abs(vector), ordinal).sum(), reciprocal);
     else
-      return std::pow(std::pow(vector, ordinal).sum(), reciprocal);
+      return std::pow(std::pow<T>(vector, ordinal).sum(), reciprocal);
   }
 };
 
