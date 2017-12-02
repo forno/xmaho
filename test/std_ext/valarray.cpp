@@ -120,6 +120,8 @@ TYPED_TEST(ValarrayTest, DistanceNorm3)
   const auto ans {xmaho::std_ext::norm<3>(this->a)};
   if constexpr (std::is_unsigned_v<TypeParam>)
     ASSERT_EQ(std::cbrt(std::pow<TypeParam>(this->a, 3).sum()), ans);
+  else if constexpr (std::is_same_v<double, TypeParam>)
+    ASSERT_DOUBLE_EQ(std::cbrt(std::pow(std::abs(this->a), 3).sum()), ans);
   else
     ASSERT_EQ(std::cbrt(std::pow(std::abs(this->a), 3).sum()), ans);
 }
