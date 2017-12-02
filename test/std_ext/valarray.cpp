@@ -70,8 +70,8 @@ protected:
   const int inner_product_correct {2*1 + 4*3 + 6*5};
   const std::vector<int> vector_product_correct {4*5-6*3, 6*1-2*5, 2*3-4*1};
   const int distance_a_norm1_correct {12};
-  const int distance_a_norm2_correct {static_cast<int>(std::hypot(2, std::hypot(4, 6)))};
-  const int distance_a_norm3_correct {static_cast<int>(std::cbrt(2*2*2 + 4*4*4 + 6*6*6))};
+  const double distance_a_norm2_correct {std::hypot(2, std::hypot(4, 6))};
+  const double distance_a_norm3_correct {std::cbrt(2*2*2 + 4*4*4 + 6*6*6)};
   const int distance_a_norm_max_correct {6};
 };
 
