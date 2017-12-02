@@ -140,9 +140,9 @@ TYPED_TEST(ValmatrixTest, ReadValueByIndex)
 
 TYPED_TEST(ValmatrixTest, ReadArrayBySlice)
 {
-  constexpr auto start {0};
-  constexpr auto length {3};
-  constexpr auto stride {2};
+  constexpr auto start {0u};
+  constexpr auto length {3u};
+  constexpr auto stride {2u};
   static_assert(start + (length - 1) * stride < size_of(TestFixture::size), "Over size");
   std::slice specification {start, length, stride};
 
@@ -155,7 +155,7 @@ TYPED_TEST(ValmatrixTest, ReadArrayBySlice)
 
 TYPED_TEST(ValmatrixTest, ReadArrayByGslice)
 {
-  constexpr auto start {1};
+  constexpr auto start {1u};
   const std::valarray<std::size_t> length {2, 2};
   const std::valarray<std::size_t> stride {3, 1};
   assert(start + (length[0] - 1) * stride[0] + (length[1] - 1) * stride[1] < size_of(TestFixture::size));
@@ -187,9 +187,9 @@ TYPED_TEST(ValmatrixTest, ReadArrayByMask)
 TYPED_TEST(ValmatrixTest, ReadArrayByIndirect)
 {
   std::default_random_engine rand {std::random_device{}()};
-  std::uniform_int_distribution<> size_dist {0, size_of(TestFixture::size)};
+  std::uniform_int_distribution<> size_dist {0, static_cast<int>(size_of(TestFixture::size))};
   std::valarray<std::size_t> specification(size_dist(rand));
-  std::uniform_int_distribution<> index_dist {0, size_of(TestFixture::size) - 1};
+  std::uniform_int_distribution<> index_dist {0, static_cast<int>(size_of(TestFixture::size) - 1)};
   std::generate(std::begin(specification), std::end(specification), [&index_dist, &rand]{return index_dist(rand);});
 
   const typename TestFixture::Valarray value {this->iota_matrix[specification]};
@@ -217,10 +217,12 @@ TYPED_TEST(ValmatrixTest, UnaryAddOperation)
 
 TYPED_TEST(ValmatrixTest, UnarySubOperation)
 {
-  const typename TestFixture::Valmatrix effected {-this->iota_matrix};
-  const typename TestFixture::Valarray correct = -this->iota_array;
-  for (auto i {0}; i < size_of(TestFixture::size); ++i)
-    ASSERT_EQ(effected[i], correct[i]);
+  if constexpr (std::is_signed_v<TypeParam>) {
+    const typename TestFixture::Valmatrix effected{ -this->iota_matrix };
+    const typename TestFixture::Valarray correct = -this->iota_array;
+    for (auto i{ 0 }; i < size_of(TestFixture::size); ++i)
+      ASSERT_EQ(effected[i], correct[i]);
+  }
 }
 
 TYPED_TEST(ValmatrixTest, UnaryNegationOperation)
