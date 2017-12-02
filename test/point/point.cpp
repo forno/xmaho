@@ -35,15 +35,21 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace
 {
 
+constexpr std::size_t testing_max_norm {5};
+
 template<typename T>
 auto get_uniform_distribution()
 {
+  constexpr auto reciprocal {1. / (testing_max_norm + 1)};
+  const auto max_value {std::pow(std::numeric_limits<T>::max() / 2, reciprocal)};
+  EXPECT_GT(max_value, 2);
+
   if constexpr (std::is_unsigned_v<T>)
-    return std::uniform_int_distribution<T>{std::numeric_limits<T>::min(), static_cast<T>(std::pow(std::numeric_limits<T>::max(), 1. / 5))};
+    return std::uniform_int_distribution<T>{0u, static_cast<T>(max_value)};
   else if constexpr (std::is_integral_v<T>)
-    return std::uniform_int_distribution<T>{-static_cast<T>(std::pow(std::abs(std::numeric_limits<T>::min() + 1), 1. / 5)), static_cast<T>(std::pow(std::numeric_limits<T>::max(), 1. / 5))};
+    return std::uniform_int_distribution<T>{-static_cast<T>(max_value), static_cast<T>(max_value)};
   else
-    return std::uniform_real_distribution<T>{-std::pow(std::abs(std::numeric_limits<T>::max()), 1. / 5), std::pow(std::numeric_limits<T>::max(), 1. / 5)};
+    return std::uniform_real_distribution<T>{-max_value, max_value};
 }
 
 }
