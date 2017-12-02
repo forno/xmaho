@@ -78,7 +78,7 @@ struct norm_impl
   auto operator()(const BasicPoint<T>& point)
   {
     constexpr auto reciprocal {1. / ordinal};
-    if constexpr (std::disjunction_v<std::is_floating_point<T>, std::is_unsigned<T>>)
+    if constexpr (std::is_unsigned_v<T>)
       return std::pow(std::pow(point.first, ordinal) + std::pow(point.second, ordinal), reciprocal);
     else if constexpr (ordinal % 2)
       return std::pow(std::pow(std::abs(point.first), ordinal) + std::pow(std::abs(point.second), ordinal), reciprocal);
@@ -118,7 +118,7 @@ struct norm_impl<3u>
   template<typename T>
   auto operator()(const BasicPoint<T>& point)
   {
-    if constexpr (std::disjunction_v<std::is_floating_point<T>, std::is_unsigned<T>>) {
+    if constexpr (std::is_unsigned_v<T>) {
       return std::cbrt(std::pow(point.first, 3) + std::pow(point.second, 3));
     } else {
       return std::cbrt(std::pow(std::abs(point.first), 3) + std::pow(std::abs(point.second), 3));
