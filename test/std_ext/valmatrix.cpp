@@ -45,6 +45,12 @@ constexpr std::size_t size_of(const Size& size)
   return size.first * size.second;
 }
 
+template<typename Container>
+std::vector<typename Container::value_type> as_validator(const Container& container)
+{
+  return std::vector<typename Container::value_type>(std::begin(container), std::end(container));
+}
+
 }
 
 template<typename T>
@@ -111,15 +117,15 @@ TEST(ValmatrixConstructTest, AllConstructors)
   constexpr Size square_size {2, 2};
   constexpr auto default_val {250};
   const xmaho::std_ext::valmatrix<int> def_val_mat {default_val, square_size.first, square_size.second};
-  const std::vector<int> def_val_mat_value(std::begin(def_val_mat), std::end(def_val_mat));
   const std::vector<int> def_val_mat_correct(size_of(square_size), default_val);
+  const std::vector<int> def_val_mat_value(std::begin(def_val_mat), std::end(def_val_mat));
   EXPECT_EQ(def_val_mat_correct, def_val_mat_value);
 
   std::valarray<int> values {5, 9, 2, 4, 6, 7};
   constexpr Size def_size {3, 2};
   const xmaho::std_ext::valmatrix<int> mat_with_def {values, def_size.first, def_size.second};
-  const std::vector<int> mat_with_def_value(std::begin(mat_with_def), std::end(mat_with_def));
   const std::vector<int> mat_with_def_correct(std::begin(values), std::end(values));
+  const std::vector<int> mat_with_def_value(std::begin(mat_with_def), std::end(mat_with_def));
   EXPECT_EQ(mat_with_def_correct, mat_with_def_value);
 }
 
@@ -148,11 +154,9 @@ TYPED_TEST(ValmatrixTest, ReadArrayBySlice)
   static_assert(start + (length - 1) * stride < size_of(TestFixture::size), "Over size");
   const std::slice specification {start, length, stride};
 
-  const typename TestFixture::Valarray value_raw {this->iota_matrix[specification]};
   const typename TestFixture::Valarray correct_raw {this->iota_array[specification]};
-  const typename TestFixture::ValidatorType value(std::begin(value_raw), std::end(value_raw));
-  const typename TestFixture::ValidatorType correct(std::begin(correct_raw), std::end(correct_raw));
-  EXPECT_EQ(correct, value);
+  const typename TestFixture::Valarray value_raw {this->iota_matrix[specification]};
+  EXPECT_EQ(as_validator(correct_raw), as_validator(value_raw));
 }
 
 TYPED_TEST(ValmatrixTest, ReadArrayByGslice)
@@ -163,11 +167,9 @@ TYPED_TEST(ValmatrixTest, ReadArrayByGslice)
   assert(start + (length[0] - 1) * stride[0] + (length[1] - 1) * stride[1] < size_of(TestFixture::size));
   const std::gslice specification {start, length, stride};
 
-  const typename TestFixture::Valarray value_raw {this->iota_matrix[specification]};
   const typename TestFixture::Valarray correct_raw {this->iota_array[specification]};
-  const typename TestFixture::ValidatorType value(std::begin(value_raw), std::end(value_raw));
-  const typename TestFixture::ValidatorType correct(std::begin(correct_raw), std::end(correct_raw));
-  EXPECT_EQ(correct, value);
+  const typename TestFixture::Valarray value_raw {this->iota_matrix[specification]};
+  EXPECT_EQ(as_validator(correct_raw), as_validator(value_raw));
 }
 
 TYPED_TEST(ValmatrixTest, ReadArrayByMask)
@@ -179,26 +181,22 @@ TYPED_TEST(ValmatrixTest, ReadArrayByMask)
   for (auto& e : specification)
     e = dist(rand);
 
-  const typename TestFixture::Valarray value_raw {this->iota_matrix[specification]};
   const typename TestFixture::Valarray correct_raw {this->iota_array[specification]};
-  const typename TestFixture::ValidatorType value(std::begin(value_raw), std::end(value_raw));
-  const typename TestFixture::ValidatorType correct(std::begin(correct_raw), std::end(correct_raw));
-  EXPECT_EQ(correct, value);
+  const typename TestFixture::Valarray value_raw {this->iota_matrix[specification]};
+  EXPECT_EQ(as_validator(correct_raw), as_validator(value_raw));
 }
 
 TYPED_TEST(ValmatrixTest, ReadArrayByIndirect)
 {
   std::default_random_engine rand {std::random_device{}()};
-  std::uniform_int_distribution<> size_dist {0, static_cast<int>(size_of(TestFixture::size))};
+  std::uniform_int_distribution<std::size_t> size_dist {0u, size_of(TestFixture::size)};
   std::valarray<std::size_t> specification(size_dist(rand));
-  std::uniform_int_distribution<> index_dist {0, static_cast<int>(size_of(TestFixture::size) - 1)};
-  std::generate(std::begin(specification), std::end(specification), [&index_dist, &rand]{return index_dist(rand);});
+  std::uniform_int_distribution<std::size_t> index_dist {0u, size_of(TestFixture::size) - 1};
+  for (auto& e : specification) e = index_dist(rand);
 
-  const typename TestFixture::Valarray value_raw {this->iota_matrix[specification]};
   const typename TestFixture::Valarray correct_raw {this->iota_array[specification]};
-  const typename TestFixture::ValidatorType value(std::begin(value_raw), std::end(value_raw));
-  const typename TestFixture::ValidatorType correct(std::begin(correct_raw), std::end(correct_raw));
-  EXPECT_EQ(correct, value);
+  const typename TestFixture::Valarray value_raw {this->iota_matrix[specification]};
+  EXPECT_EQ(as_validator(correct_raw), as_validator(value_raw));
 }
 
 TYPED_TEST(ValmatrixTest, ReadValueByPosition)
@@ -213,30 +211,24 @@ TYPED_TEST(ValmatrixTest, ReadValueByPosition)
 TYPED_TEST(ValmatrixTest, UnaryAddOperation)
 {
   const typename TestFixture::Valmatrix effected {+this->iota_matrix};
-  const typename TestFixture::ValidatorType value(std::begin(effected), std::end(effected));
-  const typename TestFixture::ValidatorType correct(std::begin(this->iota_array), std::end(this->iota_array));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(as_validator(this->iota_array), as_validator(effected));
 }
 
 TYPED_TEST(ValmatrixTest, UnarySubOperation)
 {
   if constexpr (!std::is_unsigned_v<TypeParam>) {
+    const typename TestFixture::Valarray correct_raw {-this->iota_array};
     const typename TestFixture::Valmatrix effected {-this->iota_matrix};
-    const typename TestFixture::Valarray correct_raw = -this->iota_array;
-    const typename TestFixture::ValidatorType value(std::begin(effected), std::end(effected));
-    const typename TestFixture::ValidatorType correct(std::begin(correct_raw), std::end(correct_raw));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(as_validator(correct_raw), as_validator(effected));
   }
 }
 
 TYPED_TEST(ValmatrixTest, UnaryNegationOperation)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    const typename TestFixture::Valarray correct_raw {~this->iota_array};
     const typename TestFixture::Valmatrix effected {~this->iota_matrix};
-    const typename TestFixture::Valarray correct_raw = ~this->iota_array;
-    const typename TestFixture::ValidatorType value(std::begin(effected), std::end(effected));
-    const typename TestFixture::ValidatorType correct(std::begin(correct_raw), std::end(correct_raw));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(as_validator(correct_raw), as_validator(effected));
   }
 }
 
@@ -246,8 +238,7 @@ TYPED_TEST(ValmatrixTest, AdditionAssign)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs + rhs;});
   this->iota_matrix += this->operation_matrix;
-  const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(this->iota_matrix));
 }
 
 TYPED_TEST(ValmatrixTest, ArrayAdditionAssign)
@@ -256,8 +247,7 @@ TYPED_TEST(ValmatrixTest, ArrayAdditionAssign)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs + rhs;});
   this->iota_matrix += this->operation_array;
-  const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(this->iota_matrix));
 }
 
 TYPED_TEST(ValmatrixTest, ValueAdditionAssign)
@@ -266,8 +256,7 @@ TYPED_TEST(ValmatrixTest, ValueAdditionAssign)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                  std::begin(correct), [v = this->operation_value](const auto& e){return e + v;});
   this->iota_matrix += this->operation_value;
-  const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(this->iota_matrix));
 }
 
 TYPED_TEST(ValmatrixTest, MatrixSubtractAssign)
@@ -276,8 +265,7 @@ TYPED_TEST(ValmatrixTest, MatrixSubtractAssign)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs - rhs;});
   this->iota_matrix -= this->operation_matrix;
-  const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(this->iota_matrix));
 }
 
 TYPED_TEST(ValmatrixTest, ArraySubtractAssign)
@@ -286,8 +274,7 @@ TYPED_TEST(ValmatrixTest, ArraySubtractAssign)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs - rhs;});
   this->iota_matrix -= this->operation_array;
-  const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(this->iota_matrix));
 }
 
 TYPED_TEST(ValmatrixTest, ValueSubtractAssign)
@@ -296,8 +283,7 @@ TYPED_TEST(ValmatrixTest, ValueSubtractAssign)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                  std::begin(correct), [v = this->operation_value](const auto& e){return e - v;});
   this->iota_matrix -= this->operation_value;
-  const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(this->iota_matrix));
 }
 
 TYPED_TEST(ValmatrixTest, MatrixMultiplicationAssign)
@@ -306,8 +292,7 @@ TYPED_TEST(ValmatrixTest, MatrixMultiplicationAssign)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs * rhs;});
   this->iota_matrix *= this->operation_matrix;
-  const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(this->iota_matrix));
 }
 
 TYPED_TEST(ValmatrixTest, ArrayMultiplicationAssign)
@@ -316,8 +301,7 @@ TYPED_TEST(ValmatrixTest, ArrayMultiplicationAssign)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs * rhs;});
   this->iota_matrix *= this->operation_array;
-  const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(this->iota_matrix));
 }
 
 TYPED_TEST(ValmatrixTest, ValueMultiplicationAssign)
@@ -326,8 +310,7 @@ TYPED_TEST(ValmatrixTest, ValueMultiplicationAssign)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                  std::begin(correct), [v = this->operation_value](const auto& e){return e * v;});
   this->iota_matrix *= this->operation_value;
-  const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(this->iota_matrix));
 }
 
 TYPED_TEST(ValmatrixTest, MatrixDivisionAssign)
@@ -336,8 +319,7 @@ TYPED_TEST(ValmatrixTest, MatrixDivisionAssign)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs / rhs;});
   this->iota_matrix /= this->operation_matrix;
-  const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(this->iota_matrix));
 }
 
 TYPED_TEST(ValmatrixTest, ArrayDivisionAssign)
@@ -346,8 +328,7 @@ TYPED_TEST(ValmatrixTest, ArrayDivisionAssign)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs / rhs;});
   this->iota_matrix /= this->operation_array;
-  const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(this->iota_matrix));
 }
 
 TYPED_TEST(ValmatrixTest, ValueDivisionAssign)
@@ -356,8 +337,7 @@ TYPED_TEST(ValmatrixTest, ValueDivisionAssign)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                  std::begin(correct), [v = this->operation_value](const auto& e){return e / v;});
   this->iota_matrix /= this->operation_value;
-  const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(this->iota_matrix));
 }
 
 TYPED_TEST(ValmatrixTest, MatrixResidueAssign)
@@ -367,8 +347,7 @@ TYPED_TEST(ValmatrixTest, MatrixResidueAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
                    std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs % rhs;});
     this->iota_matrix %= this->operation_matrix;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -379,8 +358,7 @@ TYPED_TEST(ValmatrixTest, ArrayResidueAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                    std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs % rhs;});
     this->iota_matrix %= this->operation_array;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -391,8 +369,7 @@ TYPED_TEST(ValmatrixTest, ValueResidueAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                    std::begin(correct), [v = this->operation_value](const auto& e){return e % v;});
     this->iota_matrix %= this->operation_value;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -403,8 +380,7 @@ TYPED_TEST(ValmatrixTest, MatrixBitwiseAndAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
                    std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs & rhs;});
     this->iota_matrix &= this->operation_matrix;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -415,8 +391,7 @@ TYPED_TEST(ValmatrixTest, ArrayBitwiseAndAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                    std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs & rhs;});
     this->iota_matrix &= this->operation_array;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -427,8 +402,7 @@ TYPED_TEST(ValmatrixTest, ValueBitwiseAndAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                    std::begin(correct), [v = this->operation_value](const auto& e){return e & v;});
     this->iota_matrix &= this->operation_value;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -439,8 +413,7 @@ TYPED_TEST(ValmatrixTest, MatrixBitwiseOrAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
                    std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs | rhs;});
     this->iota_matrix |= this->operation_matrix;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -451,8 +424,7 @@ TYPED_TEST(ValmatrixTest, ArrayBitwiseOrAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                    std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs | rhs;});
     this->iota_matrix |= this->operation_array;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -463,8 +435,7 @@ TYPED_TEST(ValmatrixTest, ValueBitwiseOrAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                    std::begin(correct), [v = this->operation_value](const auto& e){return e | v;});
     this->iota_matrix |= this->operation_value;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -475,8 +446,7 @@ TYPED_TEST(ValmatrixTest, MatrixXorAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
                    std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs ^ rhs;});
     this->iota_matrix ^= this->operation_matrix;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -487,8 +457,7 @@ TYPED_TEST(ValmatrixTest, ArrayXorAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                    std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs ^ rhs;});
     this->iota_matrix ^= this->operation_array;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -499,8 +468,7 @@ TYPED_TEST(ValmatrixTest, ValueXorAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                    std::begin(correct), [v = this->operation_value](const auto& e){return e ^ v;});
     this->iota_matrix ^= this->operation_value;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -511,8 +479,7 @@ TYPED_TEST(ValmatrixTest, MatrixShiftAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
                    std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs << rhs;});
     this->iota_matrix <<= this->operation_matrix;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -523,8 +490,7 @@ TYPED_TEST(ValmatrixTest, ArrayShiftAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                    std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs << rhs;});
     this->iota_matrix <<= this->operation_array;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -535,8 +501,7 @@ TYPED_TEST(ValmatrixTest, ValueShiftAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                    std::begin(correct), [v = this->operation_value](const auto& e){return e << v;});
     this->iota_matrix <<= this->operation_value;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -547,8 +512,7 @@ TYPED_TEST(ValmatrixTest, MatrixCounterShiftAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
                    std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs >> rhs;});
     this->iota_matrix >>= this->operation_matrix;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -559,8 +523,7 @@ TYPED_TEST(ValmatrixTest, ArrayCounterShiftAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                    std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs >> rhs;});
     this->iota_matrix >>= this->operation_array;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -571,8 +534,7 @@ TYPED_TEST(ValmatrixTest, ValueCounterShiftAssign)
     std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                    std::begin(correct), [v = this->operation_value](const auto& e){return e >> v;});
     this->iota_matrix >>= this->operation_value;
-    const typename TestFixture::ValidatorType value(std::begin(this->iota_matrix), std::end(this->iota_matrix));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(this->iota_matrix));
   }
 }
 
@@ -582,8 +544,7 @@ TYPED_TEST(ValmatrixTest, MatrixAdditionOperator)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs + rhs;});
   const auto result {this->iota_matrix + this->operation_matrix};
-  const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(result));
 }
 
 TYPED_TEST(ValmatrixTest, ArrayAdditionOperator)
@@ -592,8 +553,7 @@ TYPED_TEST(ValmatrixTest, ArrayAdditionOperator)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs + rhs;});
   const auto result {this->iota_matrix + this->operation_array};
-  const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(result));
 }
 
 TYPED_TEST(ValmatrixTest, ValueAdditionOperator)
@@ -602,8 +562,7 @@ TYPED_TEST(ValmatrixTest, ValueAdditionOperator)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                  std::begin(correct), [v = this->operation_value](const auto& e){return e + v;});
   const auto result {this->iota_matrix + this->operation_value};
-  const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(result));
 }
 
 TYPED_TEST(ValmatrixTest, ArrayInverseAdditionOperator)
@@ -612,8 +571,7 @@ TYPED_TEST(ValmatrixTest, ArrayInverseAdditionOperator)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return rhs + lhs;});
   const auto result {this->operation_array + this->iota_matrix};
-  const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(result));
 }
 
 TYPED_TEST(ValmatrixTest, ValueInverseAdditionOperator)
@@ -622,8 +580,7 @@ TYPED_TEST(ValmatrixTest, ValueInverseAdditionOperator)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                  std::begin(correct), [v = this->operation_value](const auto& e){return v + e;});
   const auto result {this->operation_value + this->iota_matrix};
-  const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(result));
 }
 
 TYPED_TEST(ValmatrixTest, MatrixSubtractOperator)
@@ -632,8 +589,7 @@ TYPED_TEST(ValmatrixTest, MatrixSubtractOperator)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs - rhs;});
   const auto result {this->iota_matrix - this->operation_matrix};
-  const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(result));
 }
 
 TYPED_TEST(ValmatrixTest, ArraySubtractOperator)
@@ -642,8 +598,7 @@ TYPED_TEST(ValmatrixTest, ArraySubtractOperator)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs - rhs;});
   const auto result {this->iota_matrix - this->operation_array};
-  const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(result));
 }
 
 TYPED_TEST(ValmatrixTest, ValueSubtractOperator)
@@ -652,8 +607,7 @@ TYPED_TEST(ValmatrixTest, ValueSubtractOperator)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                  std::begin(correct), [v = this->operation_value](const auto& e){return e - v;});
   const auto result {this->iota_matrix - this->operation_value};
-  const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(result));
 }
 
 TYPED_TEST(ValmatrixTest, ArrayInverseSubtractOperator)
@@ -662,8 +616,7 @@ TYPED_TEST(ValmatrixTest, ArrayInverseSubtractOperator)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return rhs - lhs;});
   const auto result {this->operation_array - this->iota_matrix};
-  const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(result));
 }
 
 TYPED_TEST(ValmatrixTest, ValueInverseSubtractOperator)
@@ -672,8 +625,7 @@ TYPED_TEST(ValmatrixTest, ValueInverseSubtractOperator)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                  std::begin(correct), [v = this->operation_value](const auto& e){return v - e;});
   const auto result {this->operation_value - this->iota_matrix};
-  const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(result));
 }
 
 TYPED_TEST(ValmatrixTest, MatrixMultiplicationOperator)
@@ -682,8 +634,7 @@ TYPED_TEST(ValmatrixTest, MatrixMultiplicationOperator)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs * rhs;});
   const auto result {this->iota_matrix * this->operation_matrix};
-  const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(result));
 }
 
 TYPED_TEST(ValmatrixTest, ArrayMultiplicationOperator)
@@ -692,8 +643,7 @@ TYPED_TEST(ValmatrixTest, ArrayMultiplicationOperator)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs * rhs;});
   const auto result {this->iota_matrix * this->operation_array};
-  const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(result));
 }
 
 TYPED_TEST(ValmatrixTest, ValueMultiplicationOperator)
@@ -702,8 +652,7 @@ TYPED_TEST(ValmatrixTest, ValueMultiplicationOperator)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                  std::begin(correct), [v = this->operation_value](const auto& e){return e * v;});
   const auto result {this->iota_matrix * this->operation_value};
-  const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(result));
 }
 
 TYPED_TEST(ValmatrixTest, ArrayInverseMultiplicationOperator)
@@ -712,8 +661,7 @@ TYPED_TEST(ValmatrixTest, ArrayInverseMultiplicationOperator)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
                  std::begin(correct), [](const auto& lhs, const auto& rhs){return rhs * lhs;});
   const auto result {this->operation_array * this->iota_matrix};
-  const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(result));
 }
 
 TYPED_TEST(ValmatrixTest, ValueInverseMultiplicationOperator)
@@ -722,8 +670,7 @@ TYPED_TEST(ValmatrixTest, ValueInverseMultiplicationOperator)
   std::transform(std::begin(this->iota_array), std::end(this->iota_array),
                  std::begin(correct), [v = this->operation_value](const auto& e){return v * e;});
   const auto result {this->operation_value * this->iota_matrix};
-  const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-  EXPECT_EQ(correct, value);
+  EXPECT_EQ(correct, as_validator(result));
 }
 
 TYPED_TEST(ValmatrixTest, MatrixDivisionOperator)
@@ -731,10 +678,9 @@ TYPED_TEST(ValmatrixTest, MatrixDivisionOperator)
   if constexpr (!std::is_floating_point_v<TypeParam>) {
     typename TestFixture::ValidatorType correct(this->iota_array.size());
     std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
-        std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs / rhs;});
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs / rhs;});
     const auto result {this->iota_matrix / this->operation_matrix};
-    const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
@@ -743,10 +689,9 @@ TYPED_TEST(ValmatrixTest, ArrayDivisionOperator)
   if constexpr (!std::is_floating_point_v<TypeParam>) {
     typename TestFixture::ValidatorType correct(this->iota_array.size());
     std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
-        std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs / rhs;});
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs / rhs;});
     const auto result {this->iota_matrix / this->operation_array};
-    const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
@@ -755,10 +700,9 @@ TYPED_TEST(ValmatrixTest, ValueDivisionOperator)
   if constexpr (!std::is_floating_point_v<TypeParam>) {
     typename TestFixture::ValidatorType correct(this->iota_array.size());
     std::transform(std::begin(this->iota_array), std::end(this->iota_array),
-        std::begin(correct), [v = this->operation_value](const auto& e){return e / v;});
+                   std::begin(correct), [v = this->operation_value](const auto& e){return e / v;});
     const auto result {this->iota_matrix / this->operation_value};
-    const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
@@ -767,10 +711,9 @@ TYPED_TEST(ValmatrixTest, ArrayInverseDivisionOperator)
   if constexpr (!std::is_floating_point_v<TypeParam>) {
     typename TestFixture::ValidatorType correct(this->iota_array.size());
     std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
-        std::begin(correct), [](const auto& lhs, const auto& rhs){return rhs / lhs;});
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return rhs / lhs;});
     const auto result {this->operation_array / this->iota_matrix};
-    const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
@@ -779,326 +722,357 @@ TYPED_TEST(ValmatrixTest, ValueInverseDivisionOperator)
   if constexpr (!std::is_floating_point_v<TypeParam>) {
     typename TestFixture::ValidatorType correct(this->iota_array.size());
     std::transform(std::begin(this->iota_array), std::end(this->iota_array),
-        std::begin(correct), [v = this->operation_value](const auto& e){return v / e;});
+                   std::begin(correct), [v = this->operation_value](const auto& e){return v / e;});
     const auto result {this->operation_value / this->iota_matrix};
-    const typename TestFixture::ValidatorType value(std::begin(result), std::end(result));
-    EXPECT_EQ(correct, value);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, MatrixResidueOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs % rhs;});
     const auto result {this->iota_matrix % this->operation_matrix};
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i] % this->operation_matrix[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ArrayResidueOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs % rhs;});
     const auto result {this->iota_matrix % this->operation_array};
-    this->iota_array %= this->operation_array;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ValueResidueOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array),
+                   std::begin(correct), [v = this->operation_value](const auto& e){return e % v;});
     const auto result {this->iota_matrix % this->operation_value};
-    this->iota_array %= this->operation_value;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ArrayInverseResidueOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return rhs % lhs;});
     const auto result {this->operation_array % this->iota_matrix};
-    this->operation_array %= this->iota_array;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->operation_array[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ValueInverseResidueOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array),
+                   std::begin(correct), [v = this->operation_value](const auto& e){return v % e;});
     const auto result {this->operation_value % this->iota_matrix};
-    const auto correct {this->operation_value % this->iota_array};
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], correct[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, MatrixBitwiseAndOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
-    const auto result {this->iota_matrix & this->operation_matrix};
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i] & this->operation_matrix[i]);
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs / rhs;});
+    const auto result {this->iota_matrix / this->operation_matrix};
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ArrayBitwiseAndOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
-    const auto result {this->iota_matrix & this->operation_array};
-    this->iota_array &= this->operation_array;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i]);
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs / rhs;});
+    const auto result {this->iota_matrix / this->operation_array};
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ValueBitwiseAndOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
-    const auto result {this->iota_matrix & this->operation_value};
-    this->iota_array &= this->operation_value;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i]);
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array),
+                   std::begin(correct), [v = this->operation_value](const auto& e){return e / v;});
+    const auto result {this->iota_matrix / this->operation_value};
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ArrayInverseBitwiseAndOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
-    const auto result {this->operation_array & this->iota_matrix};
-    this->operation_array &= this->iota_array;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->operation_array[i]);
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return rhs / lhs;});
+    const auto result {this->operation_array / this->iota_matrix};
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ValueInverseBitwiseAndOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
-    const auto result {this->operation_value & this->iota_matrix};
-    const auto correct {this->operation_value & this->iota_array};
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], correct[i]);
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array),
+                   std::begin(correct), [v = this->operation_value](const auto& e){return v / e;});
+    const auto result {this->operation_value / this->iota_matrix};
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, MatrixBitwiseOrOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs | rhs;});
     const auto result {this->iota_matrix | this->operation_matrix};
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i] | this->operation_matrix[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ArrayBitwiseOrOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs | rhs;});
     const auto result {this->iota_matrix | this->operation_array};
-    this->iota_array |= this->operation_array;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ValueBitwiseOrOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array),
+                   std::begin(correct), [v = this->operation_value](const auto& e){return e | v;});
     const auto result {this->iota_matrix | this->operation_value};
-    this->iota_array |= this->operation_value;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ArrayInverseBitwiseOrOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return rhs | lhs;});
     const auto result {this->operation_array | this->iota_matrix};
-    this->operation_array |= this->iota_array;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->operation_array[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ValueInverseBitwiseOrOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array),
+                   std::begin(correct), [v = this->operation_value](const auto& e){return v | e;});
     const auto result {this->operation_value | this->iota_matrix};
-    const auto correct {this->operation_value | this->iota_array};
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], correct[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, MatrixXorOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs ^ rhs;});
     const auto result {this->iota_matrix ^ this->operation_matrix};
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i] ^ this->operation_matrix[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ArrayXorOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs ^ rhs;});
     const auto result {this->iota_matrix ^ this->operation_array};
-    this->iota_array ^= this->operation_array;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ValueXorOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array),
+                   std::begin(correct), [v = this->operation_value](const auto& e){return e ^ v;});
     const auto result {this->iota_matrix ^ this->operation_value};
-    this->iota_array ^= this->operation_value;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ArrayInverseXorOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return rhs ^ lhs;});
     const auto result {this->operation_array ^ this->iota_matrix};
-    this->operation_array ^= this->iota_array;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->operation_array[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ValueInverseXorOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array),
+                   std::begin(correct), [v = this->operation_value](const auto& e){return v ^ e;});
     const auto result {this->operation_value ^ this->iota_matrix};
-    const auto correct {this->operation_value ^ this->iota_array};
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], correct[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, MatrixShiftOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
-    const auto result {this->iota_matrix << this->operation_matrix};
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i] << this->operation_matrix[i]);
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs / rhs;});
+    const auto result {this->iota_matrix / this->operation_matrix};
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ArrayShiftOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs << rhs;});
     const auto result {this->iota_matrix << this->operation_array};
-    this->iota_array <<= this->operation_array;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ValueShiftOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array),
+                   std::begin(correct), [v = this->operation_value](const auto& e){return e << v;});
     const auto result {this->iota_matrix << this->operation_value};
-    this->iota_array <<= this->operation_value;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ArrayInverseShiftOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return rhs << lhs;});
     const auto result {this->operation_array << this->iota_matrix};
-    this->operation_array <<= this->iota_array;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->operation_array[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ValueInverseShiftOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array),
+                   std::begin(correct), [v = this->operation_value](const auto& e){return v << e;});
     const auto result {this->operation_value << this->iota_matrix};
-    const auto correct {this->operation_value << this->iota_array};
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], correct[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, MatrixCounterShiftOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_matrix),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs >> rhs;});
     const auto result {this->iota_matrix >> this->operation_matrix};
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i] >> this->operation_matrix[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ArrayCounterShiftOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return lhs >> rhs;});
     const auto result {this->iota_matrix >> this->operation_array};
-    this->iota_array >>= this->operation_array;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ValueCounterShiftOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array),
+                   std::begin(correct), [v = this->operation_value](const auto& e){return e >> v;});
     const auto result {this->iota_matrix >> this->operation_value};
-    this->iota_array >>= this->operation_value;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->iota_array[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ArrayInverseCounterShiftOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array), std::begin(this->operation_array),
+                   std::begin(correct), [](const auto& lhs, const auto& rhs){return rhs >> lhs;});
     const auto result {this->operation_array >> this->iota_matrix};
-    this->operation_array >>= this->iota_array;
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], this->operation_array[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ValueInverseCounterShiftOperator)
 {
   if constexpr (!std::is_floating_point_v<TypeParam>) {
+    typename TestFixture::ValidatorType correct(this->iota_array.size());
+    std::transform(std::begin(this->iota_array), std::end(this->iota_array),
+                   std::begin(correct), [v = this->operation_value](const auto& e){return v >> e;});
     const auto result {this->operation_value >> this->iota_matrix};
-    const auto correct {this->operation_value >> this->iota_array};
-    for (auto i {0}; i < size_of(TestFixture::size); ++i)
-      EXPECT_EQ(result[i], correct[i]);
+    EXPECT_EQ(correct, as_validator(result));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ReadRow)
 {
-  for (auto i {0}; i < TestFixture::size.second; ++i) {
-    typename TestFixture::Valarray value {this->iota_matrix.row(i)};
-    typename TestFixture::Valarray correct {this->iota_array[std::slice{i * TestFixture::size.first, TestFixture::size.first, 1}]};
-    ASSERT_EQ(value.size(), correct.size());
-    for (auto j {0}; j < TestFixture::size.first; ++j)
-      EXPECT_EQ(value[j], correct[j]);
+  for (auto i {0u}; i < TestFixture::size.second; ++i) {
+    typename TestFixture::Valarray value_raw {this->iota_matrix.row(i)};
+    typename TestFixture::Valarray correct_raw {this->iota_array[std::slice{i * TestFixture::size.first, TestFixture::size.first, 1}]};
+    EXPECT_EQ(as_validator(correct_raw), as_validator(value_raw));
   }
 }
 
 TYPED_TEST(ValmatrixTest, ReadColumn)
 {
   for (auto i {0u}; i < TestFixture::size.first; ++i) {
-    typename TestFixture::Valarray value {this->iota_matrix.col(i)};
-    typename TestFixture::Valarray correct {this->iota_array[std::slice{i, TestFixture::size.second, TestFixture::size.first}]};
-    ASSERT_EQ(value.size(), correct.size());
-    for (auto j {0}; j < TestFixture::size.second; ++j)
-      EXPECT_EQ(value[j], correct[j]);
+    typename TestFixture::Valarray value_raw {this->iota_matrix.col(i)};
+    typename TestFixture::Valarray correct_raw {this->iota_array[std::slice{i, TestFixture::size.second, TestFixture::size.first}]};
+    EXPECT_EQ(as_validator(correct_raw), as_validator(value_raw));
   }
 }
 
@@ -1108,12 +1082,10 @@ TYPED_TEST(ValmatrixTest, WriteRow)
   this->iota_matrix.row(TestFixture::size.second - 1) = new_value;
   this->iota_array[std::slice{TestFixture::size.first * (TestFixture::size.second - 1), TestFixture::size.first, 1}] = new_value;
 
-  for (auto i {0}; i < TestFixture::size.second; ++i) {
-    typename TestFixture::Valarray value {this->iota_matrix.row(i)};
-    typename TestFixture::Valarray correct {this->iota_array[std::slice{i * TestFixture::size.first, TestFixture::size.first, 1}]};
-    ASSERT_EQ(value.size(), correct.size());
-    for (auto j {0}; j < TestFixture::size.first; ++j)
-      EXPECT_EQ(value[j], correct[j]);
+  for (auto i {0u}; i < TestFixture::size.first; ++i) {
+    typename TestFixture::Valarray value_raw {this->iota_matrix.col(i)};
+    typename TestFixture::Valarray correct_raw {this->iota_array[std::slice{i, TestFixture::size.second, TestFixture::size.first}]};
+    EXPECT_EQ(as_validator(correct_raw), as_validator(value_raw));
   }
 }
 
@@ -1123,12 +1095,10 @@ TYPED_TEST(ValmatrixTest, WriteColumn)
   this->iota_matrix.col(TestFixture::size.first - 1) = new_value;
   this->iota_array[std::slice{TestFixture::size.first - 1, TestFixture::size.second, TestFixture::size.first}] = new_value;
 
-  for (auto i {0u}; i < TestFixture::size.first; ++i) {
-    typename TestFixture::Valarray value {this->iota_matrix.col(i)};
-    typename TestFixture::Valarray correct {this->iota_array[std::slice{i, TestFixture::size.second, TestFixture::size.first}]};
-    ASSERT_EQ(value.size(), correct.size());
-    for (auto j {0}; j < TestFixture::size.second; ++j)
-      EXPECT_EQ(value[j], correct[j]);
+  for (auto i {0u}; i < TestFixture::size.second; ++i) {
+    typename TestFixture::Valarray value_raw {this->iota_matrix.row(i)};
+    typename TestFixture::Valarray correct_raw {this->iota_array[std::slice{i * TestFixture::size.first, TestFixture::size.first, 1}]};
+    EXPECT_EQ(as_validator(correct_raw), as_validator(value_raw));
   }
 }
 
