@@ -65,7 +65,7 @@ struct norm_impl
     if constexpr (std::is_unsigned_v<T>)
       return std::pow(std::pow<T>(vector, ordinal).sum(), reciprocal);
     else if constexpr (ordinal % 2)
-      return std::pow(std::pow(std::abs(vector), ordinal).sum(), reciprocal);
+      return std::pow(std::pow<T>(std::abs(vector), ordinal).sum(), reciprocal);
     else
       return std::pow(std::pow<T>(vector, ordinal).sum(), reciprocal);
   }

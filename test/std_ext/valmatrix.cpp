@@ -142,7 +142,7 @@ TEST(ValmatrixSizeTest, RowAndColSizeCheck)
 
 TYPED_TEST(ValmatrixTest, ReadValueByIndex)
 {
-  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+  for (auto i {0u}; i < size_of(TestFixture::size); ++i)
     EXPECT_EQ(this->iota_array[i], this->iota_matrix[i]);
 }
 
@@ -201,8 +201,8 @@ TYPED_TEST(ValmatrixTest, ReadArrayByIndirect)
 
 TYPED_TEST(ValmatrixTest, ReadValueByPosition)
 {
-  for (auto i {0}; i < TestFixture::size.first; ++i)
-    for (auto j {0}; j < TestFixture::size.second; ++j) {
+  for (auto i {0u}; i < TestFixture::size.first; ++i)
+    for (auto j {0u}; j < TestFixture::size.second; ++j) {
       const auto value {this->iota_matrix[typename TestFixture::Valmatrix::position_type{i, j}]};
       EXPECT_EQ(this->iota_array[j * TestFixture::size.second + i], value);
     }
@@ -1115,7 +1115,7 @@ TYPED_TEST(ValmatrixTest, ReadBlock)
       {TestFixture::size.first, 1}};
   typename TestFixture::Valarray correct {this->iota_array[specification]};
 
-  for (auto i {0}; i < size_of(block_size); ++i)
+  for (auto i {0u}; i < size_of(block_size); ++i)
     EXPECT_EQ(value[i], correct[i]);
 }
 
@@ -1152,12 +1152,12 @@ TYPED_TEST(ValmatrixTest, VoidSwap)
   std::swap(this->iota_matrix, swap_target);
 
   EXPECT_FALSE(this->iota_matrix.size());
-  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+  for (auto i {0u}; i < size_of(TestFixture::size); ++i)
     EXPECT_EQ(swap_target[i], this->iota_array[i]);
 
   // ADL test
   swap(swap_target, swap_target);
-  for (auto i {0}; i < size_of(TestFixture::size); ++i)
+  for (auto i {0u}; i < size_of(TestFixture::size); ++i)
     EXPECT_EQ(swap_target[i], this->iota_array[i]);
 
   // member swap

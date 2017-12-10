@@ -121,9 +121,9 @@ TYPED_TEST(ValarrayTest, DistanceNorm3)
   if constexpr (std::is_unsigned_v<TypeParam>)
     EXPECT_EQ(std::cbrt(std::pow<TypeParam>(this->a, 3).sum()), ans);
   else if constexpr (std::is_same_v<double, TypeParam>)
-    EXPECT_DOUBLE_EQ(std::cbrt(std::pow(std::abs(this->a), 3).sum()), ans);
+    EXPECT_DOUBLE_EQ(std::cbrt(std::pow<TypeParam>(std::abs(this->a), 3).sum()), ans);
   else
-    EXPECT_EQ(std::cbrt(std::pow(std::abs(this->a), 3).sum()), ans);
+    EXPECT_EQ(std::cbrt(std::pow<TypeParam>(std::abs(this->a), 3).sum()), ans);
 }
 
 TYPED_TEST(ValarrayTest, DistanceNorm4)
@@ -136,7 +136,7 @@ TYPED_TEST(ValarrayTest, DistanceNorm5)
   if constexpr (std::is_unsigned_v<TypeParam>)
     EXPECT_EQ(xmaho::std_ext::norm<5>(this->a), std::pow(std::pow<TypeParam>(this->a, 5).sum(), 1. / 5));
   else
-    EXPECT_EQ(xmaho::std_ext::norm<5>(this->a), std::pow(std::pow(std::abs(this->a), 5).sum(), 1. / 5));
+    EXPECT_EQ(xmaho::std_ext::norm<5>(this->a), std::pow(std::pow<TypeParam>(std::abs(this->a), 5).sum(), 1. / 5));
 }
 
 TYPED_TEST(ValarrayTest, DistanceNormMax)
