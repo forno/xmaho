@@ -63,6 +63,7 @@ set(GNU_WARN_OPTIONS
 add_compile_options(
   "$<$<CXX_COMPILER_ID:Clang>:${Clang_WARN_OPTIONS}>"
   "$<$<CXX_COMPILER_ID:GNU>:${GNU_WARN_OPTIONS}>"
+  $<$<CXX_COMPILER_ID:MSVC>:/W4>
 )
 
 # Add some test
