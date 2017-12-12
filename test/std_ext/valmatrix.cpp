@@ -116,7 +116,7 @@ TEST(ValmatrixConstructTest, AllConstructors)
   EXPECT_FALSE(zero.size());
   const xmaho::std_ext::valmatrix<int> one {1, 1}; // mim size
   EXPECT_EQ(1, one.size());
-  EXPECT_EQ(static_cast<int>(0), one[0]);
+  EXPECT_EQ(static_cast<int>(0u), one[0]); // avoid 0 as pointer
 
   constexpr Size diff_size {2, 5};
   const xmaho::std_ext::valmatrix<int> diffsize_mat {diff_size.first, diff_size.second}; // different size
