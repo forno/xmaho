@@ -589,7 +589,7 @@ public:
    *
    * @return Const begin iterator.
    */
-  const auto begin() const noexcept;
+  auto begin() const noexcept;
 
   /**
    * @brief Get begin iterator.
@@ -603,7 +603,7 @@ public:
    *
    * @return Const end iterator.
    */
-  const auto end() const noexcept;
+  auto end() const noexcept;
 
   /**
    * @brief Get end iterator.
@@ -1207,7 +1207,7 @@ valmatrix<T> operator>>(const T& lhs, const valmatrix<T>& rhs);
  * @return Const begin iterator.
  */
 template<typename T>
-const auto begin(const valmatrix<T>& v) noexcept;
+auto begin(const valmatrix<T>& v) noexcept;
 
 /**
  * @brief Get begin iterator.
@@ -1225,7 +1225,7 @@ auto begin(valmatrix<T>& v) noexcept;
  * @return Const end iterator.
  */
 template<typename T>
-const auto end(const valmatrix<T>& v) noexcept;
+auto end(const valmatrix<T>& v) noexcept;
 
 /**
  * @brief Get end iterator.
