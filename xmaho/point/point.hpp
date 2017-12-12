@@ -62,6 +62,12 @@ using SizePoint = BasicPoint<std::size_t>;
  * @tparam T Point type.
  * @param[in] point The base point.
  * @return The point that decreamented point.first.
+ *
+ * @code
+ * constexpr Point p {0, 0};
+ * constexpr auto lp {left(p)};
+ * static_assert(lp.first == -1 && lp.second == 0, "xmaho::point::left(Point{}) == Point{-1, 0}");
+ * @endcode
  */
 template<typename T>
 constexpr BasicPoint<T> left(BasicPoint<T> point);
@@ -72,6 +78,12 @@ constexpr BasicPoint<T> left(BasicPoint<T> point);
  * @tparam T Point type.
  * @param[in] point The base point.
  * @return The point that incremented point.first.
+ *
+ * @code
+ * constexpr Point p {0, 0};
+ * constexpr auto rp {right(p)};
+ * static_assert(rp.first == 1 && rp.second == 0, "xmaho::point::right(Point{}) == Point{1, 0}");
+ * @endcode
  */
 template<typename T>
 constexpr BasicPoint<T> right(BasicPoint<T> point);
@@ -82,6 +94,12 @@ constexpr BasicPoint<T> right(BasicPoint<T> point);
  * @tparam T Point type.
  * @param[in] point The base point.
  * @return The point that decreamented point.second.
+ *
+ * @code
+ * constexpr Point p {0, 0};
+ * constexpr auto up_p {up(p)};
+ * static_assert(up_p.first == 0 && up_p.second == -1, "xmaho::point::up(Point{}) == Point{0, -1}");
+ * @endcode
  */
 template<typename T>
 constexpr BasicPoint<T> up(BasicPoint<T> point);
@@ -92,6 +110,12 @@ constexpr BasicPoint<T> up(BasicPoint<T> point);
  * @tparam T Point type.
  * @param[in] point The base point.
  * @return The point that incremented point.second.
+ *
+ * @code
+ * constexpr Point p {0, 0};
+ * constexpr auto dp {down(p)};
+ * static_assert(dp.first == 0 && dp.second == 1, "xmaho::point::down(Point{}) == Point{0, 1}");
+ * @endcode
  */
 template<typename T>
 constexpr BasicPoint<T> down(BasicPoint<T> point);
@@ -103,6 +127,21 @@ constexpr BasicPoint<T> down(BasicPoint<T> point);
  * @tparam T Point type.
  * @param[in] point The pair of elements as vector.
  * @return The norm of the pair as vector.
+ *
+ * @code
+ * constexpr Point p {3, 4};
+ * const auto euclidean_distance {norm(p)};
+ * static_assert(is_same_v<const double, decltype(euclidean_distance)>, "norm on ordinal 2 return floting point type");
+ * assert(abs(euclidean_distance - 5) < std::numeric_limits<decltype(euclidean_distance)>::epsilon());
+ *
+ * const auto taxicab_distance {norm<1>(p)};
+ * static_assert(is_same_v<const int, decltype(taxicab_distance)>, "norm on ordinal 1 return same as point value type");
+ * assert(taxicab_distance == 7);
+ *
+ * const auto uniform_norm {norm<numeric_limits<size_t>::max()>(p)};
+ * static_assert(is_same_v<const int, decltype(uniform_norm)>, "norm on ordinal max return same as point value type");
+ * assert(uniform_norm == 4);
+ * @endcode
  */
 template<std::size_t ordinal = 2, typename T>
 constexpr auto norm(const BasicPoint<T>& point);
