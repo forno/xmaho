@@ -411,12 +411,12 @@ std::slice_array<T> xmaho::std_ext::valmatrix<T>::col(size_type index)
 }
 
 template<typename T>
-xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::block(position_type pos, position_type size) const
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::block(position_type pos, position_type sub_size) const
 {
-  assert(pos.first + (size.first - 1) < row_size());
-  assert(pos.second + (size.second - 1) < col_size());
-  const std::gslice block_gslice {detail::get_serial_index(pos, col_size()), {size.second, size.first}, {row_size(), 1}};
-  return valmatrix{std::valarray<T>::operator[](block_gslice), size.first, size.second};
+  assert(pos.first + (sub_size.first - 1) < row_size());
+  assert(pos.second + (sub_size.second - 1) < col_size());
+  const std::gslice block_gslice {detail::get_serial_index(pos, col_size()), {sub_size.second, sub_size.first}, {row_size(), 1}};
+  return valmatrix{std::valarray<T>::operator[](block_gslice), sub_size.first, sub_size.second};
 }
 
 template<typename T>
