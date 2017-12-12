@@ -38,6 +38,7 @@ set(GNU_WARN_OPTIONS
   -Wtrampolines
   -Wfloat-equal
   -Wshadow
+  -Wunsafe-loop-optimizations
   -Wcast-qual
   -Wconditionally-supported
   -Wconversion
