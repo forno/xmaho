@@ -54,11 +54,10 @@ std::vector<typename Container::value_type> as_validator(const Container& contai
 template<typename T>
 auto get_positive_uniform_distribution()
 {
-  const auto max_value {static_cast<T>(std::sqrt(std::numeric_limits<T>::max()))};
   if constexpr (std::is_integral_v<T>)
-    return std::uniform_int_distribution<T>{1u, max_value};
+    return std::uniform_int_distribution<T>{1u, 5u};
   else
-    return std::uniform_real_distribution<T>{1u, max_value};
+    return std::uniform_real_distribution<T>{1u, 5u};
 }
 
 }
