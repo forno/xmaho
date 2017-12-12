@@ -60,17 +60,17 @@ using SizePoint = BasicPoint<std::size_t>;
  * @brief Decrement point.first.
  *
  * @tparam T Point type.
- * @param[in] point The Base point.
+ * @param[in] point The base point.
  * @return The point that decreamented point.first.
  */
 template<typename T>
 constexpr BasicPoint<T> left(BasicPoint<T> point);
 
 /**
- * @brief Decrement point.first.
+ * @brief Increment point.first.
  *
  * @tparam T Point type.
- * @param[in] point The Base point.
+ * @param[in] point The base point.
  * @return The point that incremented point.first.
  */
 template<typename T>
@@ -80,17 +80,17 @@ constexpr BasicPoint<T> right(BasicPoint<T> point);
  * @brief Decrement point.second.
  *
  * @tparam T Point type.
- * @param[in] point The Base point.
+ * @param[in] point The base point.
  * @return The point that decreamented point.second.
  */
 template<typename T>
 constexpr BasicPoint<T> up(BasicPoint<T> point);
 
 /**
- * @brief Decrement point.second.
+ * @brief Increment point.second.
  *
  * @tparam T Point type.
- * @param[in] point The Base point.
+ * @param[in] point The base point.
  * @return The point that incremented point.second.
  */
 template<typename T>
