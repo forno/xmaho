@@ -52,12 +52,15 @@ std::vector<typename Container::value_type> as_validator(const Container& contai
 }
 
 template<typename T>
-auto get_positive_uniform_distribution()
+auto get_positive_uniform_distribution(std::size_t afectee_max_value)
 {
-  if constexpr (std::is_integral_v<T>)
-    return std::uniform_int_distribution<T>{1u, 5u};
-  else
-    return std::uniform_real_distribution<T>{1u, 5u};
+  if constexpr (!std::is_integral_v<T>)
+    return std::uniform_real_distribution<T>{1u, std::sqrt(std::numeric_limits<T>::max())};
+  else {
+    const auto max_value {static_cast<T>(std::numeric_limits<T>::digits - static_cast<int>(std::ceil(std::log2(afectee_max_value))))};
+    EXPECT_LT(1, max_value);
+    return std::uniform_int_distribution<T>{1u, max_value};
+  }
 }
 
 }
@@ -92,7 +95,7 @@ protected:
     std::iota(std::begin(iota_array), std::end(iota_array), 1);
 
     std::default_random_engine rand {std::random_device{}()};
-    auto dist {get_positive_uniform_distribution<T>()};
+    auto dist {get_positive_uniform_distribution<T>(iota_array.size())};
     for (auto& e : operation_matrix)
       e = dist(rand);
     for (auto& e : operation_array)
