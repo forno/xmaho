@@ -52,7 +52,7 @@ std::vector<typename Container::value_type> as_validator(const Container& contai
 }
 
 template<typename T>
-auto get_positive_uniform_distribution(std::size_t afectee_max_value)
+auto get_positive_uniform_distribution([[maybe_unused]] std::size_t afectee_max_value)
 {
   if constexpr (!std::is_integral_v<T>)
     return std::uniform_real_distribution<T>{1u, std::sqrt(std::numeric_limits<T>::max())};
@@ -116,7 +116,7 @@ TEST(ValmatrixConstructTest, AllConstructors)
   EXPECT_FALSE(zero.size());
   const xmaho::std_ext::valmatrix<int> one {1, 1}; // mim size
   EXPECT_EQ(1, one.size());
-  EXPECT_EQ(static_cast<int>(0), one[0]);
+  EXPECT_EQ(static_cast<int>(0u), one[0]); // avoid 0 as pointer
 
   constexpr Size diff_size {2, 5};
   const xmaho::std_ext::valmatrix<int> diffsize_mat {diff_size.first, diff_size.second}; // different size

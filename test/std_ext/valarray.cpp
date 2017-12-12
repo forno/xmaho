@@ -43,7 +43,7 @@ template<typename T>
 auto get_uniform_distribution(std::size_t data_count)
 {
   constexpr auto reciprocal {1. / (testing_max_norm + 1)};
-  const auto max_value {std::pow(std::numeric_limits<T>::max() / data_count, reciprocal)};
+  const auto max_value {std::pow(std::numeric_limits<T>::max() / static_cast<long double>(data_count), reciprocal)};
   EXPECT_GT(std::pow(std::numeric_limits<T>::max(), reciprocal), 2);
   EXPECT_GT(max_value, 1);
 
@@ -52,7 +52,7 @@ auto get_uniform_distribution(std::size_t data_count)
   else if constexpr (std::is_integral_v<T>)
     return std::uniform_int_distribution<T>{-static_cast<T>(max_value), static_cast<T>(max_value)};
   else
-    return std::uniform_real_distribution<T>{-max_value, max_value};
+    return std::uniform_real_distribution<T>{-static_cast<T>(max_value), static_cast<T>(max_value)};
 }
 
 }
