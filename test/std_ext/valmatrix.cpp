@@ -51,6 +51,16 @@ std::vector<typename Container::value_type> as_validator(const Container& contai
   return std::vector<typename Container::value_type>(std::begin(container), std::end(container));
 }
 
+template<typename T>
+auto get_positive_uniform_distribution()
+{
+  const auto max_value {static_cast<T>(std::sqrt(std::numeric_limits<T>::max()))};
+  if constexpr (std::is_integral_v<T>)
+    return std::uniform_int_distribution<T>{1u, max_value};
+  else
+    return std::uniform_real_distribution<T>{1u, max_value};
+}
+
 }
 
 template<typename T>
@@ -83,7 +93,7 @@ protected:
     std::iota(std::begin(iota_array), std::end(iota_array), 1);
 
     std::default_random_engine rand {std::random_device{}()};
-    std::uniform_int_distribution<> dist {1, 5};
+    auto dist {get_positive_uniform_distribution<T>()};
     for (auto& e : operation_matrix)
       e = dist(rand);
     for (auto& e : operation_array)
