@@ -123,6 +123,13 @@ constexpr BasicPoint<T> down(BasicPoint<T> point);
 /**
  * @brief Calculate norm of Point.
  *
+ * Calculate norm of point as vector.
+ * default ordinal is 2.
+ *
+ * if ordinal is numeric_limits<size_t>::max() then
+ *   return uniform norm (that is max(first, second)).
+ *
+ *
  * @tparam ordinal The norm of vector space.
  * @tparam T Point type.
  * @param[in] point The pair of elements as vector.
