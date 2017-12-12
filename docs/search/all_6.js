@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['position_5ftype',['position_type',['../classxmaho_1_1std__ext_1_1valmatrix.html#ac1adceeac05929ca5a3ab21a5cbbfaf9',1,'xmaho::std_ext::valmatrix']]]
+  ['norm',['norm',['../point_8hpp.html#a29323f351a6db164ffbfb9e4a5485f45',1,'xmaho::point::norm()'],['../valarray_8hpp.html#ac6b87850526e256c8095ff0b40990a8f',1,'xmaho::std_ext::norm()']]]
 ];

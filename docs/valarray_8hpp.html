@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">xmaho
-   &#160;<span id="projectnumber">0.1.0</span>
+   &#160;<span id="projectnumber">0.1.1</span>
    </div>
    <div id="projectbrief">The c++ header only library for latest version</div>
   </td>
@@ -91,7 +91,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">valarray.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<h3 class="version">(26e7a6b Make doc valarray (#7))</h3>
+<h3 class="version">(e819d07 Change interface for valarray (#14))</h3>
 <p>The utility functions for std::valarray.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;cstddef&gt;</code><br />
@@ -115,48 +115,14 @@ Functions</h2></td></tr>
 <tr class="memitem:ae4fa305939559e74cef9f1bd145dc356"><td class="memTemplItemLeft" align="right" valign="top">std::valarray&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="valarray_8hpp.html#ae4fa305939559e74cef9f1bd145dc356">xmaho::std_ext::vector_product</a> (const std::valarray&lt; T &gt; &amp;a, const std::valarray&lt; T &gt; &amp;b)</td></tr>
 <tr class="memdesc:ae4fa305939559e74cef9f1bd145dc356"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return vector product "a cross b".  <a href="valarray_8hpp.html#ae4fa305939559e74cef9f1bd145dc356">More...</a><br /></td></tr>
 <tr class="separator:ae4fa305939559e74cef9f1bd145dc356"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb39d833f5cd6c118d58a45a6732e74f"><td class="memTemplParams" colspan="2">template&lt;std::size_t norm = 2, typename T &gt; </td></tr>
-<tr class="memitem:abb39d833f5cd6c118d58a45a6732e74f"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="valarray_8hpp.html#abb39d833f5cd6c118d58a45a6732e74f">xmaho::std_ext::distance</a> (const std::valarray&lt; T &gt; &amp;vector)</td></tr>
-<tr class="memdesc:abb39d833f5cd6c118d58a45a6732e74f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return size of vector.  <a href="valarray_8hpp.html#abb39d833f5cd6c118d58a45a6732e74f">More...</a><br /></td></tr>
-<tr class="separator:abb39d833f5cd6c118d58a45a6732e74f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6b87850526e256c8095ff0b40990a8f"><td class="memTemplParams" colspan="2">template&lt;std::size_t ordinal = 2, typename T &gt; </td></tr>
+<tr class="memitem:ac6b87850526e256c8095ff0b40990a8f"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="valarray_8hpp.html#ac6b87850526e256c8095ff0b40990a8f">xmaho::std_ext::norm</a> (const std::valarray&lt; T &gt; &amp;vector)</td></tr>
+<tr class="memdesc:ac6b87850526e256c8095ff0b40990a8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return size of vector.  <a href="valarray_8hpp.html#ac6b87850526e256c8095ff0b40990a8f">More...</a><br /></td></tr>
+<tr class="separator:ac6b87850526e256c8095ff0b40990a8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The utility functions for std::valarray. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="file_abb39d833f5cd6c118d58a45a6732e74f"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;std::size_t norm = 2, typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">T xmaho::std_ext::distance </td>
-          <td>(</td>
-          <td class="paramtype">const std::valarray&lt; T &gt; &amp;&#160;</td>
-          <td class="paramname"><em>vector</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Return size of vector. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">norm</td><td>The norm of vector space. </td></tr>
-    <tr><td class="paramname">T</td><td>The value type of valarray. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">vector</td><td>Input vector. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The vector size. </dd></dl>
-
-</div>
-</div>
 <a class="anchor" id="file_a4cac94ac200df2c129ca84967a3cba72"></a>
 <div class="memitem">
 <div class="memproto">
@@ -193,6 +159,40 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The inner product by a and b. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="file_ac6b87850526e256c8095ff0b40990a8f"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::size_t ordinal = 2, typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto xmaho::std_ext::norm </td>
+          <td>(</td>
+          <td class="paramtype">const std::valarray&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vector</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return size of vector. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">ordinal</td><td>The norm of vector space. </td></tr>
+    <tr><td class="paramname">T</td><td>The value type of valarray. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">vector</td><td>Input vector. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The vector size. </dd></dl>
 
 </div>
 </div>
