@@ -51,6 +51,18 @@ std::vector<typename Container::value_type> as_validator(const Container& contai
   return std::vector<typename Container::value_type>(std::begin(container), std::end(container));
 }
 
+template<typename T>
+auto get_positive_uniform_distribution(std::size_t afectee_max_value)
+{
+  if constexpr (!std::is_integral_v<T>)
+    return std::uniform_real_distribution<T>{1u, std::sqrt(std::numeric_limits<T>::max())};
+  else {
+    const auto max_value {static_cast<T>(std::numeric_limits<T>::digits - static_cast<int>(std::ceil(std::log2(afectee_max_value))))};
+    EXPECT_LT(1, max_value);
+    return std::uniform_int_distribution<T>{1u, max_value};
+  }
+}
+
 }
 
 template<typename T>
@@ -83,7 +95,7 @@ protected:
     std::iota(std::begin(iota_array), std::end(iota_array), 1);
 
     std::default_random_engine rand {std::random_device{}()};
-    std::uniform_int_distribution<> dist {1, 5};
+    auto dist {get_positive_uniform_distribution<T>(iota_array.size())};
     for (auto& e : operation_matrix)
       e = dist(rand);
     for (auto& e : operation_array)
@@ -104,7 +116,7 @@ TEST(ValmatrixConstructTest, AllConstructors)
   EXPECT_FALSE(zero.size());
   const xmaho::std_ext::valmatrix<int> one {1, 1}; // mim size
   EXPECT_EQ(1, one.size());
-  EXPECT_EQ(0, one[0]);
+  EXPECT_EQ(static_cast<int>(0), one[0]);
 
   constexpr Size diff_size {2, 5};
   const xmaho::std_ext::valmatrix<int> diffsize_mat {diff_size.first, diff_size.second}; // different size
@@ -132,8 +144,8 @@ TEST(ValmatrixConstructTest, AllConstructors)
 TEST(ValmatrixSizeTest, RowAndColSizeCheck)
 {
   const xmaho::std_ext::valmatrix<int> zero {100, 0};
-  EXPECT_EQ(0, zero.row_size());
-  EXPECT_EQ(0, zero.col_size());
+  EXPECT_EQ(static_cast<std::size_t>(0u), zero.row_size());
+  EXPECT_EQ(static_cast<std::size_t>(0u), zero.col_size());
 
   const xmaho::std_ext::valmatrix<int> normal {5, 9};
   EXPECT_EQ(5, normal.row_size());
