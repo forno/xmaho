@@ -52,7 +52,7 @@ std::vector<typename Container::value_type> as_validator(const Container& contai
 }
 
 template<typename T>
-auto get_positive_uniform_distribution(std::size_t afectee_max_value)
+auto get_positive_uniform_distribution([[maybe_unused]] std::size_t afectee_max_value)
 {
   if constexpr (!std::is_integral_v<T>)
     return std::uniform_real_distribution<T>{1u, std::sqrt(std::numeric_limits<T>::max())};
