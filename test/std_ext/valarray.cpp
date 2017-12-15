@@ -43,7 +43,7 @@ template<typename T>
 auto get_uniform_distribution(std::size_t data_count)
 {
   constexpr auto reciprocal {1. / (testing_max_norm + 1)};
-  const auto max_value {std::pow(std::numeric_limits<T>::max() / static_cast<long double>(data_count), reciprocal)};
+  const auto max_value {std::pow(static_cast<long double>(std::numeric_limits<T>::max()) / static_cast<long double>(data_count), reciprocal)};
   EXPECT_GT(std::pow(std::numeric_limits<T>::max(), reciprocal), 2);
   EXPECT_GT(max_value, 1);
 

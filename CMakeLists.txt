@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1.3)
 project(xmaho
-  VERSION 0.1.0
+  VERSION 0.1.1
   LANGUAGES CXX
 )
 set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Build type for only meaningful to single-configuration generators")

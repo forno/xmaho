@@ -48,6 +48,13 @@ namespace std_ext
  * @param[in] a lhs value.
  * @param[in] b rhs value.
  * @return The inner product by a and b.
+ *
+ * @code
+ * const valarray<int> a {2, 4, 6};
+ * cosnt valarray<int> b {1, 3, 5};
+ * const auto result {inner_product(a, b)}
+ * assert(44 == result);
+ * @endcode
  */
 template<typename T>
 T inner_product(const std::valarray<T>& a, const std::valarray<T>& b);
@@ -59,6 +66,14 @@ T inner_product(const std::valarray<T>& a, const std::valarray<T>& b);
  * @param[in] a lhs value.
  * @param[in] b rhs value.
  * @return The vector product by a and b.
+ *
+ * @code
+ * const valarray<int> a {2, 4, 6};
+ * cosnt valarray<int> b {1, 3, 5};
+ * const auto result {vector_product(a, b)}
+ * const auto correct {2, -4, 2};
+ * assert(equal(begin(correct), end(correct), begin(result), end(result)));
+ * @endcode
  */
 template<typename T>
 std::valarray<T> vector_product(const std::valarray<T>& a, const std::valarray<T>& b);
@@ -70,6 +85,21 @@ std::valarray<T> vector_product(const std::valarray<T>& a, const std::valarray<T
  * @tparam T The value type of valarray.
  * @param[in] vector Input vector.
  * @return The vector size.
+ *
+ * @code
+ * const valarray<int> v {1, -2, 2};
+ * const auto euclidean_distance {norm(v)};
+ * static_assert(is_same_v<const double, decltype(euclidean_distance)>, "norm on ordinal 2 return floting point type");
+ * assert(euclidean_distance == 3.); // It is correct operation with "==" because result is interger.
+ *
+ * const auto taxicab_distance {norm<1>(v)};
+ * static_assert(is_same_v<const int, decltype(taxicab_distance)>, "norm on ordinal 1 return same as value type");
+ * assert(taxicab_distance == 5);
+ *
+ * const auto uniform_norm {norm<numeric_limits<size_t>::max()>(v)};
+ * static_assert(is_same_v<const int, decltype(uniform_norm)>, "norm on ordinal max return same as value type");
+ * assert(uniform_norm == 2);
+ * @endcode
  */
 template<std::size_t ordinal = 2, typename T>
 auto norm(const std::valarray<T>& vector);
