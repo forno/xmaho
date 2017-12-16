@@ -104,6 +104,21 @@ std::valarray<T> vector_product(const std::valarray<T>& a, const std::valarray<T
 template<std::size_t ordinal = 2, typename T>
 auto norm(const std::valarray<T>& vector);
 
+/**
+ * @brief Return the avarage of vector.
+ *
+ * @param[in] vector Input vector.
+ * @return The average of vector.
+ *
+ * @code
+ * assert(3 == average(valarray<int>{2, 6, 2}));
+ * assert(3 == average(valarray<int>{2, 5, 1, 6}); // Be careful! return type is int!
+ * assert(3.5 - average(valarray<double>{2, 5, 1, 6}) < numeric_limits<double>::min());
+ * @endcode
+ */
+template<typename T>
+T average(const std::valarray<T>& vector);
+
 }
 }
 

@@ -132,4 +132,10 @@ auto xmaho::std_ext::norm(const std::valarray<T>& vector)
   return detail::norm_impl<ordinal>{}(vector);
 }
 
+template<typename T>
+T average(const std::valarray<T>& vector)
+{
+  return vector.sum() / vector.size();
+}
+
 #endif
