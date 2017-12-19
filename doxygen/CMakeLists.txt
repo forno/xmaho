@@ -4,4 +4,4 @@ if(DOXYGEN_FOUND)
   add_custom_target(doc
     ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile"
   )
-endif(DOXYGEN_FOUND)
+endif()

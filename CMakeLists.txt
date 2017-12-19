@@ -13,7 +13,7 @@ if(ENABLE_TEST)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
   enable_testing()
   add_subdirectory(test)
-endif(ENABLE_TEST)
+endif()
 
 add_subdirectory(doxygen)
 
