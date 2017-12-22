@@ -2,6 +2,8 @@ language: cpp
 dist: trusty
 sudo: false
 cache: ccache
+git:
+  submodules: false
 addons:
   apt:
     sources: ubuntu-toolchain-r-test
