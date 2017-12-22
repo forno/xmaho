@@ -1,4 +1,4 @@
 [submodule "docs"]
 	path = docs
-	url = https://github.com/forno/xmaho.git
+	url = git@github.com:forno/xmaho.git
 	branch = gh-pages
