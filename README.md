@@ -1,7 +1,11 @@
 # x.maho
-The c++ header only library for latest version.
+The c++ header only library for latest version with only std library.
 
 [![Build Status](https://travis-ci.org/forno/xmaho.svg?branch=master)](https://travis-ci.org/forno/xmaho)
+
+## Concept
+Only depend to std library.
+Utility for my ideas.
 
 ## API
 API [here](https://forno.github.io/xmaho/files.html)
