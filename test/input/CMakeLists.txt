@@ -1,0 +1,3 @@
+add_executable(test_input_input input.cpp)
+target_link_libraries(test_input_input gmock_main)
+add_test(NAME test_input_input COMMAND test_input_input)
