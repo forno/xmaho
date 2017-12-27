@@ -67,5 +67,6 @@ add_compile_options(
 )
 
 # Add some test
+add_subdirectory(input)
 add_subdirectory(point)
 add_subdirectory(std_ext)
