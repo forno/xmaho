@@ -1,0 +1,3 @@
+add_executable(test_message_http_client client.cpp)
+target_link_libraries(test_message_http_client gmock_main)
+add_test(NAME test_message_http_client COMMAND test_message_http_client)
