@@ -30,15 +30,31 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "../client.hpp"
 
+#include <iterator>
 #include <stdexcept>
+#include <utility>
 
-template<template<typename...> typename StringT, typename CharT, typename... Args>
-constexpr xmaho::message::http::BasicClient<StringT, CharT, Args...>::BasicClient(string_view_type method, string_view_type endpoint, string_view_type version, string_view_type body)
+template<template<typename...> typename StringT, typename CharT, typename... Rest>
+constexpr xmaho::message::http::BasicClient<StringT, CharT, Rest...>::BasicClient(string_view_type method, string_view_type endpoint, string_view_type version, string_view_type body)
   : method_ {method.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Method is empty"} : std::cbegin(method), std::cend(method)},
     endpoint_ {endpoint.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Endpoint is empty"} : std::cbegin(endpoint), std::cend(endpoint)},
     version_ {std::cbegin(version), std::cend(version)},
     body_ {std::cbegin(body), std::cend(body)}
 {
+}
+
+template<template<typename...> typename StringT, typename CharT, typename... Rest>
+template<typename... Args>
+constexpr auto xmaho::message::http::BasicClient<StringT, CharT, Rest...>::emplace_header(Args... args)
+{
+  headers_.emplace(std::forward<Args>(args)...);
+}
+
+template<template<typename...> typename StringT, typename CharT, typename... Rest>
+template<typename... Args>
+constexpr auto xmaho::message::http::BasicClient<StringT, CharT, Rest...>::insert_header(Args... args)
+{
+  headers_.insert(std::forward<Args>(args)...);
 }
 
 namespace xmaho::message::http::detail
@@ -106,8 +122,8 @@ constexpr char32_t twice_newline<char32_t>[] {U"\r\n\r\n"};
 
 }
 
-template<template<typename...> typename StringT, typename CharT, typename... Args>
-constexpr xmaho::message::http::BasicClient<StringT, CharT, Args...>::operator value_type() const
+template<template<typename...> typename StringT, typename CharT, typename... Rest>
+constexpr xmaho::message::http::BasicClient<StringT, CharT, Rest...>::operator value_type() const
 {
   value_type v {method_};
   v += detail::space<CharT>;
