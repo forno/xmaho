@@ -43,9 +43,7 @@ namespace xmaho::message::http
 /**
  * @brief HTTP 0.9, 1.0 or 1.1 message holder.
  *
- * @tparam StringT The string type. ex) std::basic_string
- * @tparam CharT The character type for StringT.
- * @tparam Rest The rest of template arguments for StringT.
+ * @tparam StringT The string type. ex) std::string, std::wstring or etc...
  *
  * @code
  * xmaho::message::http::Client client_message {"GET", "/"}; // HTTP 0.9
@@ -56,12 +54,12 @@ namespace xmaho::message::http
  * std::cout << static_cast<std::string>(client_message); // GET / HTTP/1.1\r\n\r\n{id:1224}
  * @endcode
  */
-template<template<typename...> typename StringT, typename CharT, typename... Rest>
+template<typename StringT>
 class BasicClient
 {
 public:
   //! @brief The internal string type.
-  using value_type = StringT<CharT, Rest...>;
+  using value_type = StringT;
   //! @brief The string_view type. This class is usable as StringT.
   using string_view_type = std::basic_string_view<typename value_type::value_type, typename value_type::traits_type>;
   //! @brief The header type for emplace_header and insert_header.
@@ -108,6 +106,7 @@ public:
    * This function isn't explicit. So you can use this on required StringT.
    */
   constexpr operator value_type() const;
+
 private:
   //! @brief The headers of HTTP request.
   std::unordered_map<value_type, value_type> headers_ {};
@@ -119,13 +118,12 @@ private:
   value_type version_;
   //! @brief The body message of HTTP.
   value_type body_;
-
 };
 
-using Client = BasicClient<std::basic_string, char>;
-using wClient = BasicClient<std::basic_string, wchar_t>;
-using u16Client = BasicClient<std::basic_string, char16_t>;
-using u32Client = BasicClient<std::basic_string, char32_t>;
+using Client = BasicClient<std::string>;
+using wClient = BasicClient<std::wstring>;
+using u16Client = BasicClient<std::u16string>;
+using u32Client = BasicClient<std::u32string>;
 
 }
 
