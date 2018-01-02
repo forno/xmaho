@@ -64,61 +64,61 @@ template<typename T>
 constexpr T space;
 
 template<>
-constexpr char space<char> {' '};
+constexpr auto space<char> {' '};
 
 template<>
-constexpr wchar_t space<wchar_t> {L' '};
+constexpr auto space<wchar_t> {L' '};
 
 template<>
-constexpr char16_t space<char16_t> {u' '};
+constexpr auto space<char16_t> {u' '};
 
 template<>
-constexpr char32_t space<char32_t> {U' '};
+constexpr auto space<char32_t> {U' '};
 
 template<typename T>
 constexpr T colon;
 
 template<>
-constexpr char colon<char> {':'};
+constexpr auto colon<char> {':'};
 
 template<>
-constexpr wchar_t colon<wchar_t> {L':'};
+constexpr auto colon<wchar_t> {L':'};
 
 template<>
-constexpr char16_t colon<char16_t> {u':'};
+constexpr auto colon<char16_t> {u':'};
 
 template<>
-constexpr char32_t colon<char32_t> {U':'};
+constexpr auto colon<char32_t> {U':'};
 
 template<typename T>
-constexpr T newline[] {};
+constexpr T newline {};
 
 template<>
-constexpr char newline<char>[] {"\r\n"};
+constexpr auto newline<char> {"\r\n"};
 
 template<>
-constexpr wchar_t newline<wchar_t>[] {L"\r\n"};
+constexpr auto newline<wchar_t> {L"\r\n"};
 
 template<>
-constexpr char16_t newline<char16_t>[] {u"\r\n"};
+constexpr auto newline<char16_t> {u"\r\n"};
 
 template<>
-constexpr char32_t newline<char32_t>[] {U"\r\n"};
+constexpr auto newline<char32_t> {U"\r\n"};
 
 template<typename T>
-constexpr T twice_newline[] {};
+constexpr T twice_newline {};
 
 template<>
-constexpr char twice_newline<char>[] {"\r\n\r\n"};
+constexpr auto twice_newline<char> {"\r\n\r\n"};
 
 template<>
-constexpr wchar_t twice_newline<wchar_t>[] {L"\r\n\r\n"};
+constexpr auto twice_newline<wchar_t> {L"\r\n\r\n"};
 
 template<>
-constexpr char16_t twice_newline<char16_t>[] {u"\r\n\r\n"};
+constexpr auto twice_newline<char16_t> {u"\r\n\r\n"};
 
 template<>
-constexpr char32_t twice_newline<char32_t>[] {U"\r\n\r\n"};
+constexpr auto twice_newline<char32_t> {U"\r\n\r\n"};
 
 }
 
