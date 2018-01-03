@@ -45,16 +45,16 @@ constexpr xmaho::message::http::BasicClient<StringT>::BasicClient(string_view_ty
 
 template<typename StringT>
 template<typename... Args>
-constexpr auto xmaho::message::http::BasicClient<StringT>::emplace_header(Args... args)
+constexpr auto xmaho::message::http::BasicClient<StringT>::add_header(Args... args)
 {
-  headers_.emplace(std::forward<Args>(args)...);
+  return headers_.emplace(std::forward<Args>(args)...);
 }
 
 template<typename StringT>
-template<typename... Args>
-constexpr auto xmaho::message::http::BasicClient<StringT>::insert_header(Args... args)
+template<typename Iterator1, typename Iterator2>
+constexpr void xmaho::message::http::BasicClient<StringT>::add_headers(Iterator1 first, Iterator2 last)
 {
-  headers_.insert(std::forward<Args>(args)...);
+  headers_.insert(std::move(first), std::move(last));
 }
 
 namespace xmaho::message::http::detail

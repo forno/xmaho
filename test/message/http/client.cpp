@@ -56,7 +56,7 @@ TEST(MessageHTTPClientTest, NoEffectHeader)
 {
   using namespace std::literals::string_literals;
   xmaho::message::http::Client value {"GET", "/"};
-  value.emplace_header("Host", "localhost");
+  value.add_header("Host", "localhost");
   EXPECT_EQ("GET /"s, static_cast<std::string>(value));
 }
 
@@ -64,7 +64,7 @@ TEST(MessageHTTPClientTest, EmplaceMinimumHeader)
 {
   using namespace std::literals::string_literals;
   xmaho::message::http::Client value {"GET", "/", "HTTP/1.1"};
-  value.emplace_header("Host", "localhost");
+  value.add_header("Host", "localhost");
   EXPECT_EQ("GET / HTTP/1.1\r\nHost:localhost"s, static_cast<std::string>(value));
 }
 
@@ -72,7 +72,7 @@ TEST(MessageHTTPClientTest, EmplaceMinimumHeaderWithNormalValues)
 {
   using namespace std::literals::string_literals;
   xmaho::message::http::Client value {"GET", "/", "HTTP/1.1", "{id:1224}"};
-  value.emplace_header("Host", "localhost");
+  value.add_header("Host", "localhost");
   EXPECT_EQ("GET / HTTP/1.1\r\nHost:localhost\r\n\r\n{id:1224}"s, static_cast<std::string>(value));
 }
 
@@ -80,8 +80,8 @@ TEST(MessageHTTPClientTest, EmplaceSomeHeaders)
 {
   using namespace std::literals::string_literals;
   xmaho::message::http::Client value {"GET", "/", "HTTP/1.1", "{id:message}"};
-  value.emplace_header("Host", "localhost");
-  value.emplace_header("Content-Type", "application/sparql-query");
+  value.add_header("Host", "localhost");
+  value.add_header("Content-Type", "application/sparql-query");
   std::istringstream iss {value};
   std::string v;
   std::getline(iss, v);
@@ -101,7 +101,7 @@ TEST(MessageHTTPClientTest, InsertSomeHeadersWithIterator)
   using namespace std::literals::string_literals;
   xmaho::message::http::Client value {"GET", "/", "HTTP/1.1", "{id:message}"};
   std::vector<xmaho::message::http::Client::header_type> headers {{"Host", "localhost"}, {"Content-Type", "application/sparql-query"}};
-  value.insert_header(std::cbegin(headers), std::cend(headers));
+  value.add_headers(std::cbegin(headers), std::cend(headers));
   std::istringstream iss {value};
   std::string v;
   std::getline(iss, v);

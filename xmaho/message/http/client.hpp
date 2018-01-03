@@ -81,24 +81,27 @@ public:
   /**
    * @brief Add header with emplace.
    *
-   * This function forward arguments to unordered_map.
+   * This function forward arguments to unordered_map::emplace.
    *
    * @tparam Args Types of input values.
    * @param[in] args Values for headere.
+   * @return The return value of unordered_map::emplace.
    */
   template<typename... Args>
-  constexpr auto emplace_header(Args... args);
+  constexpr auto add_header(Args... args);
 
   /**
    * @brief Add header with insert.
    *
    * This function forward arguments to unordered_map.
    *
-   * @tparam Args Types of input values.
-   * @param[in] args Values for headere.
+   * @tparam Iterator1 Type of headers iterator.
+   * @tparam Iterator2 Type of headers iterator.
+   * @param[in] first The first iterator of headers.
+   * @param[in] last The last iterator of headers.
    */
-  template<typename... Args>
-  constexpr auto insert_header(Args... args);
+  template<typename Iterator1, typename Iterator2>
+  constexpr void add_headers(Iterator1 first, Iterator2 last);
 
   /**
    * @brief Create StringT value.
