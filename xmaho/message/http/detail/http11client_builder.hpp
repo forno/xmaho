@@ -39,7 +39,7 @@ namespace xmaho::message::http::detail
 {
 
 template<typename T>
-constexpr T host_str {};
+constexpr T host_str;
 
 template<>
 constexpr auto host_str<char> {"Host"};
@@ -109,7 +109,7 @@ namespace xmaho::message::http::detail
 {
 
 template<typename T>
-constexpr T get_str {};
+constexpr T get_str;
 
 template<>
 constexpr auto get_str<char> {"GET"};
@@ -138,7 +138,7 @@ namespace xmaho::message::http::detail
 {
 
 template<typename T>
-constexpr T post_str {};
+constexpr T post_str;
 
 template<>
 constexpr auto post_str<char> {"POST"};
@@ -167,7 +167,7 @@ namespace xmaho::message::http::detail
 {
 
 template<typename T>
-constexpr T http11_str {};
+constexpr T http11_str;
 
 template<>
 constexpr auto http11_str<char> {"HTTP/1.1"};
