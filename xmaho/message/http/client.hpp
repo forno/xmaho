@@ -62,7 +62,7 @@ public:
   using value_type = StringT;
   //! @brief The string_view type. This class is usable as StringT.
   using string_view_type = std::basic_string_view<typename value_type::value_type, typename value_type::traits_type>;
-  //! @brief The header type for emplace_header and insert_header.
+  //! @brief The header type for add_headers.
   using header_type = typename std::unordered_map<value_type, value_type>::value_type;
 
   /**
