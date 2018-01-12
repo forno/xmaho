@@ -54,7 +54,7 @@ namespace xmaho::message::http
  * @code
  * xmaho::message::http::HTTP11ClientBuilder client_builder {};
  * std::cout << static_cast<std::string>(client_builder.host("localhost").endpoint("/").get().execute()); // GET / HTTP/1.1
- * std::cout << static_cast<std::string>(client_builder.post("{id:1224}").execute()); // POST / HTTP/1.1\r\n\r\n{id:1224}
+ * std::cout << static_cast<std::string>(client_builder.post("{id:1224}").execute()); // POST / HTTP/1.1\r\nContent-Length:9\r\n\r\n{id:1224}
  *
  * xmaho::message::http::HTTP11ClientBuilder client_builder2 {"localhost", "/"};
  * std::cout << static_cast<std::string>(client_builder2.get().execute()); // GET / HTTP/1.1

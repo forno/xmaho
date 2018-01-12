@@ -51,7 +51,7 @@ namespace xmaho::message::http
  * xmaho::message::http::Client client_message {"GET", "/", "HTTP/1.1"};
  * std::cout << static_cast<std::string>(client_message); // GET / HTTP/1.1
  * xmaho::message::http::Client client_message {"POST", "/", "HTTP/1.1", "{id:1224}"};
- * std::cout << static_cast<std::string>(client_message); // GET / HTTP/1.1\r\n\r\n{id:1224}
+ * std::cout << static_cast<std::string>(client_message); // GET / HTTP/1.1\r\nContent-Length:9\r\n\r\n{id:1224}
  * @endcode
  */
 template<typename StringT>

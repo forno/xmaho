@@ -106,6 +106,21 @@ template<>
 constexpr auto newline<char32_t> {U"\r\n"};
 
 template<typename T>
+constexpr T content_length;
+
+template<>
+constexpr auto content_length<char> {"Content-Length"};
+
+template<>
+constexpr auto content_length<wchar_t> {L"Content-Length"};
+
+template<>
+constexpr auto content_length<char16_t> {u"Content-Length"};
+
+template<>
+constexpr auto content_length<char32_t> {U"Content-Length"};
+
+template<typename T>
 constexpr T twice_newline;
 
 template<>
@@ -119,6 +134,21 @@ constexpr auto twice_newline<char16_t> {u"\r\n\r\n"};
 
 template<>
 constexpr auto twice_newline<char32_t> {U"\r\n\r\n"};
+
+template<typename StringT>
+constexpr StringT to_string(typename StringT::size_type value);
+
+template<>
+std::string to_string(std::string::size_type value)
+{
+  return std::to_string(value);
+}
+
+template<>
+std::wstring to_string(std::wstring::size_type value)
+{
+  return std::to_wstring(value);
+}
 
 }
 
@@ -141,6 +171,10 @@ xmaho::message::http::BasicClient<StringT>::operator value_type() const
   }
   if (body_.empty())
     return v;
+  v += detail::newline<char_type>;
+  v += detail::content_length<char_type>;
+  v += detail::colon<char_type>;
+  v += detail::to_string<StringT>(body_.size());
   v += detail::twice_newline<char_type>;
   v += body_;
   return v;
