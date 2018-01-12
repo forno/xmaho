@@ -27,6 +27,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include "xmaho/message/http/http11client_builder.hpp"
 
+#include <string>
+
 #include <gtest/gtest.h>
 
 TEST(MessageHttpHTTP11ClientBuilderTest, MinimumConstruct)
@@ -52,6 +54,8 @@ TEST(MessageHttpHttp11ClientBuilderTest, FewArgumentsExecute)
   EXPECT_ANY_THROW(xmaho::message::http::HTTP11ClientBuilder{}.host("localhost").execute());
   EXPECT_ANY_THROW(xmaho::message::http::HTTP11ClientBuilder{}.get().execute());
   EXPECT_ANY_THROW(xmaho::message::http::HTTP11ClientBuilder{}.host("localhost").endpoint("/").execute());
+  EXPECT_ANY_THROW(xmaho::message::http::HTTP11ClientBuilder{}.endpoint("/").get().execute());
+  EXPECT_ANY_THROW(xmaho::message::http::HTTP11ClientBuilder{}.host("localhost").get().execute());
 }
 
 TEST(MessageHttpHttp11ClientBuilderTest, ReuseObject)
