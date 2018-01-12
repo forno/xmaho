@@ -143,9 +143,12 @@ public:
   /**
    * @brief Create HTTP/1.1 message.
    *
+   * @tparam SizetostrF The StringT::size_type to StringT convertion functor.
+   * @param[in] converter The convertion functor.
    * @return HTTP/1.1 message.
    */
-  BasicClient<StringT> execute() const;
+  template<typename SizetostrF = to_string<StringT>>
+  BasicClient<StringT, SizetostrF> execute(SizetostrF converter = {}) const;
 
 private:
   std::unordered_map<StringT, StringT> headers_ {};

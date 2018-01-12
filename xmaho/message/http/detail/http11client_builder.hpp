@@ -184,8 +184,9 @@ constexpr auto http11_str<char32_t> {U"HTTP/1.1"};
 }
 
 template<typename StringT>
-xmaho::message::http::BasicClient<StringT>
-xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::execute() const
+template<typename SizetostrF>
+xmaho::message::http::BasicClient<StringT, SizetostrF>
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::execute(SizetostrF converter) const
 {
   if (method_.empty())
     throw std::logic_error{"xmaho::message::http::BasicHTTP11ClientBuilder::execute : method must be set"};
@@ -194,7 +195,7 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::execute() const
   if (!headers_.count(detail::host_str<typename StringT::value_type>))
     throw std::logic_error{"xmaho::message::http::BasicHTTP11ClientBuilder::execute : host must be set"};
 
-  BasicClient<StringT> v {method_, endpoint_, detail::http11_str<typename StringT::value_type>, body_};
+  BasicClient<StringT, SizetostrF> v {method_, endpoint_, detail::http11_str<typename StringT::value_type>, body_, std::move(converter)};
   v.add_headers(std::cbegin(headers_), std::cend(headers_));
   return v;
 }
