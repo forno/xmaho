@@ -79,7 +79,7 @@ public:
    * @param[in] host The hostname of server.
    * @param[in] endpoint The endpoint of HTTP/1.1.
    */
-  constexpr BasicHTTP11ClientBuilder(value_type host, value_type endpoint = {});
+  constexpr explicit BasicHTTP11ClientBuilder(value_type host, value_type endpoint = {});
 
   /**
    * @brief The host header setter.
