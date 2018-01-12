@@ -91,7 +91,7 @@ public:
   constexpr auto add_header(Args... args);
 
   /**
-   * @brief Add header with insert.
+   * @brief Add headers with insert.
    *
    * This function forward arguments to unordered_map.
    *
@@ -106,7 +106,7 @@ public:
   /**
    * @brief Create StringT value.
    *
-   * This function isn't explicit. So you can use this on required StringT.
+   * This function isn't explicit. So you can use this as StringT when require StringT.
    */
   constexpr operator value_type() const;
 

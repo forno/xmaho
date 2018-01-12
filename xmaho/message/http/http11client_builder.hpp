@@ -42,6 +42,25 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace xmaho::message::http
 {
 
+/**
+ * @brief HTTP/1.1 message generator.
+ *
+ * @note
+ * This class hold reference from argument of functions.
+ * So all arguments of functions require long-term life then this instance.
+ *
+ * @tparam StringT The string type. ex) std::string, std::wstring or etc...
+ *
+ * @code
+ * xmaho::message::http::HTTP11ClientBuilder client_builder {};
+ * std::cout << static_cast<std::string>(client_builder.host("localhost").endpoint("/").get().execute()); // GET / HTTP/1.1
+ * std::cout << static_cast<std::string>(client_builder.post("{id:1224}").execute()); // POST / HTTP/1.1\r\n\r\n{id:1224}
+ *
+ * xmaho::message::http::HTTP11ClientBuilder client_builder2 {"localhost", "/"};
+ * std::cout << static_cast<std::string>(client_builder2.get().execute()); // GET / HTTP/1.1
+ * std::cout << static_cast<std::string>(client_builder2.endpoint("/endpoint").get().execute()); // GET /endpoint HTTP/1.1
+ * @endcode
+ */
 template<typename StringT>
 class BasicHTTP11ClientBuilder
 {
@@ -55,7 +74,7 @@ public:
   constexpr BasicHTTP11ClientBuilder() = default;
 
   /**
-   * @brief The construct with endpoint (It stable change)
+   * @brief The constructor with some values.
    *
    * @param[in] host The hostname of server.
    * @param[in] endpoint The endpoint of HTTP/1.1.
@@ -83,7 +102,7 @@ public:
    *
    * This function can overwrite old value.
    *
-   * @deprecated This function will are replaced some header name functions.
+   * @deprecated This function will are replaced some header name functions, like host function.
    * @param[in] name The header's name.
    * @param[in] value The header's value.
    * @return The this object.
@@ -96,7 +115,7 @@ public:
    *
    * This function don't overwrite old values for safety.
    *
-   * @deprecated This function will are replaced some header name functions.
+   * @deprecated This function will are replaced some header name functions, like host function.
    * @tparam Iterator1 Type of headers iterator.
    * @tparam Iterator2 Type of headers iterator.
    * @param[in] first The first iterator of headers.
@@ -107,7 +126,7 @@ public:
   constexpr BasicHTTP11ClientBuilder& add_headers(Iterator1 first, Iterator2 last);
 
   /**
-   * @brief The get method setter.
+   * @brief The GET method setter.
    *
    * @return The this object.
    */
