@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['swap',['swap',['../classxmaho_1_1std__ext_1_1valmatrix.html#ae5af24b50c24f0a13b4fb77428753a3b',1,'xmaho::std_ext::valmatrix::swap()'],['../valmatrix_8hpp.html#a7633936b48188e8db3ec2948c64d0c23',1,'xmaho::std_ext::swap()']]]
+  ['norm',['norm',['../point_8hpp.html#a29323f351a6db164ffbfb9e4a5485f45',1,'xmaho::point::norm()'],['../valarray_8hpp.html#ac6b87850526e256c8095ff0b40990a8f',1,'xmaho::std_ext::norm()']]]
 ];
