@@ -48,6 +48,8 @@ class BasicHTTP11ClientBuilder
 public:
   //! @brief The string_view type for arguments.
   using value_type = std::basic_string_view<typename StringT::value_type, typename StringT::traits_type>;
+  //! @brief The header type for add_headers.
+  using header_type = typename std::unordered_map<StringT, StringT>::value_type;
 
   //! @brief The default constructor.
   constexpr BasicHTTP11ClientBuilder() = default;
@@ -75,6 +77,30 @@ public:
    * @return The this object.
    */
   constexpr BasicHTTP11ClientBuilder& endpoint(value_type value);
+
+  /**
+   * @brief The header setter.
+   *
+   * This function can overwrite old value.
+   *
+   * @param[in] name The header's name.
+   * @param[in] value The header's value.
+   * @return The this object.
+   */
+  constexpr BasicHTTP11ClientBuilder& header(const StringT& name, value_type value);
+
+  /**
+   * @brief Add headers with iterator.
+   *
+   * This function don't overwrite old values for safety.
+   *
+   * @tparam Iterator1 Type of headers iterator.
+   * @tparam Iterator2 Type of headers iterator.
+   * @param[in] first The first iterator of headers.
+   * @param[in] last The last iterator of headers.
+   */
+  template<typename Iterator1, typename Iterator2>
+  constexpr BasicHTTP11ClientBuilder& add_headers(Iterator1 first, Iterator2 last);
 
   /**
    * @brief The get method setter.

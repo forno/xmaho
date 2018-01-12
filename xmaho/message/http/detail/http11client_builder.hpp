@@ -32,6 +32,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <iterator>
 #include <stdexcept>
+#include <tuple>
+#include <utility>
 
 namespace xmaho::message::http::detail
 {
@@ -103,30 +105,54 @@ constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::BasicHTTP11Cl
   : headers_ {{!host.empty() ? std::piecewise_construct : throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::BasicHTTP11ClientBuilder : host must be no empty"},
                std::forward_as_tuple(detail::host_str<typename StringT::value_type>),
                std::forward_as_tuple(std::cbegin(host), std::cend(host))}},
-    endpoint_ {!endpoint.empty() ? endpoint : throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::BasicHTTP11ClientBuilder : endpoint must be no empty"}}
+    endpoint_ {std::move(endpoint)}
 {
 }
 
 template<typename StringT>
-constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>& xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::host(value_type value)
+constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::host(value_type value)
 {
   if (value.empty())
-    throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder : host must be no empty"};
+    throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::host : host must be no empty"};
   headers_[detail::host_str<typename StringT::value_type>].assign(std::cbegin(value), std::cend(value));
   return *this;
 }
 
 template<typename StringT>
-constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>& xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::endpoint(value_type value)
+constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::endpoint(value_type value)
 {
   if (value.empty())
-    throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder : endpoint must be no empty"};
+    throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::endpoint : endpoint must be no empty"};
   endpoint_ = std::move(value);
   return *this;
 }
 
 template<typename StringT>
-constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>& xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::get()
+constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::header(const StringT& name, value_type value)
+{
+  if (name.empty())
+    throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::header : name must be no empty"};
+  if (value.empty())
+    throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::header : value must be no empty"};
+  headers_[name].assign(std::cbegin(value), std::cend(value));
+  return *this;
+}
+
+template<typename StringT>
+template<typename Iterator1, typename Iterator2>
+constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::add_headers(Iterator1 first, Iterator2 last)
+{
+  headers_.insert(std::move(first), std::move(last));
+  return *this;
+}
+
+template<typename StringT>
+constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::get()
 {
   method_ = detail::get_str<typename StringT::value_type>;
   body_ = {};
@@ -134,7 +160,8 @@ constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>& xmaho::messag
 }
 
 template<typename StringT>
-constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>& xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::post(value_type value)
+constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::post(value_type value)
 {
   method_ = detail::post_str<typename StringT::value_type>;
   body_ = std::move(value);
@@ -142,7 +169,8 @@ constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>& xmaho::messag
 }
 
 template<typename StringT>
-constexpr xmaho::message::http::BasicClient<StringT> xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::execute() const
+constexpr xmaho::message::http::BasicClient<StringT>
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::execute() const
 {
   if (method_.empty())
     throw std::logic_error{"xmaho::message::http::BasicHTTP11ClientBuilder::execute : method must be set"};
