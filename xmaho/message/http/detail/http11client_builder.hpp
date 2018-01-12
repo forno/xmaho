@@ -39,64 +39,19 @@ namespace xmaho::message::http::detail
 {
 
 template<typename T>
-T host_str {};
+constexpr T host_str {};
 
 template<>
-auto host_str<char> {"Host"};
+constexpr auto host_str<char> {"Host"};
 
 template<>
-auto host_str<wchar_t> {L"Host"};
+constexpr auto host_str<wchar_t> {L"Host"};
 
 template<>
-auto host_str<char16_t> {u"Host"};
+constexpr auto host_str<char16_t> {u"Host"};
 
 template<>
-auto host_str<char32_t> {U"Host"};
-
-template<typename T>
-T get_str {};
-
-template<>
-auto get_str<char> {"GET"};
-
-template<>
-auto get_str<wchar_t> {L"GET"};
-
-template<>
-auto get_str<char16_t> {u"GET"};
-
-template<>
-auto get_str<char32_t> {U"GET"};
-
-template<typename T>
-T post_str {};
-
-template<>
-auto post_str<char> {"POST"};
-
-template<>
-auto post_str<wchar_t> {L"POST"};
-
-template<>
-auto post_str<char16_t> {u"POST"};
-
-template<>
-auto post_str<char32_t> {U"POST"};
-
-template<typename T>
-T http11_str {};
-
-template<>
-auto http11_str<char> {"HTTP/1.1"};
-
-template<>
-auto http11_str<wchar_t> {L"HTTP/1.1"};
-
-template<>
-auto http11_str<char16_t> {u"HTTP/1.1"};
-
-template<>
-auto http11_str<char32_t> {U"HTTP/1.1"};
+constexpr auto host_str<char32_t> {U"Host"};
 
 }
 
@@ -150,6 +105,26 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::add_headers(Iterator1 f
   return *this;
 }
 
+namespace xmaho::message::http::detail
+{
+
+template<typename T>
+constexpr T get_str {};
+
+template<>
+constexpr auto get_str<char> {"GET"};
+
+template<>
+constexpr auto get_str<wchar_t> {L"GET"};
+
+template<>
+constexpr auto get_str<char16_t> {u"GET"};
+
+template<>
+constexpr auto get_str<char32_t> {U"GET"};
+
+}
+
 template<typename StringT>
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::get()
@@ -159,6 +134,26 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::get()
   return *this;
 }
 
+namespace xmaho::message::http::detail
+{
+
+template<typename T>
+constexpr T post_str {};
+
+template<>
+constexpr auto post_str<char> {"POST"};
+
+template<>
+constexpr auto post_str<wchar_t> {L"POST"};
+
+template<>
+constexpr auto post_str<char16_t> {u"POST"};
+
+template<>
+constexpr auto post_str<char32_t> {U"POST"};
+
+}
+
 template<typename StringT>
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::post(value_type value)
@@ -166,6 +161,26 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::post(value_type value)
   method_ = detail::post_str<typename StringT::value_type>;
   body_ = std::move(value);
   return *this;
+}
+
+namespace xmaho::message::http::detail
+{
+
+template<typename T>
+constexpr T http11_str {};
+
+template<>
+constexpr auto http11_str<char> {"HTTP/1.1"};
+
+template<>
+constexpr auto http11_str<wchar_t> {L"HTTP/1.1"};
+
+template<>
+constexpr auto http11_str<char16_t> {u"HTTP/1.1"};
+
+template<>
+constexpr auto http11_str<char32_t> {U"HTTP/1.1"};
+
 }
 
 template<typename StringT>
