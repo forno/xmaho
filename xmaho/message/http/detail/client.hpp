@@ -61,64 +61,64 @@ namespace xmaho::message::http::detail
 {
 
 template<typename T>
-T space;
+constexpr T space;
 
 template<>
-auto space<char> {' '};
+constexpr auto space<char> {' '};
 
 template<>
-auto space<wchar_t> {L' '};
+constexpr auto space<wchar_t> {L' '};
 
 template<>
-auto space<char16_t> {u' '};
+constexpr auto space<char16_t> {u' '};
 
 template<>
-auto space<char32_t> {U' '};
+constexpr auto space<char32_t> {U' '};
 
 template<typename T>
-T colon;
+constexpr T colon;
 
 template<>
-auto colon<char> {':'};
+constexpr auto colon<char> {':'};
 
 template<>
-auto colon<wchar_t> {L':'};
+constexpr auto colon<wchar_t> {L':'};
 
 template<>
-auto colon<char16_t> {u':'};
+constexpr auto colon<char16_t> {u':'};
 
 template<>
-auto colon<char32_t> {U':'};
+constexpr auto colon<char32_t> {U':'};
 
 template<typename T>
-T newline {};
+constexpr T newline;
 
 template<>
-auto newline<char> {"\r\n"};
+constexpr auto newline<char> {"\r\n"};
 
 template<>
-auto newline<wchar_t> {L"\r\n"};
+constexpr auto newline<wchar_t> {L"\r\n"};
 
 template<>
-auto newline<char16_t> {u"\r\n"};
+constexpr auto newline<char16_t> {u"\r\n"};
 
 template<>
-auto newline<char32_t> {U"\r\n"};
+constexpr auto newline<char32_t> {U"\r\n"};
 
 template<typename T>
-T twice_newline {};
+constexpr T twice_newline;
 
 template<>
-auto twice_newline<char> {"\r\n\r\n"};
+constexpr auto twice_newline<char> {"\r\n\r\n"};
 
 template<>
-auto twice_newline<wchar_t> {L"\r\n\r\n"};
+constexpr auto twice_newline<wchar_t> {L"\r\n\r\n"};
 
 template<>
-auto twice_newline<char16_t> {u"\r\n\r\n"};
+constexpr auto twice_newline<char16_t> {u"\r\n\r\n"};
 
 template<>
-auto twice_newline<char32_t> {U"\r\n\r\n"};
+constexpr auto twice_newline<char32_t> {U"\r\n\r\n"};
 
 }
 
