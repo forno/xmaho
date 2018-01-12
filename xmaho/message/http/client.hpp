@@ -48,7 +48,7 @@ namespace xmaho::message::http
  *
  * @note
  * Librarians will add specializations for u16string and u32string when std namespace get converter.
- * Users may use function macro to avoid conflict at the time.
+ * Users may use user define struct to avoid conflict at the time.
  *
  * @tparam StringT The string type.
  */
@@ -68,6 +68,7 @@ struct to_string
  * @brief HTTP 0.9, 1.0 or 1.1 message holder.
  *
  * @tparam StringT The string type. ex) std::string, std::wstring or etc...
+ * @tparam SizetostrF The StringT::size_type to StringT convertion functor.
  *
  * @code
  * xmaho::message::http::Client client_message {"GET", "/"}; // HTTP 0.9
