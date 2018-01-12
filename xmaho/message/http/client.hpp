@@ -74,9 +74,9 @@ public:
    * @param[in] body The body message of HTTP.
    */
   BasicClient(string_view_type method,
-                        string_view_type endpoint,
-                        string_view_type version = {},
-                        string_view_type body = {});
+              string_view_type endpoint,
+              string_view_type version = {},
+              string_view_type body = {});
 
   /**
    * @brief Add header with emplace.
