@@ -70,3 +70,4 @@ add_compile_options(
 add_subdirectory(input)
 add_subdirectory(point)
 add_subdirectory(std_ext)
+add_subdirectory(message)
