@@ -73,7 +73,7 @@ public:
    * @param[in] version The HTTP version.
    * @param[in] body The body message of HTTP.
    */
-  constexpr BasicClient(string_view_type method,
+  BasicClient(string_view_type method,
                         string_view_type endpoint,
                         string_view_type version = {},
                         string_view_type body = {});
@@ -88,7 +88,7 @@ public:
    * @return The return value of unordered_map::emplace.
    */
   template<typename... Args>
-  constexpr auto add_header(Args... args);
+  auto add_header(Args... args);
 
   /**
    * @brief Add headers with insert.
@@ -101,14 +101,14 @@ public:
    * @param[in] last The last iterator of headers.
    */
   template<typename Iterator1, typename Iterator2>
-  constexpr void add_headers(Iterator1 first, Iterator2 last);
+  void add_headers(Iterator1 first, Iterator2 last);
 
   /**
    * @brief Create StringT value.
    *
    * This function isn't explicit. So you can use this as StringT when require StringT.
    */
-  constexpr operator value_type() const;
+  operator value_type() const;
 
 private:
   //! @brief The headers of HTTP request.

@@ -39,69 +39,69 @@ namespace xmaho::message::http::detail
 {
 
 template<typename T>
-constexpr T host_str {};
+T host_str {};
 
 template<>
-constexpr auto host_str<char> {"Host"};
+auto host_str<char> {"Host"};
 
 template<>
-constexpr auto host_str<wchar_t> {L"Host"};
+auto host_str<wchar_t> {L"Host"};
 
 template<>
-constexpr auto host_str<char16_t> {u"Host"};
+auto host_str<char16_t> {u"Host"};
 
 template<>
-constexpr auto host_str<char32_t> {U"Host"};
+auto host_str<char32_t> {U"Host"};
 
 template<typename T>
-constexpr T get_str {};
+T get_str {};
 
 template<>
-constexpr auto get_str<char> {"GET"};
+auto get_str<char> {"GET"};
 
 template<>
-constexpr auto get_str<wchar_t> {L"GET"};
+auto get_str<wchar_t> {L"GET"};
 
 template<>
-constexpr auto get_str<char16_t> {u"GET"};
+auto get_str<char16_t> {u"GET"};
 
 template<>
-constexpr auto get_str<char32_t> {U"GET"};
+auto get_str<char32_t> {U"GET"};
 
 template<typename T>
-constexpr T post_str {};
+T post_str {};
 
 template<>
-constexpr auto post_str<char> {"POST"};
+auto post_str<char> {"POST"};
 
 template<>
-constexpr auto post_str<wchar_t> {L"POST"};
+auto post_str<wchar_t> {L"POST"};
 
 template<>
-constexpr auto post_str<char16_t> {u"POST"};
+auto post_str<char16_t> {u"POST"};
 
 template<>
-constexpr auto post_str<char32_t> {U"POST"};
+auto post_str<char32_t> {U"POST"};
 
 template<typename T>
-constexpr T http11_str {};
+T http11_str {};
 
 template<>
-constexpr auto http11_str<char> {"HTTP/1.1"};
+auto http11_str<char> {"HTTP/1.1"};
 
 template<>
-constexpr auto http11_str<wchar_t> {L"HTTP/1.1"};
+auto http11_str<wchar_t> {L"HTTP/1.1"};
 
 template<>
-constexpr auto http11_str<char16_t> {u"HTTP/1.1"};
+auto http11_str<char16_t> {u"HTTP/1.1"};
 
 template<>
-constexpr auto http11_str<char32_t> {U"HTTP/1.1"};
+auto http11_str<char32_t> {U"HTTP/1.1"};
 
 }
 
 template<typename StringT>
-constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::BasicHTTP11ClientBuilder(value_type host, value_type endpoint)
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::BasicHTTP11ClientBuilder(value_type host, value_type endpoint)
   : headers_ {{!host.empty() ? std::piecewise_construct : throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::BasicHTTP11ClientBuilder : host must be no empty"},
                std::forward_as_tuple(detail::host_str<typename StringT::value_type>),
                std::forward_as_tuple(std::cbegin(host), std::cend(host))}},
@@ -110,7 +110,7 @@ constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::BasicHTTP11Cl
 }
 
 template<typename StringT>
-constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::host(value_type value)
 {
   if (value.empty())
@@ -120,7 +120,7 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::host(value_type value)
 }
 
 template<typename StringT>
-constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::endpoint(value_type value)
 {
   if (value.empty())
@@ -130,7 +130,7 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::endpoint(value_type val
 }
 
 template<typename StringT>
-constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::header(const StringT& name, value_type value)
 {
   if (name.empty())
@@ -143,7 +143,7 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::header(const StringT& n
 
 template<typename StringT>
 template<typename Iterator1, typename Iterator2>
-constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::add_headers(Iterator1 first, Iterator2 last)
 {
   headers_.insert(std::move(first), std::move(last));
@@ -151,7 +151,7 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::add_headers(Iterator1 f
 }
 
 template<typename StringT>
-constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::get()
 {
   method_ = detail::get_str<typename StringT::value_type>;
@@ -160,7 +160,7 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::get()
 }
 
 template<typename StringT>
-constexpr xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::post(value_type value)
 {
   method_ = detail::post_str<typename StringT::value_type>;
@@ -169,7 +169,7 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::post(value_type value)
 }
 
 template<typename StringT>
-constexpr xmaho::message::http::BasicClient<StringT>
+xmaho::message::http::BasicClient<StringT>
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::execute() const
 {
   if (method_.empty())

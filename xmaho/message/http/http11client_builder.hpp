@@ -71,7 +71,7 @@ public:
   using header_type = typename std::unordered_map<StringT, StringT>::value_type;
 
   //! @brief The default constructor.
-  constexpr BasicHTTP11ClientBuilder() = default;
+  BasicHTTP11ClientBuilder() = default;
 
   /**
    * @brief The constructor with some values.
@@ -79,7 +79,7 @@ public:
    * @param[in] host The hostname of server.
    * @param[in] endpoint The endpoint of HTTP/1.1.
    */
-  constexpr explicit BasicHTTP11ClientBuilder(value_type host, value_type endpoint = {});
+  explicit BasicHTTP11ClientBuilder(value_type host, value_type endpoint = {});
 
   /**
    * @brief The host header setter.
@@ -87,7 +87,7 @@ public:
    * @param[in] value The hostname of server.
    * @return The this object.
    */
-  constexpr BasicHTTP11ClientBuilder& host(value_type value);
+  BasicHTTP11ClientBuilder& host(value_type value);
 
   /**
    * @brief The endpoint setter.
@@ -95,7 +95,7 @@ public:
    * @param[in] value The endpoint of HTTP/1.1
    * @return The this object.
    */
-  constexpr BasicHTTP11ClientBuilder& endpoint(value_type value);
+  BasicHTTP11ClientBuilder& endpoint(value_type value);
 
   /**
    * @brief The header setter.
@@ -108,7 +108,7 @@ public:
    * @return The this object.
    */
   [[deprecated]]
-  constexpr BasicHTTP11ClientBuilder& header(const StringT& name, value_type value);
+  BasicHTTP11ClientBuilder& header(const StringT& name, value_type value);
 
   /**
    * @brief Add headers with iterator.
@@ -123,14 +123,14 @@ public:
    */
   template<typename Iterator1, typename Iterator2>
   [[deprecated]]
-  constexpr BasicHTTP11ClientBuilder& add_headers(Iterator1 first, Iterator2 last);
+  BasicHTTP11ClientBuilder& add_headers(Iterator1 first, Iterator2 last);
 
   /**
    * @brief The GET method setter.
    *
    * @return The this object.
    */
-  constexpr BasicHTTP11ClientBuilder& get();
+  BasicHTTP11ClientBuilder& get();
 
   /**
    * @brief The POST method setter.
@@ -138,14 +138,14 @@ public:
    * @param[in] value The body of POST.
    * @return The this object.
    */
-  constexpr BasicHTTP11ClientBuilder& post(value_type value = {});
+  BasicHTTP11ClientBuilder& post(value_type value = {});
 
   /**
    * @brief Create HTTP/1.1 message.
    *
    * @return HTTP/1.1 message.
    */
-  constexpr BasicClient<StringT> execute() const;
+  BasicClient<StringT> execute() const;
 
 private:
   std::unordered_map<StringT, StringT> headers_ {};

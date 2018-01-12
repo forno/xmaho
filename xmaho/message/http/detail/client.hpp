@@ -35,7 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <utility>
 
 template<typename StringT>
-constexpr xmaho::message::http::BasicClient<StringT>::BasicClient(string_view_type method, string_view_type endpoint, string_view_type version, string_view_type body)
+xmaho::message::http::BasicClient<StringT>::BasicClient(string_view_type method, string_view_type endpoint, string_view_type version, string_view_type body)
   : method_ {method.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Method is empty"} : std::cbegin(method), std::cend(method)},
     endpoint_ {endpoint.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Endpoint is empty"} : std::cbegin(endpoint), std::cend(endpoint)},
     version_ {std::cbegin(version), std::cend(version)},
@@ -45,14 +45,14 @@ constexpr xmaho::message::http::BasicClient<StringT>::BasicClient(string_view_ty
 
 template<typename StringT>
 template<typename... Args>
-constexpr auto xmaho::message::http::BasicClient<StringT>::add_header(Args... args)
+auto xmaho::message::http::BasicClient<StringT>::add_header(Args... args)
 {
   return headers_.emplace(std::forward<Args>(args)...);
 }
 
 template<typename StringT>
 template<typename Iterator1, typename Iterator2>
-constexpr void xmaho::message::http::BasicClient<StringT>::add_headers(Iterator1 first, Iterator2 last)
+void xmaho::message::http::BasicClient<StringT>::add_headers(Iterator1 first, Iterator2 last)
 {
   headers_.insert(std::move(first), std::move(last));
 }
@@ -61,69 +61,69 @@ namespace xmaho::message::http::detail
 {
 
 template<typename T>
-constexpr T space;
+T space;
 
 template<>
-constexpr auto space<char> {' '};
+auto space<char> {' '};
 
 template<>
-constexpr auto space<wchar_t> {L' '};
+auto space<wchar_t> {L' '};
 
 template<>
-constexpr auto space<char16_t> {u' '};
+auto space<char16_t> {u' '};
 
 template<>
-constexpr auto space<char32_t> {U' '};
+auto space<char32_t> {U' '};
 
 template<typename T>
-constexpr T colon;
+T colon;
 
 template<>
-constexpr auto colon<char> {':'};
+auto colon<char> {':'};
 
 template<>
-constexpr auto colon<wchar_t> {L':'};
+auto colon<wchar_t> {L':'};
 
 template<>
-constexpr auto colon<char16_t> {u':'};
+auto colon<char16_t> {u':'};
 
 template<>
-constexpr auto colon<char32_t> {U':'};
+auto colon<char32_t> {U':'};
 
 template<typename T>
-constexpr T newline {};
+T newline {};
 
 template<>
-constexpr auto newline<char> {"\r\n"};
+auto newline<char> {"\r\n"};
 
 template<>
-constexpr auto newline<wchar_t> {L"\r\n"};
+auto newline<wchar_t> {L"\r\n"};
 
 template<>
-constexpr auto newline<char16_t> {u"\r\n"};
+auto newline<char16_t> {u"\r\n"};
 
 template<>
-constexpr auto newline<char32_t> {U"\r\n"};
+auto newline<char32_t> {U"\r\n"};
 
 template<typename T>
-constexpr T twice_newline {};
+T twice_newline {};
 
 template<>
-constexpr auto twice_newline<char> {"\r\n\r\n"};
+auto twice_newline<char> {"\r\n\r\n"};
 
 template<>
-constexpr auto twice_newline<wchar_t> {L"\r\n\r\n"};
+auto twice_newline<wchar_t> {L"\r\n\r\n"};
 
 template<>
-constexpr auto twice_newline<char16_t> {u"\r\n\r\n"};
+auto twice_newline<char16_t> {u"\r\n\r\n"};
 
 template<>
-constexpr auto twice_newline<char32_t> {U"\r\n\r\n"};
+auto twice_newline<char32_t> {U"\r\n\r\n"};
 
 }
 
 template<typename StringT>
-constexpr xmaho::message::http::BasicClient<StringT>::operator value_type() const
+xmaho::message::http::BasicClient<StringT>::operator value_type() const
 {
   using char_type = typename value_type::value_type;
   value_type v {method_};
