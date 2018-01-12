@@ -68,9 +68,9 @@ TEST(MessageHttpHttp11ClientBuilderTest, ReuseObject)
                                    .post("first body message")
                                    .execute()};
   using namespace std::literals::string_literals;
-  EXPECT_EQ("POST / HTTP/1.1\r\nHost:localhost\r\n\r\nfirst body message"s, value1);
+  EXPECT_EQ("POST / HTTP/1.1\r\nHost:localhost\r\nContent-Length:18\r\n\r\nfirst body message"s, value1);
   const std::string value2 {builder.post("second body message").execute()};
-  EXPECT_EQ("POST / HTTP/1.1\r\nHost:localhost\r\n\r\nsecond body message"s, value2);
+  EXPECT_EQ("POST / HTTP/1.1\r\nHost:localhost\r\nContent-Length:19\r\n\r\nsecond body message"s, value2);
   const std::string value3 {builder.get().execute()};
   EXPECT_EQ("GET / HTTP/1.1\r\nHost:localhost"s, value3);
 }

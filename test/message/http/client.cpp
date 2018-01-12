@@ -50,7 +50,7 @@ TEST(MessageHTTPClientTest, ToString)
   using namespace std::literals::string_literals;
   EXPECT_EQ("GET /"s, static_cast<std::string>(xmaho::message::http::Client{"GET", "/"}));
   EXPECT_EQ("GET / HTTP/1.1"s, static_cast<std::string>(xmaho::message::http::Client{"GET", "/", "HTTP/1.1"}));
-  EXPECT_EQ("GET / HTTP/1.1\r\n\r\n{id:1224}"s, static_cast<std::string>(xmaho::message::http::Client{"GET", "/", "HTTP/1.1", "{id:1224}"}));
+  EXPECT_EQ("GET / HTTP/1.1\r\nContent-Length:9\r\n\r\n{id:1224}"s, static_cast<std::string>(xmaho::message::http::Client{"GET", "/", "HTTP/1.1", "{id:1224}"}));
 }
 
 TEST(MessageHTTPClientTest, NoEffectHeader)
@@ -74,7 +74,7 @@ TEST(MessageHTTPClientTest, EmplaceMinimumHeaderWithNormalValues)
   using namespace std::literals::string_literals;
   xmaho::message::http::Client value {"GET", "/", "HTTP/1.1", "{id:1224}"};
   value.add_header("Host", "localhost");
-  EXPECT_EQ("GET / HTTP/1.1\r\nHost:localhost\r\n\r\n{id:1224}"s, static_cast<std::string>(value));
+  EXPECT_EQ("GET / HTTP/1.1\r\nHost:localhost\r\nContent-Length:9\r\n\r\n{id:1224}"s, static_cast<std::string>(value));
 }
 
 TEST(MessageHTTPClientTest, EmplaceSomeHeaders)
@@ -91,6 +91,8 @@ TEST(MessageHTTPClientTest, EmplaceSomeHeaders)
   EXPECT_TRUE("Host:localhost\r|Content-Type:application/sparql-query\r"s.find(v) != std::string::npos);
   std::getline(iss, v);
   EXPECT_TRUE("Host:localhost\r|Content-Type:application/sparql-query\r"s.find(v) != std::string::npos);
+  std::getline(iss, v);
+  EXPECT_EQ("Content-Length:12\r"s, v);
   std::getline(iss, v);
   EXPECT_EQ("\r"s, v);
   std::getline(iss, v);
@@ -111,6 +113,8 @@ TEST(MessageHTTPClientTest, InsertSomeHeadersWithIterator)
   EXPECT_TRUE("Host:localhost\r|Content-Type:application/sparql-query\r"s.find(v) != std::string::npos);
   std::getline(iss, v);
   EXPECT_TRUE("Host:localhost\r|Content-Type:application/sparql-query\r"s.find(v) != std::string::npos);
+  std::getline(iss, v);
+  EXPECT_EQ("Content-Length:12\r"s, v);
   std::getline(iss, v);
   EXPECT_EQ("\r"s, v);
   std::getline(iss, v);
