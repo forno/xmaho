@@ -27,32 +27,50 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
 #include "../client.hpp"
 
 #include <iterator>
 #include <stdexcept>
 #include <utility>
 
-template<typename StringT>
-xmaho::message::http::BasicClient<StringT>::BasicClient(string_view_type method, string_view_type endpoint, string_view_type version, string_view_type body)
+template<>
+struct xmaho::message::http::to_string<std::string>
+{
+  std::string operator()(const std::string::size_type& value) const
+  {
+    return std::to_string(value);
+  }
+};
+
+template<>
+struct xmaho::message::http::to_string<std::wstring>
+{
+  std::wstring operator()(const std::wstring::size_type& value) const
+  {
+    return std::to_wstring(value);
+  }
+};
+
+template<typename StringT, typename SizetostrF>
+xmaho::message::http::BasicClient<StringT, SizetostrF>::BasicClient(string_view_type method, string_view_type endpoint, string_view_type version, string_view_type body, SizetostrF converter)
   : method_ {method.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Method is empty"} : std::cbegin(method), std::cend(method)},
     endpoint_ {endpoint.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Endpoint is empty"} : std::cbegin(endpoint), std::cend(endpoint)},
     version_ {std::cbegin(version), std::cend(version)},
-    body_ {std::cbegin(body), std::cend(body)}
+    body_ {std::cbegin(body), std::cend(body)},
+    converter_ {converter}
 {
 }
 
-template<typename StringT>
+template<typename StringT, typename SizetostrF>
 template<typename... Args>
-auto xmaho::message::http::BasicClient<StringT>::add_header(Args... args)
+auto xmaho::message::http::BasicClient<StringT, SizetostrF>::add_header(Args... args)
 {
   return headers_.emplace(std::forward<Args>(args)...);
 }
 
-template<typename StringT>
+template<typename StringT, typename SizetostrF>
 template<typename Iterator1, typename Iterator2>
-void xmaho::message::http::BasicClient<StringT>::add_headers(Iterator1 first, Iterator2 last)
+void xmaho::message::http::BasicClient<StringT, SizetostrF>::add_headers(Iterator1 first, Iterator2 last)
 {
   headers_.insert(std::move(first), std::move(last));
 }
@@ -135,25 +153,10 @@ constexpr auto twice_newline<char16_t> {u"\r\n\r\n"};
 template<>
 constexpr auto twice_newline<char32_t> {U"\r\n\r\n"};
 
-template<typename StringT>
-constexpr StringT to_string(typename StringT::size_type value);
-
-template<>
-std::string to_string(std::string::size_type value)
-{
-  return std::to_string(value);
 }
 
-template<>
-std::wstring to_string(std::wstring::size_type value)
-{
-  return std::to_wstring(value);
-}
-
-}
-
-template<typename StringT>
-xmaho::message::http::BasicClient<StringT>::operator value_type() const
+template<typename StringT, typename SizetostrF>
+xmaho::message::http::BasicClient<StringT, SizetostrF>::operator value_type() const
 {
   using char_type = typename value_type::value_type;
   value_type v {method_};
@@ -174,7 +177,7 @@ xmaho::message::http::BasicClient<StringT>::operator value_type() const
   v += detail::newline<char_type>;
   v += detail::content_length<char_type>;
   v += detail::colon<char_type>;
-  v += detail::to_string<StringT>(body_.size());
+  v += converter_(body_.size());
   v += detail::twice_newline<char_type>;
   v += body_;
   return v;

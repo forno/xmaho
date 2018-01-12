@@ -35,10 +35,34 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 #include <string_view>
+#include <type_traits>
 #include <unordered_map>
 
 namespace xmaho::message::http
 {
+
+/**
+ * @brief The StringT::size_type to StringT convertion class.
+ *
+ * Users can add template specializations for your strings.
+ *
+ * @note
+ * Librarians will add specializations for u16string and u32string when std namespace get converter.
+ * Users may use function macro to avoid conflict at the time.
+ *
+ * @tparam StringT The string type.
+ */
+template<typename StringT>
+struct to_string
+{
+  /**
+   * @brief The convertion function.
+   *
+   * @param[in] value The StringT::size_type value.
+   * @return The value as StringT.
+   */
+  StringT operator()(typename StringT::size_type value) const;
+};
 
 /**
  * @brief HTTP 0.9, 1.0 or 1.1 message holder.
@@ -54,7 +78,7 @@ namespace xmaho::message::http
  * std::cout << static_cast<std::string>(client_message); // GET / HTTP/1.1\r\nContent-Length:9\r\n\r\n{id:1224}
  * @endcode
  */
-template<typename StringT>
+template<typename StringT, typename SizetostrF = to_string<StringT>>
 class BasicClient
 {
 public:
@@ -76,7 +100,8 @@ public:
   BasicClient(string_view_type method,
               string_view_type endpoint,
               string_view_type version = {},
-              string_view_type body = {});
+              string_view_type body = {},
+              SizetostrF converter = {});
 
   /**
    * @brief Add header with emplace.
@@ -121,6 +146,8 @@ private:
   value_type version_;
   //! @brief The body message of HTTP.
   value_type body_;
+  //! @brief The converter for StringT::size_type to StringT.
+  std::decay_t<SizetostrF> converter_;
 };
 
 using Client = BasicClient<std::string>;
