@@ -83,10 +83,12 @@ public:
    *
    * This function can overwrite old value.
    *
+   * @deprecated This function will are replaced some header name functions.
    * @param[in] name The header's name.
    * @param[in] value The header's value.
    * @return The this object.
    */
+  [[deprecated]]
   constexpr BasicHTTP11ClientBuilder& header(const StringT& name, value_type value);
 
   /**
@@ -94,12 +96,14 @@ public:
    *
    * This function don't overwrite old values for safety.
    *
+   * @deprecated This function will are replaced some header name functions.
    * @tparam Iterator1 Type of headers iterator.
    * @tparam Iterator2 Type of headers iterator.
    * @param[in] first The first iterator of headers.
    * @param[in] last The last iterator of headers.
    */
   template<typename Iterator1, typename Iterator2>
+  [[deprecated]]
   constexpr BasicHTTP11ClientBuilder& add_headers(Iterator1 first, Iterator2 last);
 
   /**
