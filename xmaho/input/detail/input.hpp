@@ -29,6 +29,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include "../input.hpp"
 
+#include <utility>
+
 template<typename T>
 constexpr T xmaho::input::get_value(std::istream& is)
 {
