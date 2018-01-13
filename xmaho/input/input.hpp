@@ -1,9 +1,7 @@
-#ifndef XMAHO_INPUT_INPUT_H
-#define XMAHO_INPUT_INPUT_H
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017, Doi Yusuke
+Copyright (c) 2017 - 2018, Doi Yusuke
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,13 +26,16 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef XMAHO_INPUT_INPUT_H
+#define XMAHO_INPUT_INPUT_H
+
+#include <istream>
+#include <limits>
+
 /**
  * @file input/input.hpp
  * @brief Utility library for istream to values.
  */
-
-#include <istream>
-#include <limits>
 
 namespace xmaho::input
 {

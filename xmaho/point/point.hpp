@@ -1,9 +1,7 @@
-#ifndef XMAHO_POINT_POINT_H
-#define XMAHO_POINT_POINT_H
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017, Doi Yusuke
+Copyright (c) 2017 - 2018, Doi Yusuke
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,13 +26,16 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef XMAHO_POINT_POINT_H
+#define XMAHO_POINT_POINT_H
+
+#include <cstddef>
+#include <utility>
+
 /**
  * @file point/point.hpp
  * @brief Utility library for std::pair<T, T> as Point.
  */
-
-#include <cstddef>
-#include <utility>
 
 namespace xmaho::point
 {

@@ -1,9 +1,7 @@
-#ifndef XMAHO_MESSAGE_HTTP_HTTP11CLIENT_BUILDER_H
-#define XMAHO_MESSAGE_HTTP_HTTP11CLIENT_BUILDER_H
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017, Doi Yusuke
+Copyright (c) 2017 - 2018, Doi Yusuke
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,16 +26,19 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/**
- * @file message/http/http11client_builder.hpp
- * @brief HTTP client message generator.
- */
+#ifndef XMAHO_MESSAGE_HTTP_HTTP11CLIENT_BUILDER_H
+#define XMAHO_MESSAGE_HTTP_HTTP11CLIENT_BUILDER_H
 
 #include "client.hpp"
 
 #include <string>
 #include <string_view>
 #include <unordered_map>
+
+/**
+ * @file message/http/http11client_builder.hpp
+ * @brief HTTP client message generator.
+ */
 
 namespace xmaho::message::http
 {

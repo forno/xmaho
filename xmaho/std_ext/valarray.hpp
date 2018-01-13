@@ -1,9 +1,7 @@
-#ifndef XMAHO_STD_EXT_VALARRAY_H
-#define XMAHO_STD_EXT_VALARRAY_H
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017, Doi Yusuke
+Copyright (c) 2017 - 2018, Doi Yusuke
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,13 +26,16 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef XMAHO_STD_EXT_VALARRAY_H
+#define XMAHO_STD_EXT_VALARRAY_H
+
+#include <cstddef>
+#include <valarray>
+
 /**
  * @file std_ext/valarray.hpp
  * @brief The utility functions for std::valarray.
  */
-
-#include <cstddef>
-#include <valarray>
 
 namespace xmaho::std_ext
 {

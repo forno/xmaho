@@ -1,9 +1,7 @@
-#ifndef XMAHO_MESSAGE_HTTP_CLIENT_H
-#define XMAHO_MESSAGE_HTTP_CLIENT_H
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017, Doi Yusuke
+Copyright (c) 2017 - 2018, Doi Yusuke
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,15 +26,18 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/**
- * @file message/http/client.hpp
- * @brief HTTP client message generator.
- */
+#ifndef XMAHO_MESSAGE_HTTP_CLIENT_H
+#define XMAHO_MESSAGE_HTTP_CLIENT_H
 
 #include <string>
 #include <string_view>
 #include <type_traits>
 #include <unordered_map>
+
+/**
+ * @file message/http/client.hpp
+ * @brief HTTP client message generator.
+ */
 
 namespace xmaho::message::http
 {
