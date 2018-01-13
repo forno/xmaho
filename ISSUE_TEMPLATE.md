@@ -1,4 +1,4 @@
-# Your opinion summary
+# Opinion summary
 
 # Problem or Reason
 
