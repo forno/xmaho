@@ -45,11 +45,7 @@ inline std::valarray<T> xmaho::std_ext::vector_product(const std::valarray<T>& a
   return a.cshift(1) * b.cshift(-1) - a.cshift(-1) * b.cshift(1);
 }
 
-namespace xmaho
-{
-namespace std_ext
-{
-namespace detail
+namespace xmaho::std_ext::detail
 {
 
 template<std::size_t ordinal>
@@ -121,8 +117,6 @@ struct norm_impl<std::numeric_limits<std::size_t>::max()>
   }
 };
 
-}
-}
 }
 
 template<std::size_t ordinal, typename T>

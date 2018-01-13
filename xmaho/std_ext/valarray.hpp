@@ -36,9 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cstddef>
 #include <valarray>
 
-namespace xmaho
-{
-namespace std_ext
+namespace xmaho::std_ext
 {
 
 /**
@@ -104,7 +102,6 @@ std::valarray<T> vector_product(const std::valarray<T>& a, const std::valarray<T
 template<std::size_t ordinal = 2, typename T>
 auto norm(const std::valarray<T>& vector);
 
-}
 }
 
 #include "detail/valarray.hpp"

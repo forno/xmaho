@@ -36,9 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cstddef>
 #include <utility>
 
-namespace xmaho
-{
-namespace point
+namespace xmaho::point
 {
 
 /**
@@ -153,7 +151,6 @@ constexpr BasicPoint<T> down(BasicPoint<T> point);
 template<std::size_t ordinal = 2, typename T>
 constexpr auto norm(const BasicPoint<T>& point);
 
-}
 }
 
 #include "detail/point.hpp"

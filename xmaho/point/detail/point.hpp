@@ -61,11 +61,7 @@ constexpr xmaho::point::BasicPoint<T> xmaho::point::down(BasicPoint<T> point)
   return point;
 }
 
-namespace xmaho
-{
-namespace point
-{
-namespace detail
+namespace xmaho::point::detail
 {
 
 template<std::size_t ordinal>
@@ -140,8 +136,6 @@ struct norm_impl<std::numeric_limits<std::size_t>::max()>
   }
 };
 
-}
-}
 }
 
 template<std::size_t ordinal, typename T>

@@ -37,9 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <utility>
 #include <valarray>
 
-namespace xmaho
-{
-namespace std_ext
+namespace xmaho::std_ext
 {
 
 /**
@@ -1245,7 +1243,6 @@ auto end(valmatrix<T>& v) noexcept;
 template<typename T>
 void swap(valmatrix<T>& a, valmatrix<T>& b) noexcept;
 
-}
 }
 
 #include "detail/valmatrix.hpp"

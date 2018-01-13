@@ -31,11 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <cassert>
 
-namespace xmaho
-{
-namespace std_ext
-{
-namespace detail
+namespace xmaho::std_ext::detail
 {
 
 constexpr std::size_t get_serial_index(
@@ -50,8 +46,6 @@ constexpr std::pair<std::size_t, std::size_t> get_init_size(std::size_t row_size
   return {col_size ? row_size : 0 , row_size ? col_size : 0};
 }
 
-}
-}
 }
 
 template<typename T>
