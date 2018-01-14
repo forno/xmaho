@@ -53,8 +53,9 @@ struct xmaho::message::http::to_string<std::wstring>
   }
 };
 
+// This function is complexity. It isn't inline function.
 template<typename StringT, typename SizetostrF>
-inline xmaho::message::http::BasicClient<StringT, SizetostrF>::BasicClient(string_view_type method, string_view_type endpoint, string_view_type version, string_view_type body, SizetostrF converter)
+xmaho::message::http::BasicClient<StringT, SizetostrF>::BasicClient(string_view_type method, string_view_type endpoint, string_view_type version, string_view_type body, SizetostrF converter)
   : method_ {method.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Method is empty"} : std::cbegin(method), std::cend(method)},
     endpoint_ {endpoint.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Endpoint is empty"} : std::cbegin(endpoint), std::cend(endpoint)},
     version_ {std::cbegin(version), std::cend(version)},
@@ -157,8 +158,9 @@ constexpr auto twice_newline<char32_t> {U"\r\n\r\n"};
 
 }
 
+// This function is complexity. It isn't inline function.
 template<typename StringT, typename SizetostrF>
-inline xmaho::message::http::BasicClient<StringT, SizetostrF>::operator value_type() const
+xmaho::message::http::BasicClient<StringT, SizetostrF>::operator value_type() const
 {
   using char_type = typename value_type::value_type;
   value_type v {method_};
