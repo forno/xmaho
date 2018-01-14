@@ -55,8 +55,8 @@ namespace xmaho::input
  * get_value<unsigned int>(std::cin); // get a value from standard input
  * @endcode
  */
-template<typename T>
-constexpr T get_value(std::istream& is);
+template<typename T, typename Istream>
+constexpr T get_value(Istream& is);
 
 /**
  * @brief Construct C type container from is.
@@ -88,8 +88,8 @@ constexpr T get_value(std::istream& is);
  * assert(!cin); // you not specify length then istream must get fail state
  * @endcode
  */
-template<typename C>
-constexpr C get_container(std::istream& is, typename C::size_type length = std::numeric_limits<typename C::size_type>::max());
+template<typename C, typename Istream>
+constexpr C get_container(Istream& is, typename C::size_type length = std::numeric_limits<typename C::size_type>::max());
 
 }
 
