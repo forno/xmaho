@@ -54,7 +54,7 @@ struct xmaho::message::http::to_string<std::wstring>
 };
 
 template<typename StringT, typename SizetostrF>
-xmaho::message::http::BasicClient<StringT, SizetostrF>::BasicClient(string_view_type method, string_view_type endpoint, string_view_type version, string_view_type body, SizetostrF converter)
+inline xmaho::message::http::BasicClient<StringT, SizetostrF>::BasicClient(string_view_type method, string_view_type endpoint, string_view_type version, string_view_type body, SizetostrF converter)
   : method_ {method.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Method is empty"} : std::cbegin(method), std::cend(method)},
     endpoint_ {endpoint.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Endpoint is empty"} : std::cbegin(endpoint), std::cend(endpoint)},
     version_ {std::cbegin(version), std::cend(version)},
@@ -65,14 +65,14 @@ xmaho::message::http::BasicClient<StringT, SizetostrF>::BasicClient(string_view_
 
 template<typename StringT, typename SizetostrF>
 template<typename... Args>
-auto xmaho::message::http::BasicClient<StringT, SizetostrF>::add_header(Args... args)
+inline auto xmaho::message::http::BasicClient<StringT, SizetostrF>::add_header(Args... args)
 {
   return headers_.emplace(std::forward<Args>(args)...);
 }
 
 template<typename StringT, typename SizetostrF>
 template<typename Iterator1, typename Iterator2>
-void xmaho::message::http::BasicClient<StringT, SizetostrF>::add_headers(Iterator1 first, Iterator2 last)
+inline void xmaho::message::http::BasicClient<StringT, SizetostrF>::add_headers(Iterator1 first, Iterator2 last)
 {
   headers_.insert(std::move(first), std::move(last));
 }
@@ -158,7 +158,7 @@ constexpr auto twice_newline<char32_t> {U"\r\n\r\n"};
 }
 
 template<typename StringT, typename SizetostrF>
-xmaho::message::http::BasicClient<StringT, SizetostrF>::operator value_type() const
+inline xmaho::message::http::BasicClient<StringT, SizetostrF>::operator value_type() const
 {
   using char_type = typename value_type::value_type;
   value_type v {method_};
