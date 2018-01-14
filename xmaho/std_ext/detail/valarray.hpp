@@ -122,7 +122,7 @@ struct norm_impl<std::numeric_limits<std::size_t>::max()>
 }
 
 template<std::size_t ordinal, typename T>
-auto xmaho::std_ext::norm(const std::valarray<T>& vector)
+inline auto xmaho::std_ext::norm(const std::valarray<T>& vector)
 {
   return detail::norm_impl<ordinal>{}(vector);
 }
