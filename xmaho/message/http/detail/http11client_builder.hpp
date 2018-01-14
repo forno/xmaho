@@ -61,7 +61,7 @@ template<typename StringT>
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::BasicHTTP11ClientBuilder(value_type host, value_type endpoint)
   : headers_ {{!host.empty() ? std::piecewise_construct : throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::BasicHTTP11ClientBuilder : host must be no empty"},
                std::forward_as_tuple(detail::host_str<typename StringT::value_type>),
-               std::forward_as_tuple([&]{using std::cbegin; return cbegin(host);}, [&]{using std::cend; return cend(host);})}},
+               std::forward_as_tuple(std::cbegin(host), std::cend(host))}},
     endpoint_ {std::move(endpoint)}
 {
 }
