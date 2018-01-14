@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "../input.hpp"
 
+#include <iterator>
 #include <utility>
 
 template<typename T, typename Istream>
@@ -44,12 +45,12 @@ constexpr T xmaho::input::get_value(Istream& is)
 template<typename C, typename Istream>
 constexpr C xmaho::input::get_container(Istream& is, typename C::size_type length)
 {
-  using std::begin;
-  using std::end;
   C v {};
   typename C::value_type e {};
-  for (auto i {length}; i != 0 && is >> e; --i)
-    v.insert(end(v), std::move(e));
+  for (auto i {length}; i != 0 && is >> e; --i) {
+    using std::cend;
+    v.insert(cend(v), std::move(e));
+  }
   return v;
 }
 
