@@ -56,7 +56,7 @@ namespace xmaho::input
  * @endcode
  */
 template<typename T>
-constexpr T get_value(std::istream& is);
+T get_value(std::istream& is);
 
 /**
  * @brief Construct C type container from is.
@@ -89,7 +89,7 @@ constexpr T get_value(std::istream& is);
  * @endcode
  */
 template<typename C>
-constexpr C get_container(std::istream& is, typename C::size_type length = std::numeric_limits<typename C::size_type>::max());
+C get_container(std::istream& is, typename C::size_type length = std::numeric_limits<typename C::size_type>::max());
 
 }
 

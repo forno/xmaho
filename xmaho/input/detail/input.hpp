@@ -35,21 +35,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <utility>
 
 template<typename T>
-constexpr T xmaho::input::get_value(std::istream& is)
+inline T xmaho::input::get_value(std::istream& is)
 {
   T v {};
   is >> v;
   return v;
 }
 
+// This function is complexity. It isn't inline function.
 template<typename C>
-constexpr C xmaho::input::get_container(std::istream& is, typename C::size_type length)
+C xmaho::input::get_container(std::istream& is, typename C::size_type length)
 {
   C v {};
   typename C::value_type e {};
   for (auto i {length}; i != 0 && is >> e; --i) {
     using std::cend;
-    v.insert(cend(v), std::move(e));
+    // e aren't moved. e can be assigned by is after move,
+    // but user class may are not support it.
+    v.insert(cend(v), e);
   }
   return v;
 }
