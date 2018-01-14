@@ -13,6 +13,7 @@ set(Clang_WARN_OPTIONS
   -Wno-global-constructors
   -Wno-missing-variable-declarations
   -Wno-padded
+  -fcomment-block-commands=file
 )
 set(GNU_WARN_OPTIONS
   -Wall

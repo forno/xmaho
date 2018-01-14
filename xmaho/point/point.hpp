@@ -46,14 +46,7 @@ namespace xmaho::point
  * @tparam T The same type of both of pair types.
  */
 template<typename T>
-using BasicPoint = std::pair<T, T>;
-
-//! @brief BasicPoint<int> for normal template specialization.
-using Point = BasicPoint<int>;
-//! @brief BasicPoint<unsinged int> for unsigned template specialization.
-using UPoint = BasicPoint<unsigned int>;
-//! @brief BasicPoint<std::size_t> for size template specialization.
-using SizePoint = BasicPoint<std::size_t>;
+using Point = std::pair<T, T>;
 
 /**
  * @brief Decrement point.first.
@@ -63,13 +56,13 @@ using SizePoint = BasicPoint<std::size_t>;
  * @return The point that decreamented point.first.
  *
  * @code
- * constexpr Point p {0, 0};
+ * constexpr Point<int> p {0, 0};
  * constexpr auto lp {left(p)};
- * static_assert(lp.first == -1 && lp.second == 0, "xmaho::point::left(Point{}) == Point{-1, 0}");
+ * static_assert(lp.first == -1 && lp.second == 0, "xmaho::point::left(Point<int>{}) == Point<int>{-1, 0}");
  * @endcode
  */
 template<typename T>
-constexpr BasicPoint<T> left(BasicPoint<T> point);
+constexpr Point<T> left(Point<T> point);
 
 /**
  * @brief Increment point.first.
@@ -79,13 +72,13 @@ constexpr BasicPoint<T> left(BasicPoint<T> point);
  * @return The point that incremented point.first.
  *
  * @code
- * constexpr Point p {0, 0};
+ * constexpr Point<int> p {0, 0};
  * constexpr auto rp {right(p)};
- * static_assert(rp.first == 1 && rp.second == 0, "xmaho::point::right(Point{}) == Point{1, 0}");
+ * static_assert(rp.first == 1 && rp.second == 0, "xmaho::point::right(Point<int>{}) == Point<int>{1, 0}");
  * @endcode
  */
 template<typename T>
-constexpr BasicPoint<T> right(BasicPoint<T> point);
+constexpr Point<T> right(Point<T> point);
 
 /**
  * @brief Decrement point.second.
@@ -95,13 +88,13 @@ constexpr BasicPoint<T> right(BasicPoint<T> point);
  * @return The point that decreamented point.second.
  *
  * @code
- * constexpr Point p {0, 0};
+ * constexpr Point<int> p {0, 0};
  * constexpr auto up_p {up(p)};
- * static_assert(up_p.first == 0 && up_p.second == -1, "xmaho::point::up(Point{}) == Point{0, -1}");
+ * static_assert(up_p.first == 0 && up_p.second == -1, "xmaho::point::up(Point<int>{}) == Point<int>{0, -1}");
  * @endcode
  */
 template<typename T>
-constexpr BasicPoint<T> up(BasicPoint<T> point);
+constexpr Point<T> up(Point<T> point);
 
 /**
  * @brief Increment point.second.
@@ -111,13 +104,13 @@ constexpr BasicPoint<T> up(BasicPoint<T> point);
  * @return The point that incremented point.second.
  *
  * @code
- * constexpr Point p {0, 0};
+ * constexpr Point<int> p {0, 0};
  * constexpr auto dp {down(p)};
- * static_assert(dp.first == 0 && dp.second == 1, "xmaho::point::down(Point{}) == Point{0, 1}");
+ * static_assert(dp.first == 0 && dp.second == 1, "xmaho::point::down(Point<int>{}) == Point<int>{0, 1}");
  * @endcode
  */
 template<typename T>
-constexpr BasicPoint<T> down(BasicPoint<T> point);
+constexpr Point<T> down(Point<T> point);
 
 /**
  * @brief Calculate norm of Point.
@@ -135,7 +128,7 @@ constexpr BasicPoint<T> down(BasicPoint<T> point);
  * @return The norm of the pair as vector.
  *
  * @code
- * constexpr Point p {3, 4};
+ * constexpr Point<int> p {3, 4};
  * const auto euclidean_distance {norm(p)};
  * static_assert(is_same_v<const double, decltype(euclidean_distance)>, "norm on ordinal 2 return floting point type");
  * assert(abs(euclidean_distance - 5) < std::numeric_limits<decltype(euclidean_distance)>::epsilon());
@@ -150,7 +143,7 @@ constexpr BasicPoint<T> down(BasicPoint<T> point);
  * @endcode
  */
 template<std::size_t ordinal = 2, typename T>
-constexpr auto norm(const BasicPoint<T>& point);
+constexpr auto norm(const Point<T>& point);
 
 }
 
