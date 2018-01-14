@@ -72,7 +72,9 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::host(value_type value)
 {
   if (value.empty())
     throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::host : host must be no empty"};
-  headers_[detail::host_str<typename StringT::value_type>].assign(std::cbegin(value), std::cend(value));
+  using std::cbegin;
+  using std::cend;
+  headers_[detail::host_str<typename StringT::value_type>].assign(cbegin(value), cend(value));
   return *this;
 }
 
@@ -94,7 +96,9 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::header(const StringT& n
     throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::header : name must be no empty"};
   if (value.empty())
     throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::header : value must be no empty"};
-  headers_[name].assign(std::cbegin(value), std::cend(value));
+  using std::cbegin;
+  using std::cend;
+  headers_[name].assign(cbegin(value), cend(value));
   return *this;
 }
 
@@ -198,7 +202,9 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::execute(SizetostrF conv
     throw std::logic_error{"xmaho::message::http::BasicHTTP11ClientBuilder::execute : host must be set"};
 
   BasicClient<StringT, SizetostrF> v {method_, endpoint_, detail::http11_str<typename StringT::value_type>, body_, std::move(converter)};
-  v.add_headers(std::cbegin(headers_), std::cend(headers_));
+  using std::cbegin;
+  using std::cend;
+  v.add_headers(cbegin(headers_), cend(headers_));
   return v;
 }
 
