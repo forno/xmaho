@@ -56,10 +56,10 @@ struct xmaho::message::http::to_string<std::wstring>
 // This function is complexity. It isn't inline function.
 template<typename StringT, typename SizetostrF>
 xmaho::message::http::BasicClient<StringT, SizetostrF>::BasicClient(string_view_type method, string_view_type endpoint, string_view_type version, string_view_type body, SizetostrF converter)
-  : method_ {method.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Method is empty"} : std::cbegin(method), std::cend(method)},
-    endpoint_ {endpoint.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Endpoint is empty"} : std::cbegin(endpoint), std::cend(endpoint)},
-    version_ {std::cbegin(version), std::cend(version)},
-    body_ {std::cbegin(body), std::cend(body)},
+  : method_ {method.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Method is empty"} : [&]{using std::cbegin; return cbegin(method);}(), [&]{using std::cend; return cend(method);}()},
+    endpoint_ {endpoint.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Endpoint is empty"} : [&]{using std::cbegin; return cbegin(endpoint);}(), [&]{using std::cend; return cend(endpoint);}()},
+    version_ {[&]{using std::cbegin; return cbegin(version);}(), [&]{using std::cend; return cend(version);}()},
+    body_ {[&]{using std::cbegin; return cbegin(body);}(), [&]{using std::cend; return cend(body);}()},
     converter_ {converter}
 {
 }
