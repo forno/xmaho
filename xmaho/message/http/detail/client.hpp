@@ -31,7 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "../client.hpp"
 
-#include <iterator>
 #include <stdexcept>
 #include <utility>
 
@@ -56,10 +55,10 @@ struct xmaho::message::http::to_string<std::wstring>
 // This function is complexity. It isn't inline function.
 template<typename StringT, typename SizetostrF>
 xmaho::message::http::BasicClient<StringT, SizetostrF>::BasicClient(string_view_type method, string_view_type endpoint, string_view_type version, string_view_type body, SizetostrF converter)
-  : method_ {method.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Method is empty"} : std::cbegin(method), std::cend(method)},
-    endpoint_ {endpoint.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Endpoint is empty"} : std::cbegin(endpoint), std::cend(endpoint)},
-    version_ {std::cbegin(version), std::cend(version)},
-    body_ {std::cbegin(body), std::cend(body)},
+  : method_ {method.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Method is empty"} : method.cbegin(), method.cend()},
+    endpoint_ {endpoint.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Endpoint is empty"} : endpoint.cbegin(), endpoint.cend()},
+    version_ {version.cbegin(), version.cend()},
+    body_ {body.cbegin(), body.cend()},
     converter_ {converter}
 {
 }

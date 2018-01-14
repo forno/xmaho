@@ -31,7 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "../http11client_builder.hpp"
 
-#include <iterator>
 #include <stdexcept>
 #include <tuple>
 #include <utility>
@@ -61,7 +60,7 @@ template<typename StringT>
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::BasicHTTP11ClientBuilder(value_type host, value_type endpoint)
   : headers_ {{!host.empty() ? std::piecewise_construct : throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::BasicHTTP11ClientBuilder : host must be no empty"},
                std::forward_as_tuple(detail::host_str<typename StringT::value_type>),
-               std::forward_as_tuple(std::cbegin(host), std::cend(host))}},
+               std::forward_as_tuple(host.cbegin(), host.cend())}},
     endpoint_ {std::move(endpoint)}
 {
 }
@@ -72,7 +71,7 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::host(value_type value)
 {
   if (value.empty())
     throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::host : host must be no empty"};
-  headers_[detail::host_str<typename StringT::value_type>].assign(std::cbegin(value), std::cend(value));
+  headers_[detail::host_str<typename StringT::value_type>].assign(value.cbegin(), value.cend());
   return *this;
 }
 
@@ -94,7 +93,7 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::header(const StringT& n
     throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::header : name must be no empty"};
   if (value.empty())
     throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::header : value must be no empty"};
-  headers_[name].assign(std::cbegin(value), std::cend(value));
+  headers_[name].assign(value.cbegin(), value.cend());
   return *this;
 }
 
@@ -199,7 +198,7 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::execute(SizetostrF conv
     throw std::logic_error{"xmaho::message::http::BasicHTTP11ClientBuilder::execute : host must be set"};
 
   BasicClient<StringT, SizetostrF> v {method_, endpoint_, detail::http11_str<typename StringT::value_type>, body_, std::move(converter)};
-  v.add_headers(std::cbegin(headers_), std::cend(headers_));
+  v.add_headers(headers_.cbegin(), headers_.cend());
   return v;
 }
 
