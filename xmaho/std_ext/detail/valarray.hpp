@@ -36,13 +36,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <type_traits>
 
 template<typename T>
-inline T xmaho::std_ext::inner_product(const std::valarray<T>& a, const std::valarray<T>& b)
+T xmaho::std_ext::inner_product(const std::valarray<T>& a, const std::valarray<T>& b)
 {
   return (a * b).sum();
 }
 
 template<typename T>
-inline std::valarray<T> xmaho::std_ext::vector_product(const std::valarray<T>& a, const std::valarray<T>& b)
+std::valarray<T> xmaho::std_ext::vector_product(const std::valarray<T>& a, const std::valarray<T>& b)
 {
   return a.cshift(1) * b.cshift(-1) - a.cshift(-1) * b.cshift(1);
 }
@@ -122,7 +122,7 @@ struct norm_impl<std::numeric_limits<std::size_t>::max()>
 }
 
 template<std::size_t ordinal, typename T>
-inline auto xmaho::std_ext::norm(const std::valarray<T>& vector)
+auto xmaho::std_ext::norm(const std::valarray<T>& vector)
 {
   return detail::norm_impl<ordinal>{}(vector);
 }

@@ -52,7 +52,6 @@ struct xmaho::message::http::to_string<std::wstring>
   }
 };
 
-// This function is complexity. It isn't inline function.
 template<typename StringT, typename SizetostrF>
 xmaho::message::http::BasicClient<StringT, SizetostrF>::BasicClient(string_view_type method, string_view_type endpoint, string_view_type version, string_view_type body, SizetostrF converter)
   : method_ {method.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Method is empty"} : method.cbegin(), method.cend()},
@@ -65,14 +64,14 @@ xmaho::message::http::BasicClient<StringT, SizetostrF>::BasicClient(string_view_
 
 template<typename StringT, typename SizetostrF>
 template<typename... Args>
-inline auto xmaho::message::http::BasicClient<StringT, SizetostrF>::add_header(Args... args)
+auto xmaho::message::http::BasicClient<StringT, SizetostrF>::add_header(Args... args)
 {
   return headers_.emplace(std::forward<Args>(args)...);
 }
 
 template<typename StringT, typename SizetostrF>
 template<typename Iterator1, typename Iterator2>
-inline void xmaho::message::http::BasicClient<StringT, SizetostrF>::add_headers(Iterator1 first, Iterator2 last)
+void xmaho::message::http::BasicClient<StringT, SizetostrF>::add_headers(Iterator1 first, Iterator2 last)
 {
   headers_.insert(std::move(first), std::move(last));
 }
@@ -157,7 +156,6 @@ constexpr auto twice_newline<char32_t> {U"\r\n\r\n"};
 
 }
 
-// This function is complexity. It isn't inline function.
 template<typename StringT, typename SizetostrF>
 xmaho::message::http::BasicClient<StringT, SizetostrF>::operator value_type() const
 {

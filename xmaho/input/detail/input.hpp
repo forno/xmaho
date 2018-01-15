@@ -35,14 +35,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <utility>
 
 template<typename T>
-inline T xmaho::input::get_value(std::istream& is)
+T xmaho::input::get_value(std::istream& is)
 {
   T v {};
   is >> v;
   return v;
 }
 
-// This function is complexity. It isn't inline function.
 template<typename C>
 C xmaho::input::get_container(std::istream& is, typename C::size_type length)
 {

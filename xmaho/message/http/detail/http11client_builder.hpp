@@ -55,7 +55,6 @@ constexpr auto host_str<char32_t> {U"Host"};
 
 }
 
-// This function is complexity. It isn't inline function.
 template<typename StringT>
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::BasicHTTP11ClientBuilder(value_type host, value_type endpoint)
   : headers_ {{!host.empty() ? std::piecewise_construct : throw std::invalid_argument{"xmaho::message::http::BasicHTTP11ClientBuilder::BasicHTTP11ClientBuilder : host must be no empty"},
@@ -66,7 +65,7 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::BasicHTTP11ClientBuilde
 }
 
 template<typename StringT>
-inline xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::host(value_type value)
 {
   if (value.empty())
@@ -76,7 +75,7 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::host(value_type value)
 }
 
 template<typename StringT>
-inline xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::endpoint(value_type value)
 {
   if (value.empty())
@@ -86,7 +85,7 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::endpoint(value_type val
 }
 
 template<typename StringT>
-inline xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::header(const StringT& name, value_type value)
 {
   if (name.empty())
@@ -99,7 +98,7 @@ xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::header(const StringT& n
 
 template<typename StringT>
 template<typename Iterator1, typename Iterator2>
-inline xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::add_headers(Iterator1 first, Iterator2 last)
 {
   headers_.insert(std::move(first), std::move(last));
@@ -127,7 +126,7 @@ constexpr auto get_str<char32_t> {U"GET"};
 }
 
 template<typename StringT>
-inline xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::get()
 {
   method_ = detail::get_str<typename StringT::value_type>;
@@ -156,7 +155,7 @@ constexpr auto post_str<char32_t> {U"POST"};
 }
 
 template<typename StringT>
-inline xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
+xmaho::message::http::BasicHTTP11ClientBuilder<StringT>&
 xmaho::message::http::BasicHTTP11ClientBuilder<StringT>::post(value_type value)
 {
   method_ = detail::post_str<typename StringT::value_type>;
@@ -184,7 +183,6 @@ constexpr auto http11_str<char32_t> {U"HTTP/1.1"};
 
 }
 
-// This function is complexity. It isn't inline function.
 template<typename StringT>
 template<typename SizetostrF>
 xmaho::message::http::BasicClient<StringT, SizetostrF>
