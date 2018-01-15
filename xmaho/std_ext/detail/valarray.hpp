@@ -56,7 +56,7 @@ struct norm_impl
   static_assert(ordinal > 0, "The norm of vector space is over 0.");
 
   template<typename T>
-  auto operator()(const std::valarray<T>& vector)
+  auto operator()(const std::valarray<T>& vector) const
   {
     constexpr auto reciprocal {1. / ordinal};
     if constexpr (std::is_unsigned_v<T>)
@@ -72,7 +72,7 @@ template<>
 struct norm_impl<1u>
 {
   template<typename T>
-  auto operator()(const std::valarray<T>& vector)
+  auto operator()(const std::valarray<T>& vector) const
   {
     if constexpr (std::is_unsigned_v<T>)
       return vector.sum();
@@ -85,7 +85,7 @@ template<>
 struct norm_impl<2u>
 {
   template<typename T>
-  auto operator()(const std::valarray<T>& vector)
+  auto operator()(const std::valarray<T>& vector) const
   {
     return std::sqrt((vector * vector).sum());
   }
@@ -95,7 +95,7 @@ template<>
 struct norm_impl<3u>
 {
   template<typename T>
-  auto operator()(const std::valarray<T>& vector)
+  auto operator()(const std::valarray<T>& vector) const
   {
     if constexpr (std::is_unsigned_v<T>)
       return std::cbrt((vector * vector * vector).sum());
@@ -110,7 +110,7 @@ template<>
 struct norm_impl<std::numeric_limits<std::size_t>::max()>
 {
   template<typename T>
-  auto operator()(const std::valarray<T>& vector)
+  auto operator()(const std::valarray<T>& vector) const
   {
     if constexpr (std::is_unsigned_v<T>)
       return vector.max();
