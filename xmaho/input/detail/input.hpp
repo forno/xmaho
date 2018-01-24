@@ -34,16 +34,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iterator>
 #include <utility>
 
-template<typename T>
-T xmaho::input::get_value(std::istream& is)
+template<typename T, typename... Args>
+T xmaho::input::get_value(std::basic_istream<Args...>& is)
 {
   T v {};
   is >> v;
   return v;
 }
 
-template<typename C>
-C xmaho::input::get_container(std::istream& is, typename C::size_type length)
+template<typename C, typename... Args>
+C xmaho::input::get_container(std::basic_istream<Args...>& is, typename C::size_type length)
 {
   C v {};
   typename C::value_type e {};
