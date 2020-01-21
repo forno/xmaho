@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 template<typename T>
-xmaho::floating::equal<T>::equal(const T& epsilon) noexcept
+constexpr xmaho::floating::equal<T>::equal(const T& epsilon) noexcept
   : epsilon_ {epsilon}
 {}
 

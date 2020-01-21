@@ -55,7 +55,7 @@ public:
    * @brief Equal class constructor with epsilon.
    * @param[in] epsilon Enough small value as no difference.
    */
-  equal(const T& epsilon = std::numeric_limits<T>::epsilon()) noexcept;
+  constexpr equal(const T& epsilon = std::numeric_limits<T>::epsilon()) noexcept;
 
   /**
    *  @brief Compare lhs and rhs to check equals them.
