@@ -1,9 +1,7 @@
-![](https://github.com/forno/xmaho/workflows/C/C++%20CI/badge.svg)
-
 # x.maho
 The c++ header only library for latest version with only std library.
 
-[![Build Status](https://travis-ci.org/forno/xmaho.svg?branch=master)](https://travis-ci.org/forno/xmaho)
+![](https://github.com/forno/xmaho/workflows/C/C++%20CI/badge.svg)
 
 ## Concept
 Only depend to std library.

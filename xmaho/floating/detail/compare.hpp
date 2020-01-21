@@ -1,7 +1,7 @@
 /*
 BSD 2-Clause License
 
-Copyright (c) 2020, Doi Yusuke
+Copyright (c) 2020, FORNO
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 template<typename T>
-xmaho::floating::equal<T>::equal(const T& epsilon) noexcept
+constexpr xmaho::floating::equal<T>::equal(const T& epsilon) noexcept
   : epsilon_ {epsilon}
 {}
 

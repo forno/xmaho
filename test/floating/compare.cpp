@@ -1,7 +1,7 @@
 /*
 BSD 2-Clause License
 
-Copyright (c) 2020, Doi Yusuke
+Copyright (c) 2020, FORNO
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -148,5 +148,20 @@ TEST(FloatingCompare, UserDefinedValues)
     EXPECT_PRED2(equal, 1._fpn, value);
     EXPECT_FLOAT_EQ(1.f, static_cast<float>(value));
     EXPECT_NE(1._fpn, value);
+  }
+}
+
+TEST(FloatingCompare, ConstexprCheck)
+{
+  constexpr xmaho::floating::equal<float> equal{};
+  static_assert(equal(0.f, 0.f));
+  static_assert(equal(1.f, 1.f));
+  static_assert(equal(10.f, 10.f));
+  static_assert(equal(1e6f, 1e6f));
+  {
+    constexpr auto value {[](){auto v {0.f}; for (auto i {10u}; i != 0; --i) v += 0.1f; return v;}()};
+    static_assert(equal(1.f, value));
+    static_assert(1.f != value);
+    EXPECT_FLOAT_EQ(1.f, value);
   }
 }

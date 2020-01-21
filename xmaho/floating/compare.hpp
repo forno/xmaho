@@ -1,7 +1,7 @@
 /*
 BSD 2-Clause License
 
-Copyright (c) 2020, Doi Yusuke
+Copyright (c) 2020, FORNO
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -39,9 +39,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace xmaho::floating
 {
 
+/**
+ * @brief Equal check functional class for floating-point number.
+ *
+ * @tparam T Value type for equal check.
+ */
 template<typename T>
 class equal
 {
+  //! @brief Enough too small epsilon.
   T epsilon_;
 
 public:
@@ -49,7 +55,7 @@ public:
    * @brief Equal class constructor with epsilon.
    * @param[in] epsilon Enough small value as no difference.
    */
-  equal(const T& epsilon = std::numeric_limits<T>::epsilon()) noexcept;
+  constexpr equal(const T& epsilon = std::numeric_limits<T>::epsilon()) noexcept;
 
   /**
    *  @brief Compare lhs and rhs to check equals them.
