@@ -45,7 +45,18 @@ class equal
   T epsilon_;
 
 public:
+  /**
+   * @brief Equal class constructor with epsilon.
+   * @param[in] epsilon Enough small value as no difference.
+   */
   equal(const T& epsilon = std::numeric_limits<T>::epsilon()) noexcept;
+
+  /**
+   *  @brief Compare lhs and rhs to check equals them.
+   *  @param[in] lhs Left hand side value.
+   *  @param[in] rhs Right hand side value.
+   *  @return Are they equal.
+   */
   constexpr bool operator()(const T& lhs, const T& rhs) const noexcept;
 };
 
