@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "../input.hpp"
 
 #include <iterator>
+#include <type_traits>
 #include <utility>
 
 template<typename T, typename... Args>
@@ -42,16 +43,37 @@ T xmaho::input::get_value(std::basic_istream<Args...>& is)
   return v;
 }
 
+namespace xmaho::input::detail
+{
+
+template<typename T>
+auto has_push_back_impl(nullptr_t) -> decltype(
+  std::declval<T>().push_back(std::declval<typename T::value_type>()),
+  std::true_type{});
+
+template<typename T>
+auto has_push_back_impl(...) -> std::false_type;
+
+template<typename T>
+struct has_push_back
+  : decltype(has_push_back_impl<T>(nullptr)) {};
+
+}
+
 template<typename C, typename... Args>
 C xmaho::input::get_container(std::basic_istream<Args...>& is, typename C::size_type length)
 {
   C v {};
+  if (length != std::numeric_limits<typename C::size_type>::max())
+    v.reserve(length);
   typename C::value_type e {};
   for (auto i {length}; i != 0 && is >> e; --i) {
-    using std::cend;
-    // e aren't moved. e can be assigned by is after move,
-    // but user class may are not support it.
-    v.insert(cend(v), e);
+    if constexpr (xmaho::input::detail::has_push_back<C>{}) {
+      v.push_back(std::move_if_noexcept(e));
+    } else {
+      using std::cend;
+      v.insert(cend(v), std::move_if_noexcept(e));
+    }
   }
   return v;
 }
