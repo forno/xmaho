@@ -1,9 +1,7 @@
-#ifndef XMAHO_POINT_DETAIL_POINT_H
-#define XMAHO_POINT_DETAIL_POINT_H
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017, Doi Yusuke
+Copyright (c) 2017 - 2018, Doi Yusuke
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,6 +26,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef XMAHO_POINT_DETAIL_POINT_H
+#define XMAHO_POINT_DETAIL_POINT_H
+
 #include "../point.hpp"
 
 #include <algorithm>
@@ -35,38 +36,34 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <limits>
 
 template<typename T>
-constexpr xmaho::point::BasicPoint<T> xmaho::point::left(BasicPoint<T> point)
+constexpr xmaho::point::point<T> xmaho::point::left(point<T> p)
 {
-  --point.first;
-  return point;
+  --p.first;
+  return p;
 }
 
 template<typename T>
-constexpr xmaho::point::BasicPoint<T> xmaho::point::right(BasicPoint<T> point)
+constexpr xmaho::point::point<T> xmaho::point::right(point<T> p)
 {
-  ++point.first;
-  return point;
+  ++p.first;
+  return p;
 }
 
 template<typename T>
-constexpr xmaho::point::BasicPoint<T> xmaho::point::up(BasicPoint<T> point)
+constexpr xmaho::point::point<T> xmaho::point::up(point<T> p)
 {
-  --point.second;
-  return point;
+  --p.second;
+  return p;
 }
 
 template<typename T>
-constexpr xmaho::point::BasicPoint<T> xmaho::point::down(BasicPoint<T> point)
+constexpr xmaho::point::point<T> xmaho::point::down(point<T> p)
 {
-  ++point.second;
-  return point;
+  ++p.second;
+  return p;
 }
 
-namespace xmaho
-{
-namespace point
-{
-namespace detail
+namespace xmaho::point::detail
 {
 
 template<std::size_t ordinal>
@@ -75,15 +72,15 @@ struct norm_impl
   static_assert(ordinal > 0, "The norm of vector space is over 0.");
 
   template<typename T>
-  auto operator()(const BasicPoint<T>& point)
+  constexpr auto operator()(const point<T>& p) const
   {
     constexpr auto reciprocal {1. / ordinal};
     if constexpr (std::is_unsigned_v<T>)
-      return std::pow(std::pow(point.first, ordinal) + std::pow(point.second, ordinal), reciprocal);
+      return std::pow(std::pow(p.first, ordinal) + std::pow(p.second, ordinal), reciprocal);
     else if constexpr (ordinal % 2)
-      return std::pow(std::pow(std::abs(point.first), ordinal) + std::pow(std::abs(point.second), ordinal), reciprocal);
+      return std::pow(std::pow(std::abs(p.first), ordinal) + std::pow(std::abs(p.second), ordinal), reciprocal);
     else
-      return std::pow(std::pow(point.first, ordinal) + std::pow(point.second, ordinal), reciprocal);
+      return std::pow(std::pow(p.first, ordinal) + std::pow(p.second, ordinal), reciprocal);
 
   }
 };
@@ -92,12 +89,12 @@ template<>
 struct norm_impl<1u>
 {
   template<typename T>
-  auto operator()(const BasicPoint<T>& point)
+  constexpr auto operator()(const point<T>& p) const
   {
     if constexpr (std::is_unsigned_v<T>) {
-      return point.first + point.second;
+      return p.first + p.second;
     } else {
-      return std::abs(point.first) + std::abs(point.second);
+      return std::abs(p.first) + std::abs(p.second);
     }
   }
 };
@@ -106,9 +103,9 @@ template<>
 struct norm_impl<2u>
 {
   template<typename T>
-  auto operator()(const BasicPoint<T>& point)
+  constexpr auto operator()(const point<T>& p) const
   {
-    return std::hypot(point.first, point.second);
+    return std::hypot(p.first, p.second);
   }
 };
 
@@ -116,12 +113,12 @@ template<>
 struct norm_impl<3u>
 {
   template<typename T>
-  auto operator()(const BasicPoint<T>& point)
+  constexpr auto operator()(const point<T>& p) const
   {
     if constexpr (std::is_unsigned_v<T>) {
-      return std::cbrt(std::pow(point.first, 3) + std::pow(point.second, 3));
+      return std::cbrt(std::pow(p.first, 3) + std::pow(p.second, 3));
     } else {
-      return std::cbrt(std::pow(std::abs(point.first), 3) + std::pow(std::abs(point.second), 3));
+      return std::cbrt(std::pow(std::abs(p.first), 3) + std::pow(std::abs(p.second), 3));
     }
   }
 };
@@ -131,24 +128,22 @@ template<>
 struct norm_impl<std::numeric_limits<std::size_t>::max()>
 {
   template<typename T>
-  auto operator()(const BasicPoint<T>& point)
+  constexpr auto operator()(const point<T>& p) const
   {
     if constexpr (std::is_unsigned_v<T>) {
-      return std::max(point.first, point.second);
+      return std::max(p.first, p.second);
     } else {
-      return std::max(std::abs(point.first), std::abs(point.second));
+      return std::max(std::abs(p.first), std::abs(p.second));
     }
   }
 };
 
 }
-}
-}
 
 template<std::size_t ordinal, typename T>
-constexpr auto xmaho::point::norm(const BasicPoint<T>& point)
+constexpr auto xmaho::point::norm(const point<T>& p)
 {
-  return detail::norm_impl<ordinal>{}(point);
+  return detail::norm_impl<ordinal>{}(p);
 }
 
 #endif

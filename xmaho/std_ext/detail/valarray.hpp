@@ -1,9 +1,7 @@
-#ifndef XMAHO_STD_EXT_DETAIL_VALARRAY_H
-#define XMAHO_STD_EXT_DETAIL_VALARRAY_H
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017, Doi Yusuke
+Copyright (c) 2017 - 2018, Doi Yusuke
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,6 +26,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef XMAHO_STD_EXT_DETAIL_VALARRAY_H
+#define XMAHO_STD_EXT_DETAIL_VALARRAY_H
+
 #include "../valarray.hpp"
 
 #include <cmath>
@@ -35,22 +36,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <type_traits>
 
 template<typename T>
-inline T xmaho::std_ext::inner_product(const std::valarray<T>& a, const std::valarray<T>& b)
+T xmaho::std_ext::inner_product(const std::valarray<T>& a, const std::valarray<T>& b)
 {
   return (a * b).sum();
 }
 
 template<typename T>
-inline std::valarray<T> xmaho::std_ext::vector_product(const std::valarray<T>& a, const std::valarray<T>& b)
+std::valarray<T> xmaho::std_ext::vector_product(const std::valarray<T>& a, const std::valarray<T>& b)
 {
   return a.cshift(1) * b.cshift(-1) - a.cshift(-1) * b.cshift(1);
 }
 
-namespace xmaho
-{
-namespace std_ext
-{
-namespace detail
+namespace xmaho::std_ext::detail
 {
 
 template<std::size_t ordinal>
@@ -59,7 +56,7 @@ struct norm_impl
   static_assert(ordinal > 0, "The norm of vector space is over 0.");
 
   template<typename T>
-  auto operator()(const std::valarray<T>& vector)
+  auto operator()(const std::valarray<T>& vector) const
   {
     constexpr auto reciprocal {1. / ordinal};
     if constexpr (std::is_unsigned_v<T>)
@@ -75,7 +72,7 @@ template<>
 struct norm_impl<1u>
 {
   template<typename T>
-  auto operator()(const std::valarray<T>& vector)
+  auto operator()(const std::valarray<T>& vector) const
   {
     if constexpr (std::is_unsigned_v<T>)
       return vector.sum();
@@ -88,7 +85,7 @@ template<>
 struct norm_impl<2u>
 {
   template<typename T>
-  auto operator()(const std::valarray<T>& vector)
+  auto operator()(const std::valarray<T>& vector) const
   {
     return std::sqrt((vector * vector).sum());
   }
@@ -98,7 +95,7 @@ template<>
 struct norm_impl<3u>
 {
   template<typename T>
-  auto operator()(const std::valarray<T>& vector)
+  auto operator()(const std::valarray<T>& vector) const
   {
     if constexpr (std::is_unsigned_v<T>)
       return std::cbrt((vector * vector * vector).sum());
@@ -113,7 +110,7 @@ template<>
 struct norm_impl<std::numeric_limits<std::size_t>::max()>
 {
   template<typename T>
-  auto operator()(const std::valarray<T>& vector)
+  auto operator()(const std::valarray<T>& vector) const
   {
     if constexpr (std::is_unsigned_v<T>)
       return vector.max();
@@ -122,8 +119,6 @@ struct norm_impl<std::numeric_limits<std::size_t>::max()>
   }
 };
 
-}
-}
 }
 
 template<std::size_t ordinal, typename T>

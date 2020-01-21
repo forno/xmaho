@@ -11,7 +11,7 @@ addons:
 env:
   global:
   - ENV_EVAL="CXX=g++-7 CC=gcc-7"
-  - MAKEFLAGS="-j 3"
+  - PARA_FLAGS="-j 3"
   matrix:
   - BUILD_TYPE=Debug
   - BUILD_TYPE=RelWithDebInfo
@@ -27,7 +27,7 @@ before_script:
 - cd build
 script:
 - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DENABLE_TEST=ON
-- make $MAKEFLAGS
-- ctest
+- make $PARA_FLAGS
+- ctest $PARA_FLAGS
 after_failure:
 - cat Testing/Temporary/LastTest.log

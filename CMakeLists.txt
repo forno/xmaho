@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.1.3)
 project(xmaho
-  VERSION 0.1.2
+  VERSION 0.1.3
   LANGUAGES CXX
 )
 set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Build type for only meaningful to single-configuration generators")
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS RelWithDebInfo Release Debug MinSizeRel)
 
-option(ENABLE_TEST "Add build target for gtest" OFF)
+option(ENABLE_TEST "Add build target for gtest")
 
 if(ENABLE_TEST)
   include_directories(.)

@@ -13,12 +13,12 @@ set(Clang_WARN_OPTIONS
   -Wno-global-constructors
   -Wno-missing-variable-declarations
   -Wno-padded
+  -fcomment-block-commands=file
 )
 set(GNU_WARN_OPTIONS
   -Wall
   -Wextra
   -Wpedantic
-  -Wchkp
   -Wdouble-promotion
   -Wnull-dereference
   -Wimplicit-fallthrough

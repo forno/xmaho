@@ -1,9 +1,7 @@
-#ifndef XMAHO_INPUT_DETAIL_INPUT_H
-#define XMAHO_INPUT_DETAIL_INPUT_H
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017, Doi Yusuke
+Copyright (c) 2017 - 2020, Doi Yusuke
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,25 +26,33 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef XMAHO_INPUT_DETAIL_INPUT_H
+#define XMAHO_INPUT_DETAIL_INPUT_H
+
 #include "../input.hpp"
 
-template<typename T>
-constexpr T xmaho::input::get_value(std::istream& is)
+#include <iterator>
+#include <utility>
+
+template<typename T, typename... Args>
+T xmaho::input::get_value(std::basic_istream<Args...>& is)
 {
   T v {};
   is >> v;
   return v;
 }
 
-template<typename C>
-constexpr C xmaho::input::get_container(std::istream& is, typename C::size_type length)
+template<typename C, typename... Args>
+C xmaho::input::get_container(std::basic_istream<Args...>& is, typename C::size_type length)
 {
-  using std::begin;
-  using std::end;
   C v {};
   typename C::value_type e {};
-  for (auto i {length}; i != 0 && is >> e; --i)
-    v.insert(end(v), std::move(e));
+  for (auto i {length}; i != 0 && is >> e; --i) {
+    using std::cend;
+    // e aren't moved. e can be assigned by is after move,
+    // but user class may are not support it.
+    v.insert(cend(v), e);
+  }
   return v;
 }
 

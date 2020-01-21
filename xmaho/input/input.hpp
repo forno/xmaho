@@ -1,9 +1,7 @@
-#ifndef XMAHO_INPUT_INPUT_H
-#define XMAHO_INPUT_INPUT_H
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017, Doi Yusuke
+Copyright (c) 2017 - 2020, Doi Yusuke
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,14 +26,17 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef XMAHO_INPUT_INPUT_H
+#define XMAHO_INPUT_INPUT_H
+
+#include <iostream>
+#include <istream>
+#include <limits>
+
 /**
  * @file input/input.hpp
  * @brief Utility library for istream to values.
  */
-
-#include <istream>
-#include <limits>
-#include <utility>
 
 namespace xmaho::input
 {
@@ -44,6 +45,7 @@ namespace xmaho::input
  * @brief Construct T type value from is.
  *
  * @tparam T The value type. Required DefaultConstructible.
+ * @tparam Args Template types of basic_istream.
  * @param[in] is The input stream for value.
  * @return The T type value.
  *
@@ -55,8 +57,8 @@ namespace xmaho::input
  * get_value<unsigned int>(std::cin); // get a value from standard input
  * @endcode
  */
-template<typename T>
-constexpr T get_value(std::istream& is);
+template<typename T, typename... Args>
+T get_value(std::basic_istream<Args...>& is = std::cin);
 
 /**
  * @brief Construct C type container from is.
@@ -66,6 +68,7 @@ constexpr T get_value(std::istream& is);
  * It mean this function returnable few size container.
  *
  * @tparam C The container type. Required SequenceContainer.
+ * @tparam Args Template types of basic_istream.
  * @param[in] is The input stream for value.
  * @param[in] length The container size.
  * @return The C type container.
@@ -83,13 +86,13 @@ constexpr T get_value(std::istream& is);
  * assert(string{"abc"} == get_container<string>(iss)); // string is container
  * assert(!iss);
  * assert(iss.eof()); // you can check stream last with eof().
- * get_container<unsigned int>(cin, 5); // get a container from standard input
- * get_container<unsigned int>(cin); // get a container from standard input
+ * get_container<set<int>>(cin, 5); // get a container from standard input
+ * get_container<unordered_set<int>>(cin); // get values from standard input
  * assert(!cin); // you not specify length then istream must get fail state
  * @endcode
  */
-template<typename C>
-constexpr C get_container(std::istream& is, typename C::size_type length = std::numeric_limits<typename C::size_type>::max());
+template<typename C, typename... Args>
+C get_container(std::basic_istream<Args...>& is = std::cin, typename C::size_type length = std::numeric_limits<typename C::size_type>::max());
 
 }
 

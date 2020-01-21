@@ -25,6 +25,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
 #include "xmaho/std_ext/valarray.hpp"
 
 #include <cmath>
@@ -65,22 +66,22 @@ protected:
   using Valarray = std::valarray<T>;
   using ValidatorType = std::vector<T>;
 
-  std::size_t size;
-  Valarray a;
-  Valarray b;
+  std::size_t size_;
+  Valarray a_;
+  Valarray b_;
 
   void SetUp()
   {
     std::default_random_engine rand {std::random_device{}()};
 
     std::uniform_int_distribution<std::size_t> size_dist {1u, 4u};
-    size = size_dist(rand);
-    a.resize(size);
-    b.resize(size);
+    size_ = size_dist(rand);
+    a_.resize(size_);
+    b_.resize(size_);
 
-    auto dist {get_uniform_distribution<T>(size)};
-    for (auto& e : a) e = dist(rand);
-    for (auto& e : b) e = dist(rand);
+    auto dist {get_uniform_distribution<T>(size_)};
+    for (auto& e : a_) e = dist(rand);
+    for (auto& e : b_) e = dist(rand);
   }
 };
 
@@ -89,60 +90,60 @@ TYPED_TEST_CASE(ValarrayTest, ValarrayTypes);
 
 TYPED_TEST(ValarrayTest, InnerProduct)
 {
-  EXPECT_EQ(xmaho::std_ext::inner_product(this->a, this->b), (this->a * this->b).sum());
+  EXPECT_EQ(xmaho::std_ext::inner_product(this->a_, this->b_), (this->a_ * this->b_).sum());
 }
 
 TYPED_TEST(ValarrayTest, VectorProduct)
 {
-  const auto res {xmaho::std_ext::vector_product(this->a, this->b)};
+  const auto res {xmaho::std_ext::vector_product(this->a_, this->b_)};
   const typename TestFixture::ValidatorType ans(std::begin(res), std::end(res));
-  const typename TestFixture::Valarray correct_raw {this->a.cshift(1) * this->b.cshift(-1) - this->a.cshift(-1) * this->b.cshift(1)};
+  const typename TestFixture::Valarray correct_raw {this->a_.cshift(1) * this->b_.cshift(-1) - this->a_.cshift(-1) * this->b_.cshift(1)};
   const typename TestFixture::ValidatorType correct(std::begin(correct_raw), std::end(correct_raw));
   EXPECT_EQ(ans, correct);
 }
 
 TYPED_TEST(ValarrayTest, DistanceNorm1)
 {
-  const auto ans {xmaho::std_ext::norm<1>(this->a)};
+  const auto ans {xmaho::std_ext::norm<1>(this->a_)};
   if constexpr (std::is_unsigned_v<TypeParam>)
-    EXPECT_EQ(ans, this->a.sum());
+    EXPECT_EQ(ans, this->a_.sum());
   else
-    EXPECT_EQ(ans, std::abs(this->a).sum());
+    EXPECT_EQ(ans, std::abs(this->a_).sum());
 }
 
 TYPED_TEST(ValarrayTest, DistanceNorm2)
 {
-  EXPECT_EQ(std::sqrt(std::pow<TypeParam>(this->a, 2).sum()), xmaho::std_ext::norm<2>(this->a));
+  EXPECT_EQ(std::sqrt(std::pow<TypeParam>(this->a_, 2).sum()), xmaho::std_ext::norm<2>(this->a_));
 }
 
 TYPED_TEST(ValarrayTest, DistanceNorm3)
 {
-  const auto ans {xmaho::std_ext::norm<3>(this->a)};
+  const auto ans {xmaho::std_ext::norm<3>(this->a_)};
   if constexpr (std::is_unsigned_v<TypeParam>)
-    EXPECT_EQ(std::cbrt(std::pow<TypeParam>(this->a, 3).sum()), ans);
+    EXPECT_EQ(std::cbrt(std::pow<TypeParam>(this->a_, 3).sum()), ans);
   else if constexpr (std::is_same_v<double, TypeParam>)
-    EXPECT_DOUBLE_EQ(std::cbrt(std::pow<TypeParam>(std::abs(this->a), 3).sum()), ans);
+    EXPECT_DOUBLE_EQ(std::cbrt(std::pow<TypeParam>(std::abs(this->a_), 3).sum()), ans);
   else
-    EXPECT_EQ(std::cbrt(std::pow<TypeParam>(std::abs(this->a), 3).sum()), ans);
+    EXPECT_EQ(std::cbrt(std::pow<TypeParam>(std::abs(this->a_), 3).sum()), ans);
 }
 
 TYPED_TEST(ValarrayTest, DistanceNorm4)
 {
-  EXPECT_EQ(xmaho::std_ext::norm<4>(this->a), std::pow(std::pow<TypeParam>(this->a, 4).sum(), 1. / 4));
+  EXPECT_EQ(xmaho::std_ext::norm<4>(this->a_), std::pow(std::pow<TypeParam>(this->a_, 4).sum(), 1. / 4));
 }
 
 TYPED_TEST(ValarrayTest, DistanceNorm5)
 {
   if constexpr (std::is_unsigned_v<TypeParam>)
-    EXPECT_EQ(xmaho::std_ext::norm<5>(this->a), std::pow(std::pow<TypeParam>(this->a, 5).sum(), 1. / 5));
+    EXPECT_EQ(xmaho::std_ext::norm<5>(this->a_), std::pow(std::pow<TypeParam>(this->a_, 5).sum(), 1. / 5));
   else
-    EXPECT_EQ(xmaho::std_ext::norm<5>(this->a), std::pow(std::pow<TypeParam>(std::abs(this->a), 5).sum(), 1. / 5));
+    EXPECT_EQ(xmaho::std_ext::norm<5>(this->a_), std::pow(std::pow<TypeParam>(std::abs(this->a_), 5).sum(), 1. / 5));
 }
 
 TYPED_TEST(ValarrayTest, DistanceNormMax)
 {
   if constexpr (std::is_unsigned_v<TypeParam>)
-    EXPECT_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(this->a), this->a.max());
+    EXPECT_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(this->a_), this->a_.max());
   else
-    EXPECT_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(this->a), std::abs(this->a).max());
+    EXPECT_EQ(xmaho::std_ext::norm<std::numeric_limits<std::size_t>::max()>(this->a_), std::abs(this->a_).max());
 }

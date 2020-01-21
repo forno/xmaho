@@ -25,6 +25,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
 #include "xmaho/point/point.hpp"
 
 #include <limits>
@@ -59,20 +60,18 @@ class PointTest
   : public ::testing::Test
 {
 protected:
-  using Point = xmaho::point::BasicPoint<T>;
-
-  T first_value;
-  T second_value;
-  Point point;
+  xmaho::point::point<T> point_;
+  T first_value_;
+  T second_value_;
 
   void SetUp()
   {
     std::default_random_engine rand {std::random_device{}()};
     auto dist {get_uniform_distribution<T>()};
 
-    first_value = dist(rand);
-    second_value = dist(rand);
-    point = std::make_pair(first_value, second_value);
+    first_value_ = dist(rand);
+    second_value_ = dist(rand);
+    point_ = std::make_pair(first_value_, second_value_);
   }
 };
 
@@ -81,64 +80,64 @@ TYPED_TEST_CASE(PointTest, PointTypes);
 
 TYPED_TEST(PointTest, MoveLeft)
 {
-  const auto new_point {xmaho::point::left(this->point)};
-  EXPECT_EQ(new_point.first, this->first_value - 1);
-  EXPECT_EQ(new_point.second, this->second_value);
+  const auto new_point {xmaho::point::left(this->point_)};
+  EXPECT_EQ(new_point.first, this->first_value_ - 1);
+  EXPECT_EQ(new_point.second, this->second_value_);
 }
 
 TYPED_TEST(PointTest, MoveRight)
 {
-  const auto new_point {xmaho::point::right(this->point)};
-  EXPECT_EQ(new_point.first, this->first_value + 1);
-  EXPECT_EQ(new_point.second, this->second_value);
+  const auto new_point {xmaho::point::right(this->point_)};
+  EXPECT_EQ(new_point.first, this->first_value_ + 1);
+  EXPECT_EQ(new_point.second, this->second_value_);
 }
 
 TYPED_TEST(PointTest, MoveUp)
 {
-  const auto new_point {xmaho::point::up(this->point)};
-  EXPECT_EQ(new_point.first, this->first_value);
-  EXPECT_EQ(new_point.second, this->second_value - 1);
+  const auto new_point {xmaho::point::up(this->point_)};
+  EXPECT_EQ(new_point.first, this->first_value_);
+  EXPECT_EQ(new_point.second, this->second_value_ - 1);
 }
 
 TYPED_TEST(PointTest, MoveDown)
 {
-  const auto new_point {xmaho::point::down(this->point)};
-  EXPECT_EQ(new_point.first, this->first_value);
-  EXPECT_EQ(new_point.second, this->second_value + 1);
+  const auto new_point {xmaho::point::down(this->point_)};
+  EXPECT_EQ(new_point.first, this->first_value_);
+  EXPECT_EQ(new_point.second, this->second_value_ + 1);
 }
 
 TYPED_TEST(PointTest, Norm1)
 {
   if constexpr (std::is_unsigned_v<TypeParam>)
-    EXPECT_EQ(xmaho::point::norm<1>(this->point), this->first_value + this->second_value);
+    EXPECT_EQ(xmaho::point::norm<1>(this->point_), this->first_value_ + this->second_value_);
   else
-    EXPECT_EQ(xmaho::point::norm<1>(this->point), std::abs(this->first_value) + std::abs(this->second_value));
+    EXPECT_EQ(xmaho::point::norm<1>(this->point_), std::abs(this->first_value_) + std::abs(this->second_value_));
 }
 
 TYPED_TEST(PointTest, Norm2)
 {
-  EXPECT_EQ(xmaho::point::norm<2>(this->point), std::hypot(this->first_value, this->second_value));
+  EXPECT_EQ(xmaho::point::norm<2>(this->point_), std::hypot(this->first_value_, this->second_value_));
 }
 
 TYPED_TEST(PointTest, Norm3)
 {
   if constexpr (std::is_unsigned_v<TypeParam>)
-    EXPECT_EQ(xmaho::point::norm<3>(this->point), std::cbrt(std::pow(this->first_value, 3) + std::pow(this->second_value, 3)));
+    EXPECT_EQ(xmaho::point::norm<3>(this->point_), std::cbrt(std::pow(this->first_value_, 3) + std::pow(this->second_value_, 3)));
   else
-    EXPECT_EQ(xmaho::point::norm<3>(this->point), std::cbrt(std::pow(std::abs(this->first_value), 3) + std::pow(std::abs(this->second_value), 3)));
+    EXPECT_EQ(xmaho::point::norm<3>(this->point_), std::cbrt(std::pow(std::abs(this->first_value_), 3) + std::pow(std::abs(this->second_value_), 3)));
 }
 
 TYPED_TEST(PointTest, Norm4)
 {
-  EXPECT_EQ(xmaho::point::norm<4>(this->point), std::pow(std::pow(this->first_value, 4) + std::pow(this->second_value, 4), 1. / 4));
+  EXPECT_EQ(xmaho::point::norm<4>(this->point_), std::pow(std::pow(this->first_value_, 4) + std::pow(this->second_value_, 4), 1. / 4));
 }
 
 TYPED_TEST(PointTest, NormMax)
 {
   if constexpr (std::is_unsigned_v<TypeParam>)
-    EXPECT_EQ(xmaho::point::norm<std::numeric_limits<std::size_t>::max()>(this->point),
-              std::max(this->first_value, this->second_value));
+    EXPECT_EQ(xmaho::point::norm<std::numeric_limits<std::size_t>::max()>(this->point_),
+              std::max(this->first_value_, this->second_value_));
   else
-    EXPECT_EQ(xmaho::point::norm<std::numeric_limits<std::size_t>::max()>(this->point),
-              std::max(std::abs(this->first_value), std::abs(this->second_value)));
+    EXPECT_EQ(xmaho::point::norm<std::numeric_limits<std::size_t>::max()>(this->point_),
+              std::max(std::abs(this->first_value_), std::abs(this->second_value_)));
 }

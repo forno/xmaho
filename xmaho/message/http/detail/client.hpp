@@ -1,9 +1,7 @@
-#ifndef XMAHO_MESSAGE_HTTP_DETAIL_CLIENT_H
-#define XMAHO_MESSAGE_HTTP_DETAIL_CLIENT_H
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017, Doi Yusuke
+Copyright (c) 2017 - 2018, Doi Yusuke
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -27,9 +25,12 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
+#ifndef XMAHO_MESSAGE_HTTP_DETAIL_CLIENT_H
+#define XMAHO_MESSAGE_HTTP_DETAIL_CLIENT_H
+
 #include "../client.hpp"
 
-#include <iterator>
 #include <stdexcept>
 #include <utility>
 
@@ -53,10 +54,10 @@ struct xmaho::message::http::to_string<std::wstring>
 
 template<typename StringT, typename SizetostrF>
 xmaho::message::http::BasicClient<StringT, SizetostrF>::BasicClient(string_view_type method, string_view_type endpoint, string_view_type version, string_view_type body, SizetostrF converter)
-  : method_ {method.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Method is empty"} : std::cbegin(method), std::cend(method)},
-    endpoint_ {endpoint.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Endpoint is empty"} : std::cbegin(endpoint), std::cend(endpoint)},
-    version_ {std::cbegin(version), std::cend(version)},
-    body_ {std::cbegin(body), std::cend(body)},
+  : method_ {method.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Method is empty"} : method.cbegin(), method.cend()},
+    endpoint_ {endpoint.empty() ? throw std::invalid_argument{"xmaho::message::http::BasicClient::BasicClient : Endpoint is empty"} : endpoint.cbegin(), endpoint.cend()},
+    version_ {version.cbegin(), version.cend()},
+    body_ {body.cbegin(), body.cend()},
     converter_ {converter}
 {
 }

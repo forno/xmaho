@@ -1,9 +1,7 @@
-#ifndef XMAHO_STD_EXT_DETAIL_VALMATRIX_H
-#define XMAHO_STD_EXT_DETAIL_VALMATRIX_H
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017, Doi Yusuke
+Copyright (c) 2017 - 2018, Doi Yusuke
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,15 +26,14 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef XMAHO_STD_EXT_DETAIL_VALMATRIX_H
+#define XMAHO_STD_EXT_DETAIL_VALMATRIX_H
+
 #include "../valmatrix.hpp"
 
 #include <cassert>
 
-namespace xmaho
-{
-namespace std_ext
-{
-namespace detail
+namespace xmaho::std_ext::detail
 {
 
 constexpr std::size_t get_serial_index(
@@ -51,8 +48,6 @@ constexpr std::pair<std::size_t, std::size_t> get_init_size(std::size_t row_size
   return {col_size ? row_size : 0 , row_size ? col_size : 0};
 }
 
-}
-}
 }
 
 template<typename T>

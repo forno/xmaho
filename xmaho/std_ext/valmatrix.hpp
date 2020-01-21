@@ -1,9 +1,7 @@
-#ifndef XMAHO_STD_EXT_VALMATRIX_H
-#define XMAHO_STD_EXT_VALMATRIX_H
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017, Doi Yusuke
+Copyright (c) 2017 - 2018, Doi Yusuke
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,18 +26,19 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/**
- * @file std_ext/valmatrix.hpp
- * @brief The valmatrix composit valarray with dimention data.
- */
+#ifndef XMAHO_STD_EXT_VALMATRIX_H
+#define XMAHO_STD_EXT_VALMATRIX_H
 
 #include <cstddef>
 #include <utility>
 #include <valarray>
 
-namespace xmaho
-{
-namespace std_ext
+/**
+ * @file std_ext/valmatrix.hpp
+ * @brief The valmatrix composit valarray with dimention data.
+ */
+
+namespace xmaho::std_ext
 {
 
 /**
@@ -1245,7 +1244,6 @@ auto end(valmatrix<T>& v) noexcept;
 template<typename T>
 void swap(valmatrix<T>& a, valmatrix<T>& b) noexcept;
 
-}
 }
 
 #include "detail/valmatrix.hpp"
