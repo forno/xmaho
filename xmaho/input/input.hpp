@@ -1,7 +1,7 @@
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017 - 2018, Doi Yusuke
+Copyright (c) 2017 - 2020, Doi Yusuke
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef XMAHO_INPUT_INPUT_H
 #define XMAHO_INPUT_INPUT_H
 
+#include <iostream>
 #include <istream>
 #include <limits>
 
@@ -57,7 +58,7 @@ namespace xmaho::input
  * @endcode
  */
 template<typename T, typename... Args>
-T get_value(std::basic_istream<Args...>& is);
+T get_value(std::basic_istream<Args...>& is = std::cin);
 
 /**
  * @brief Construct C type container from is.
@@ -91,7 +92,7 @@ T get_value(std::basic_istream<Args...>& is);
  * @endcode
  */
 template<typename C, typename... Args>
-C get_container(std::basic_istream<Args...>& is, typename C::size_type length = std::numeric_limits<typename C::size_type>::max());
+C get_container(std::basic_istream<Args...>& is = std::cin, typename C::size_type length = std::numeric_limits<typename C::size_type>::max());
 
 }
 
