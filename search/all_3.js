@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['deprecated_20list',['Deprecated List',['../deprecated.html',1,'']]],
-  ['down',['down',['../point_8hpp.html#a251530e1d8174d96bc4da25bbdceae79',1,'xmaho::point']]]
+  ['deprecated_20list_10',['Deprecated List',['../deprecated.html',1,'']]],
+  ['down_11',['down',['../point_8hpp.html#abf1243c9c56ba79b3145066f7ccd2ede',1,'xmaho::point']]]
 ];

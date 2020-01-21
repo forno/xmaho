@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['point',['Point',['../point_8hpp.html#a8781ec9b195f0132625e531061143223',1,'xmaho::point']]],
-  ['position_5ftype',['position_type',['../classxmaho_1_1std__ext_1_1valmatrix.html#ac1adceeac05929ca5a3ab21a5cbbfaf9',1,'xmaho::std_ext::valmatrix']]]
+  ['size_5ftype_135',['size_type',['../classxmaho_1_1std__ext_1_1valmatrix.html#a32a056831dd74b81a82227c7bc800f39',1,'xmaho::std_ext::valmatrix']]],
+  ['string_5fview_5ftype_136',['string_view_type',['../classxmaho_1_1message_1_1http_1_1_basic_client.html#a16d70c7770fe1de0c43ec2db7348aa00',1,'xmaho::message::http::BasicClient']]]
 ];

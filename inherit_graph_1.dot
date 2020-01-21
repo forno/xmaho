@@ -1,0 +1,8 @@
+digraph "Graphical Class Hierarchy"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="xmaho::message::http\l::BasicHTTP11ClientBuilder\l\< StringT \>",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classxmaho_1_1message_1_1http_1_1_basic_h_t_t_p11_client_builder.html",tooltip="HTTP/1.1 message generator."];
+}

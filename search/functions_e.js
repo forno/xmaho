@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['up',['up',['../point_8hpp.html#a4a81419e3833f8863968e43c37867077',1,'xmaho::point']]]
+  ['up_129',['up',['../point_8hpp.html#ac1cb6b732c5fad1adbbed9bb7f389f85',1,'xmaho::point']]]
 ];
