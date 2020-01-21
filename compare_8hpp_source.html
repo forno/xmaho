@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.16"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>xmaho: /home/forno/ws/prog/xmaho/xmaho/floating/compare.hpp (259581c Add document to floating/compare) Source File</title>
+<title>xmaho: /home/forno/ws/prog/xmaho/xmaho/floating/compare.hpp (fbc442f Update floating/compare with constexpr) Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -74,7 +74,7 @@ $(function() {
 <a href="compare_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">BSD 2-Clause License</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"></span> </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">Copyright (c) 2020, Doi Yusuke</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">Copyright (c) 2020, FORNO</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">All rights reserved.</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">Redistribution and use in source and binary forms, with or without</span></div>
@@ -107,23 +107,26 @@ $(function() {
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">namespace </span>xmaho::floating</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">class </span>equal</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  T epsilon_;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  equal(<span class="keyword">const</span> T&amp; epsilon = std::numeric_limits&lt;T&gt;::epsilon()) noexcept;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  constexpr <span class="keywordtype">bool</span> operator()(const T&amp; lhs, const T&amp; rhs) const noexcept;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;};</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#include &quot;detail/compare.hpp&quot;</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="classxmaho_1_1floating_1_1equal.html">   48</a></span>&#160;<span class="keyword">class </span><a class="code" href="classxmaho_1_1floating_1_1equal.html">equal</a></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  T epsilon_;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  constexpr <a class="code" href="classxmaho_1_1floating_1_1equal.html#a362ff14b61deee6129312637ff569533">equal</a>(<span class="keyword">const</span> T&amp; epsilon = std::numeric_limits&lt;T&gt;::epsilon()) noexcept;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  constexpr <span class="keywordtype">bool</span> <a class="code" href="classxmaho_1_1floating_1_1equal.html#a1a537c83415427dcb59da906b5be03d1">operator()</a>(<span class="keyword">const</span> T&amp; lhs, <span class="keyword">const</span> T&amp; rhs) <span class="keyword">const</span> noexcept;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;};</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#include &quot;detail/compare.hpp&quot;</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aclassxmaho_1_1floating_1_1equal_html"><div class="ttname"><a href="classxmaho_1_1floating_1_1equal.html">xmaho::floating::equal</a></div><div class="ttdoc">Equal check functional class for floating-point number.</div><div class="ttdef"><b>Definition:</b> compare.hpp:48</div></div>
+<div class="ttc" id="aclassxmaho_1_1floating_1_1equal_html_a1a537c83415427dcb59da906b5be03d1"><div class="ttname"><a href="classxmaho_1_1floating_1_1equal.html#a1a537c83415427dcb59da906b5be03d1">xmaho::floating::equal::operator()</a></div><div class="ttdeci">constexpr bool operator()(const T &amp;lhs, const T &amp;rhs) const noexcept</div><div class="ttdoc">Compare lhs and rhs to check equals them.</div></div>
+<div class="ttc" id="aclassxmaho_1_1floating_1_1equal_html_a362ff14b61deee6129312637ff569533"><div class="ttname"><a href="classxmaho_1_1floating_1_1equal.html#a362ff14b61deee6129312637ff569533">xmaho::floating::equal::equal</a></div><div class="ttdeci">constexpr equal(const T &amp;epsilon=std::numeric_limits&lt; T &gt;::epsilon()) noexcept</div><div class="ttdoc">Equal class constructor with epsilon.</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

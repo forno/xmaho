@@ -4,5 +4,5 @@ digraph "Graphical Class Hierarchy"
   edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
   node [fontname="Helvetica",fontsize="10",shape=record];
   rankdir="LR";
-  Node0 [label="xmaho::message::http\l::BasicClient\< StringT,\l SizetostrF \>",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classxmaho_1_1message_1_1http_1_1_basic_client.html",tooltip="HTTP 0.9, 1.0 or 1.1 message holder."];
+  Node0 [label="xmaho::floating::equal\< T \>",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classxmaho_1_1floating_1_1equal.html",tooltip="Equal check functional class for floating-point number."];
 }

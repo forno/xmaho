@@ -4,7 +4,5 @@ digraph "Graphical Class Hierarchy"
   edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
   node [fontname="Helvetica",fontsize="10",shape=record];
   rankdir="LR";
-  Node1 [label="std::valarray\< T \>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip="STL class."];
-  Node1 -> Node0 [dir="back",color="firebrick4",fontsize="10",style="solid",fontname="Helvetica"];
-  Node0 [label="xmaho::std_ext::valmatrix\< T \>",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classxmaho_1_1std__ext_1_1valmatrix.html",tooltip="The adapter class for matrix valarray."];
+  Node0 [label="xmaho::message::http\l::to_string\< StringT \>",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structxmaho_1_1message_1_1http_1_1to__string.html",tooltip="The StringT::size_type to StringT convertion class."];
 }
