@@ -39,9 +39,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace xmaho::floating
 {
 
+/**
+ * @brief Equal check functional class for floating-point number.
+ *
+ * @tparam T Value type for equal check.
+ */
 template<typename T>
 class equal
 {
+  //! @brief Enough too small epsilon.
   T epsilon_;
 
 public:
