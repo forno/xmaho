@@ -67,7 +67,8 @@ add_compile_options(
 )
 
 # Add some test
+add_subdirectory(floating)
 add_subdirectory(input)
+add_subdirectory(message)
 add_subdirectory(point)
 add_subdirectory(std_ext)
-add_subdirectory(message)
