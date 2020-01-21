@@ -34,86 +34,86 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /**
  * @file point/point.hpp
- * @brief Utility library for std::pair<T, T> as Point.
+ * @brief Utility library for std::pair<T, T> as point.
  */
 
 namespace xmaho::point
 {
 
 /**
- * @brief The std::pair<T, T> is Point.
+ * @brief The std::pair<T, T> is point.
  *
  * @tparam T The same type of both of pair types.
  */
 template<typename T>
-using Point = std::pair<T, T>;
+using point = std::pair<T, T>;
 
 /**
  * @brief Decrement point.first.
  *
- * @tparam T Point type.
- * @param[in] point The base point.
+ * @tparam T point type.
+ * @param[in] p The base point.
  * @return The point that decreamented point.first.
  *
  * @code
- * constexpr Point<int> p {0, 0};
+ * constexpr point<int> p {0, 0};
  * constexpr auto lp {left(p)};
- * static_assert(lp.first == -1 && lp.second == 0, "xmaho::point::left(Point<int>{}) == Point<int>{-1, 0}");
+ * static_assert(lp.first == -1 && lp.second == 0, "xmaho::point::left(point<int>{}) == point<int>{-1, 0}");
  * @endcode
  */
 template<typename T>
-constexpr Point<T> left(Point<T> point);
+constexpr point<T> left(point<T> p);
 
 /**
  * @brief Increment point.first.
  *
- * @tparam T Point type.
- * @param[in] point The base point.
+ * @tparam T point type.
+ * @param[in] p The base point.
  * @return The point that incremented point.first.
  *
  * @code
- * constexpr Point<int> p {0, 0};
+ * constexpr point<int> p {0, 0};
  * constexpr auto rp {right(p)};
- * static_assert(rp.first == 1 && rp.second == 0, "xmaho::point::right(Point<int>{}) == Point<int>{1, 0}");
+ * static_assert(rp.first == 1 && rp.second == 0, "xmaho::point::right(point<int>{}) == point<int>{1, 0}");
  * @endcode
  */
 template<typename T>
-constexpr Point<T> right(Point<T> point);
+constexpr point<T> right(point<T> p);
 
 /**
  * @brief Decrement point.second.
  *
- * @tparam T Point type.
- * @param[in] point The base point.
+ * @tparam T point type.
+ * @param[in] p The base point.
  * @return The point that decreamented point.second.
  *
  * @code
- * constexpr Point<int> p {0, 0};
+ * constexpr point<int> p {0, 0};
  * constexpr auto up_p {up(p)};
- * static_assert(up_p.first == 0 && up_p.second == -1, "xmaho::point::up(Point<int>{}) == Point<int>{0, -1}");
+ * static_assert(up_p.first == 0 && up_p.second == -1, "xmaho::point::up(point<int>{}) == point<int>{0, -1}");
  * @endcode
  */
 template<typename T>
-constexpr Point<T> up(Point<T> point);
+constexpr point<T> up(point<T> p);
 
 /**
  * @brief Increment point.second.
  *
- * @tparam T Point type.
- * @param[in] point The base point.
+ * @tparam T point type.
+ * @param[in] p The base point.
  * @return The point that incremented point.second.
  *
  * @code
- * constexpr Point<int> p {0, 0};
+ * constexpr point<int> p {0, 0};
  * constexpr auto dp {down(p)};
- * static_assert(dp.first == 0 && dp.second == 1, "xmaho::point::down(Point<int>{}) == Point<int>{0, 1}");
+ * static_assert(dp.first == 0 && dp.second == 1, "xmaho::point::down(point<int>{}) == point<int>{0, 1}");
  * @endcode
  */
 template<typename T>
-constexpr Point<T> down(Point<T> point);
+constexpr point<T> down(point<T> p);
 
 /**
- * @brief Calculate norm of Point.
+ * @brief Calculate norm of point.
  *
  * Calculate norm of point as vector.
  * default ordinal is 2.
@@ -123,12 +123,12 @@ constexpr Point<T> down(Point<T> point);
  *
  *
  * @tparam ordinal The norm of vector space.
- * @tparam T Point type.
- * @param[in] point The pair of elements as vector.
+ * @tparam T point type.
+ * @param[in] p The pair of elements as vector.
  * @return The norm of the pair as vector.
  *
  * @code
- * constexpr Point<int> p {3, 4};
+ * constexpr point<int> p {3, 4};
  * const auto euclidean_distance {norm(p)};
  * static_assert(is_same_v<const double, decltype(euclidean_distance)>, "norm on ordinal 2 return floting point type");
  * assert(abs(euclidean_distance - 5) < std::numeric_limits<decltype(euclidean_distance)>::epsilon());
@@ -143,7 +143,7 @@ constexpr Point<T> down(Point<T> point);
  * @endcode
  */
 template<std::size_t ordinal = 2, typename T>
-constexpr auto norm(const Point<T>& point);
+constexpr auto norm(const point<T>& p);
 
 }
 

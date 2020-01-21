@@ -60,7 +60,7 @@ class PointTest
   : public ::testing::Test
 {
 protected:
-  xmaho::point::Point<T> point_;
+  xmaho::point::point<T> point_;
   T first_value_;
   T second_value_;
 
