@@ -40,10 +40,13 @@ namespace xmaho::floating
 {
 
 template<typename T>
-class Equal
+class equal
 {
+  T epsilon_;
+
 public:
-  constexpr bool operator()(const T& lhs, const T& rhs, const T& epsilon = std::numeric_limits<T>::epsilon());
+  equal(const T& epsilon = std::numeric_limits<T>::epsilon()) noexcept;
+  constexpr bool operator()(const T& lhs, const T& rhs) const noexcept;
 };
 
 }

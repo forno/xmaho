@@ -26,32 +26,10 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef XMAHO_FLOATING_DETAIL_COMPARE_H
-#define XMAHO_FLOATING_DETAIL_COMPARE_H
+#include "xmaho/floating/compare.hpp"
 
-#include "../compare.hpp"
+#include <gtest/gtest.h>
 
-#include <cmath>
-
-/**
- * @file floating/compare.hpp
- * @brief Compare function for floating point numbers
- */
-
-template<typename T>
-xmaho::floating::equal<T>::equal(const T& epsilon) noexcept
-  : epsilon_ {epsilon}
-{}
-
-template<typename T>
-constexpr bool xmaho::floating::equal<T>::operator()(const T& lhs, const T& rhs) const noexcept
+TEST(FloatingCompare, FloatValues)
 {
-  using std::abs;
-  using std::max;
-  const auto diff {abs(lhs - rhs)};
-  if (diff <= epsilon_)
-    return true;
-  return diff <= (max(abs(lhs), abs(rhs)) * epsilon_);
 }
-
-#endif
