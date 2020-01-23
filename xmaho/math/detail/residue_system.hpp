@@ -1,9 +1,7 @@
-#ifndef XMAHO_MATH_DETAIL_RESIDUE_SYSTEM_H
-#define XMAHO_MATH_DETAIL_RESIDUE_SYSTEM_H
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017, Doi Yusuke
+Copyright (c) 2017 - 2020, FORNO
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,165 +26,123 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/**
- * @file math/residue_system.hpp
- * @brief The redidue system functors.
- */
+#ifndef XMAHO_MATH_DETAIL_RESIDUE_SYSTEM_H
+#define XMAHO_MATH_DETAIL_RESIDUE_SYSTEM_H
 
-#include "detail/residue_system_base.hpp"
+#include "../residue_system.hpp"
 
-namespace xmaho
-{
-namespace math
+namespace xmaho::math::detail
 {
 
-/**
- * @brief The caliculate type on complite redidue system.
- *
- * @pre modulo > 0
- * @tparam modulo The modulo number.
- * @tparam T The value type.
- */
-template<std::size_t modulo, typename T = std::size_t>
-class ResidueSystem : private detail::ResidueSystemBase
-{
-  static_assert(modulo > 0, "Modulo must be over 0");
-public:
-  //! @brief The value type.
-  using value_type = T;
-
-  /**
-   * @brief Default constructor with T{};
-   */
-  ResidueSystem();
-
-  /**
-   * @brief Construct by first value.
-   */
-  explicit ResidueSystem(const T& value);
-
-  //! @brief Default copy assign for overload.
-  ResidueSystem& operator=(const ResidueSystem&) & = default;
-  //! @brief Default move assign for overload.
-  ResidueSystem& operator=(ResidueSystem&&) & noexcept = default;
-
-  /**
-   * @brief Assign value_type value on modulo.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator=(const T& rhs) &;
-
-  /**
-   * @brief Assign value_type value on modulo.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator=(T&& rhs) & noexcept;
-
-  /**
-   * @brief Assign combine addition.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator+=(const ResidueSystem& rhs) &;
-
-  /**
-   * @brief Assign combine addition.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator+=(const T& rhs) &;
-
-  /**
-   * @brief Assign combine subtraction.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator-=(const ResidueSystem& rhs) &;
-
-  /**
-   * @brief Assign combine subtraction.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator-=(const T& rhs) &;
-
-  /**
-   * @brief Assign combine multiplication.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator*=(const ResidueSystem& rhs) &;
-
-  /**
-   * @brief Assign combine multiplication.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator*=(const T& rhs) &;
-
-  /**
-   * @brief Assign combine divition.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator/=(const ResidueSystem& rhs) &;
-
-  /**
-   * @brief Assign combine divition.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator/=(const T& rhs) &;
-
-
-  /**
-   * @brief Assign combine residue.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator%=(const ResidueSystem& rhs) &;
-
-  /**
-   * @brief Assign combine residue.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator%=(const T& rhs) &;
-
-  /**
-   * @brief Swap objects.
-   *
-   * @param[in,out] other Swap target.
-   */
-  void swap(ResidueSystem& other) noexcept;
-};
-
-/**
- * @brief Swap objects.
- *
- * @param[in,out] a Swap target.
- * @param[in,out] b Swap target.
- */
 template<typename T>
-void swap(ResidueSystem<T>& a, ResidueSystem<T>& b) noexcept;
+constexpr residue(const T& value, const T& modulo)
+noexcept(noexcept(value % modulo) && noexcept(value + modulo))
+{
+  return (value % modulo + modulo) % modulo;
+}
 
 }
+
+template<std::size_t modulo, typename T = std::size_t>
+constexpr xmaho::math::residue_system<modulo, T>::residue_system(const T& value) noexcept
+  : value_ {residue(value, modulo)}
+{
 }
 
-#include "detail/residue_system.hpp"
+template<std::size_t modulo, typename T = std::size_t>
+explicit constexpr xmaho::math::residue_system<modulo, T>::operator T() const
+  noexcept(std::is_nothrow_copy_constructible_v<T>);
+{
+  return value_;
+}
+
+template<std::size_t modulo, typename T = std::size_t>
+constexpr xmaho::math::residue_system<modulo, T>&
+xmaho::math::residue_system<modulo, T>::operator+() const noexcept
+{
+  return *this;
+}
+
+template<std::size_t modulo, typename T = std::size_t>
+constexpr xmaho::math::residue_system<modulo, T>
+xmaho::math::residue_system<modulo, T>::operator-() const noexcept(noexcept(-T{}))
+{
+  return {-value_};
+}
+
+template<std::size_t modulo, typename T = std::size_t>
+constexpr xmaho::math::residue_system<modulo, T>&
+xmaho::math::residue_system<modulo, T>::operator+=(const residue_system& rhs) &
+  noexcept(noexcept(T{} + T{}))
+{
+  value_ = residue(value_ + rhs.value_, modulo);
+  return *this;
+}
+
+template<std::size_t modulo, typename T = std::size_t>
+constexpr xmaho::math::residue_system<modulo, T>&
+xmaho::math::residue_system<modulo, T>::operator-=(const residue_system& rhs) &
+  noexcept(noexcept(T{} - T{}))
+{
+  value_ = residue(value_ - rhs.value_, modulo);
+  return *this;
+}
+
+template<std::size_t modulo, typename T = std::size_t>
+constexpr xmaho::math::residue_system<modulo, T>&
+xmaho::math::residue_system<modulo, T>::operator*=(const residue_system& rhs) &
+  noexcept(noexcept(T{} * T{}))
+{
+  value_ = residue(value_ * rhs.value_, modulo);
+  return *this;
+}
+
+template<std::size_t modulo, typename T = std::size_t>
+constexpr xmaho::math::residue_system<modulo, T>&
+xmaho::math::residue_system<modulo, T>::operator/=(const residue_system& rhs) &
+  noexcept(noexcept(T{} / T{}))
+{
+  value_ = residue(value_ / rhs.value_, modulo);
+  return *this;
+}
+
+template<std::size_t modulo, typename T = std::size_t>
+constexpr xmaho::math::residue_system<modulo, T>
+xmaho::math::residue_system<modulo, T>::operator+(const residue_system& rhs) const
+  noexcept(noexcept(T{} + T{}))
+{
+  return {value_ + rhs.value_};
+}
+
+template<std::size_t modulo, typename T = std::size_t>
+constexpr xmaho::math::residue_system<modulo, T>
+xmaho::math::residue_system<modulo, T>::operator-(const residue_system& rhs) const
+template<std::size_t modulo, typename T = std::size_t>
+  noexcept(noexcept(T{} - T{}))
+{
+  return {value_ - rhs.value_};
+}
+
+template<std::size_t modulo, typename T = std::size_t>
+constexpr xmaho::math::residue_system<modulo, T>
+xmaho::math::residue_system<modulo, T>::operator*(const residue_system& rhs) const
+  noexcept(noexcept(T{} * T{}))
+{
+  return {value_ * rhs.value_};
+}
+
+template<std::size_t modulo, typename T = std::size_t>
+constexpr xmaho::math::residue_system<modulo, T>
+xmaho::math::residue_system<modulo, T>::operator/(const residue_system& rhs) const
+  noexcept(noexcept(T{} / T{}))
+{
+  return {value_ / rhs.value_};
+}
+
+template<std::size_t modulo, typename T = std::size_t>
+void xmaho::math::residue_system<modulo, T>::swap(residue_system& other) noexcept
+{
+  std::swap(value_, other.value_);
+}
 
 #endif

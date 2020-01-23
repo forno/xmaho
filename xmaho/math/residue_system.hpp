@@ -1,9 +1,7 @@
-#ifndef XMAHO_MATH_MODULO_H
-#define XMAHO_MATH_MODULO_H
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017, Doi Yusuke
+Copyright (c) 2017 - 2020, FORNO
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,18 +26,19 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef XMAHO_MATH_RESIDUE_SYSTEM_H
+#define XMAHO_MATH_RESIDUE_SYSTEM_H
+
+#include <cstddef>
+#include <type_traits>
+#include <utility>
+
 /**
  * @file math/residue_system.hpp
  * @brief The redidue system functors.
  */
 
-#include "detail/residue_system_base.hpp"
-
-#include <cstddef>
-
-namespace xmaho
-{
-namespace math
+namespace xmaho::math
 {
 
 /**
@@ -50,51 +49,45 @@ namespace math
  * @tparam T The value type.
  */
 template<std::size_t modulo, typename T = std::size_t>
-class ResidueSystem : private detail::ResidueSystemBase
+class residue_system
 {
   static_assert(modulo > 0, "Modulo must be over 0");
+  static_assert(std::is_nothrow_default_constructible_v<T>, "T must can be make noexcept construct");
+  static_assert(std::is_nothrow_move_constructible_v<T> ||
+                std::is_nothrow_copy_constructible_v<T>, "T must can be maked by T");
+  static_assert(noexcept(T{} + T{}), "T must that can be noexcept addition by T");
+  static_assert(noexcept(T{} % T{}), "T must that can be noexcept dividion by T");
 public:
   //! @brief The value type.
   using value_type = T;
 
-  /**
-   * @brief Default constructor with T{};
-   */
-  ResidueSystem();
+  //!  @brief Default constructor with T{};
+  constexpr residue_system() = default;
 
   /**
    * @brief Construct by first value.
+   *
+   * @param[in] value Initalization value.
    */
-  explicit ResidueSystem(const T& value);
+  constexpr residue_system(const T& value) noexcept;
 
-  //! @brief Default copy assign for overload.
-  ResidueSystem& operator=(const ResidueSystem&) & = default;
-  //! @brief Default move assign for overload.
-  ResidueSystem& operator=(ResidueSystem&&) & noexcept = default;
+  //!  @brief Convert function to T.
+  explicit constexpr operator T() const
+    noexcept(std::is_nothrow_copy_constructible_v<T>);
 
   /**
-   * @brief Assign value_type value on modulo.
+   * @brief Unary addition.
    *
-   * @param[in] rhs Value.
    * @return This reference.
    */
-  ResidueSystem& operator=(const T& rhs) &;
+  constexpr residue_system& operator+() const noexcept;
 
   /**
-   * @brief Assign value_type value on modulo.
+   * @brief Unary minus.
    *
-   * @param[in] rhs Value.
-   * @return This reference.
+   * @return New value.
    */
-  ResidueSystem& operator=(T&& rhs) & noexcept;
-
-  /**
-   * @brief Assign combine addition.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator+=(const ResidueSystem& rhs) &;
+  constexpr residue_system operator-() const noexcept(noexcept(-T{}));
 
   /**
    * @brief Assign combine addition.
@@ -102,7 +95,8 @@ public:
    * @param[in] rhs Value.
    * @return This reference.
    */
-  ResidueSystem& operator+=(const T& rhs) &;
+  constexpr residue_system& operator+=(const residue_system& rhs) &
+    noexcept(noexcept(T{} + T{}));
 
   /**
    * @brief Assign combine subtraction.
@@ -110,15 +104,8 @@ public:
    * @param[in] rhs Value.
    * @return This reference.
    */
-  ResidueSystem& operator-=(const ResidueSystem& rhs) &;
-
-  /**
-   * @brief Assign combine subtraction.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator-=(const T& rhs) &;
+  constexpr residue_system& operator-=(const residue_system& rhs) &
+    noexcept(noexcept(T{} - T{}));
 
   /**
    * @brief Assign combine multiplication.
@@ -126,15 +113,8 @@ public:
    * @param[in] rhs Value.
    * @return This reference.
    */
-  ResidueSystem& operator*=(const ResidueSystem& rhs) &;
-
-  /**
-   * @brief Assign combine multiplication.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator*=(const T& rhs) &;
+  constexpr residue_system& operator*=(const residue_system& rhs) &
+    noexcept(noexcept(T{} * T{}));
 
   /**
    * @brief Assign combine divition.
@@ -142,39 +122,51 @@ public:
    * @param[in] rhs Value.
    * @return This reference.
    */
-  ResidueSystem& operator/=(const ResidueSystem& rhs) &;
+  constexpr residue_system& operator/=(const residue_system& rhs) &
+    noexcept(noexcept(T{} / T{}));
 
   /**
-   * @brief Assign combine divition.
+   * @brief Addition.
    *
    * @param[in] rhs Value.
-   * @return This reference.
+   * @return New value.
    */
-  ResidueSystem& operator/=(const T& rhs) &;
-
-
-  /**
-   * @brief Assign combine residue.
-   *
-   * @param[in] rhs Value.
-   * @return This reference.
-   */
-  ResidueSystem& operator%=(const ResidueSystem& rhs) &;
+  constexpr residue_system operator+(const residue_system& rhs) const
+    noexcept(noexcept(T{} + T{}));
 
   /**
-   * @brief Assign combine residue.
+   * @brief Subtraction.
    *
    * @param[in] rhs Value.
-   * @return This reference.
+   * @return New value.
    */
-  ResidueSystem& operator%=(const T& rhs) &;
+  constexpr residue_system operator-(const residue_system& rhs) const
+    noexcept(noexcept(T{} - T{}));
+
+  /**
+   * @brief Multiplication.
+   *
+   * @param[in] rhs Value.
+   * @return New value.
+   */
+  constexpr residue_system operator*(const residue_system& rhs) const
+    noexcept(noexcept(T{} * T{}));
+
+  /**
+   * @brief Divition.
+   *
+   * @param[in] rhs Value.
+   * @return New value.
+   */
+  constexpr residue_system operator/(const residue_system& rhs) const
+    noexcept(noexcept(T{} / T{}));
 
   /**
    * @brief Swap objects.
    *
    * @param[in,out] other Swap target.
    */
-  void swap(ResidueSystem& other) noexcept;
+  void swap(residue_system& other) noexcept;
 };
 
 /**
@@ -183,10 +175,9 @@ public:
  * @param[in,out] a Swap target.
  * @param[in,out] b Swap target.
  */
-template<typename T>
-void swap(ResidueSystem<T>& a, ResidueSystem<T>& b) noexcept;
+template<typename... Args>
+void swap(residue_system<Args...>& a, residue_system<Args...>& b) noexcept;
 
-}
 }
 
 #include "detail/residue_system.hpp"
