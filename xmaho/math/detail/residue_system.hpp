@@ -35,9 +35,9 @@ namespace xmaho::math::detail
 {
 
 template<typename T>
-constexpr T residue(const T& value, const T& modulo)
-noexcept(noexcept(value % modulo) && noexcept(value + modulo))
+constexpr T residue(const T& value, const T& modulo) noexcept
 {
+  static_assert(noexcept(value % modulo) && noexcept(value + modulo), "xmaho::math::residue_system: Interface error: noexcept through out");
   return (value % modulo + modulo) % modulo;
 }
 
