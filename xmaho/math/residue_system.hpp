@@ -167,6 +167,9 @@ public:
    * @param[in,out] other Swap target.
    */
   void swap(residue_system& other) noexcept;
+
+private:
+  T value_ {};
 };
 
 /**
@@ -175,8 +178,8 @@ public:
  * @param[in,out] a Swap target.
  * @param[in,out] b Swap target.
  */
-template<typename... Args>
-void swap(residue_system<Args...>& a, residue_system<Args...>& b) noexcept;
+template<std::size_t modulo, typename T = std::size_t>
+void swap(residue_system<modulo, T>& a, residue_system<modulo, T>& b) noexcept;
 
 }
 

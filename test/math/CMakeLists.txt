@@ -1,0 +1,3 @@
+add_executable(test_math_residue_system residue_system.cpp)
+target_link_libraries(test_math_residue_system gmock_main)
+add_test(NAME test_math_residue_system COMMAND test_math_residue_system)

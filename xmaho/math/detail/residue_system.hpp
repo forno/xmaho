@@ -35,7 +35,7 @@ namespace xmaho::math::detail
 {
 
 template<typename T>
-constexpr residue(const T& value, const T& modulo)
+constexpr T residue(const T& value, const T& modulo)
 noexcept(noexcept(value % modulo) && noexcept(value + modulo))
 {
   return (value % modulo + modulo) % modulo;
@@ -43,70 +43,70 @@ noexcept(noexcept(value % modulo) && noexcept(value + modulo))
 
 }
 
-template<std::size_t modulo, typename T = std::size_t>
+template<std::size_t modulo, typename T>
 constexpr xmaho::math::residue_system<modulo, T>::residue_system(const T& value) noexcept
-  : value_ {residue(value, modulo)}
+  : value_ {detail::residue(value, modulo)}
 {
 }
 
-template<std::size_t modulo, typename T = std::size_t>
-explicit constexpr xmaho::math::residue_system<modulo, T>::operator T() const
-  noexcept(std::is_nothrow_copy_constructible_v<T>);
+template<std::size_t modulo, typename T>
+constexpr xmaho::math::residue_system<modulo, T>::operator T() const
+  noexcept(std::is_nothrow_copy_constructible_v<T>)
 {
   return value_;
 }
 
-template<std::size_t modulo, typename T = std::size_t>
+template<std::size_t modulo, typename T>
 constexpr xmaho::math::residue_system<modulo, T>&
 xmaho::math::residue_system<modulo, T>::operator+() const noexcept
 {
   return *this;
 }
 
-template<std::size_t modulo, typename T = std::size_t>
+template<std::size_t modulo, typename T>
 constexpr xmaho::math::residue_system<modulo, T>
 xmaho::math::residue_system<modulo, T>::operator-() const noexcept(noexcept(-T{}))
 {
   return {-value_};
 }
 
-template<std::size_t modulo, typename T = std::size_t>
+template<std::size_t modulo, typename T>
 constexpr xmaho::math::residue_system<modulo, T>&
 xmaho::math::residue_system<modulo, T>::operator+=(const residue_system& rhs) &
   noexcept(noexcept(T{} + T{}))
 {
-  value_ = residue(value_ + rhs.value_, modulo);
+  value_ = detail::residue(value_ + rhs.value_, modulo);
   return *this;
 }
 
-template<std::size_t modulo, typename T = std::size_t>
+template<std::size_t modulo, typename T>
 constexpr xmaho::math::residue_system<modulo, T>&
 xmaho::math::residue_system<modulo, T>::operator-=(const residue_system& rhs) &
   noexcept(noexcept(T{} - T{}))
 {
-  value_ = residue(value_ - rhs.value_, modulo);
+  value_ = detail::residue(value_ - rhs.value_, modulo);
   return *this;
 }
 
-template<std::size_t modulo, typename T = std::size_t>
+template<std::size_t modulo, typename T>
 constexpr xmaho::math::residue_system<modulo, T>&
 xmaho::math::residue_system<modulo, T>::operator*=(const residue_system& rhs) &
   noexcept(noexcept(T{} * T{}))
 {
-  value_ = residue(value_ * rhs.value_, modulo);
+  value_ = detail::residue(value_ * rhs.value_, modulo);
   return *this;
 }
 
-template<std::size_t modulo, typename T = std::size_t>
+template<std::size_t modulo, typename T>
 constexpr xmaho::math::residue_system<modulo, T>&
 xmaho::math::residue_system<modulo, T>::operator/=(const residue_system& rhs) &
   noexcept(noexcept(T{} / T{}))
 {
-  value_ = residue(value_ / rhs.value_, modulo);
+  value_ = detail::residue(value_ / rhs.value_, modulo);
   return *this;
 }
 
-template<std::size_t modulo, typename T = std::size_t>
+template<std::size_t modulo, typename T>
 constexpr xmaho::math::residue_system<modulo, T>
 xmaho::math::residue_system<modulo, T>::operator+(const residue_system& rhs) const
   noexcept(noexcept(T{} + T{}))
@@ -114,16 +114,15 @@ xmaho::math::residue_system<modulo, T>::operator+(const residue_system& rhs) con
   return {value_ + rhs.value_};
 }
 
-template<std::size_t modulo, typename T = std::size_t>
+template<std::size_t modulo, typename T>
 constexpr xmaho::math::residue_system<modulo, T>
 xmaho::math::residue_system<modulo, T>::operator-(const residue_system& rhs) const
-template<std::size_t modulo, typename T = std::size_t>
   noexcept(noexcept(T{} - T{}))
 {
   return {value_ - rhs.value_};
 }
 
-template<std::size_t modulo, typename T = std::size_t>
+template<std::size_t modulo, typename T>
 constexpr xmaho::math::residue_system<modulo, T>
 xmaho::math::residue_system<modulo, T>::operator*(const residue_system& rhs) const
   noexcept(noexcept(T{} * T{}))
@@ -131,7 +130,7 @@ xmaho::math::residue_system<modulo, T>::operator*(const residue_system& rhs) con
   return {value_ * rhs.value_};
 }
 
-template<std::size_t modulo, typename T = std::size_t>
+template<std::size_t modulo, typename T>
 constexpr xmaho::math::residue_system<modulo, T>
 xmaho::math::residue_system<modulo, T>::operator/(const residue_system& rhs) const
   noexcept(noexcept(T{} / T{}))
@@ -139,7 +138,7 @@ xmaho::math::residue_system<modulo, T>::operator/(const residue_system& rhs) con
   return {value_ / rhs.value_};
 }
 
-template<std::size_t modulo, typename T = std::size_t>
+template<std::size_t modulo, typename T>
 void xmaho::math::residue_system<modulo, T>::swap(residue_system& other) noexcept
 {
   std::swap(value_, other.value_);
