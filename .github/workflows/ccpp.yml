@@ -1,0 +1,17 @@
+name: C/C++ CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: cmake . -DCMAKE_BUILD_TYPE=Debug -DENABLE_TEST=ON
+      run: cmake . -DCMAKE_BUILD_TYPE=Debug -DENABLE_TEST=ON
+    - name: make
+      run: make
+    - name: make test
+      run: make test

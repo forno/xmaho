@@ -1,9 +1,7 @@
-#ifndef XMAHO_STD_EXT_DETAIL_VALMATRIX_H
-#define XMAHO_STD_EXT_DETAIL_VALMATRIX_H
 /*
 BSD 2-Clause License
 
-Copyright (c) 2017, Doi Yusuke
+Copyright (c) 2017 - 2020, FORNO
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,59 +26,55 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef XMAHO_STD_EXT_DETAIL_VALMATRIX_H
+#define XMAHO_STD_EXT_DETAIL_VALMATRIX_H
+
 #include "../valmatrix.hpp"
 
 #include <cassert>
-#include <stdexcept>
 
-namespace xmaho
-{
-namespace std_ext
-{
-namespace detail
+namespace xmaho::std_ext::detail
 {
 
-inline std::size_t size(std::pair<std::size_t, std::size_t> pos)
-{
-  return pos.first * pos.second;
-}
-
-inline std::size_t get_serial_index(
+constexpr std::size_t get_serial_index(
   std::pair<std::size_t, std::size_t> pos,
   std::size_t col_size)
 {
-  return pos.first * col_size + pos.second;
+  return col_size * pos.second + pos.first;
 }
 
+constexpr std::pair<std::size_t, std::size_t> get_init_size(std::size_t row_size, std::size_t col_size)
+{
+  return {col_size ? row_size : 0 , row_size ? col_size : 0};
 }
-}
+
 }
 
 template<typename T>
 xmaho::std_ext::valmatrix<T>::valmatrix(size_type row_size, size_type col_size)
   : std::valarray<T>(row_size * col_size),
-    size_ {col_size ? row_size : 0, row_size ? col_size : 0}
+    size_ {detail::get_init_size(row_size, col_size)}
 {
 }
 
 template<typename T>
 xmaho::std_ext::valmatrix<T>::valmatrix(const T& value, size_type row_size, size_type col_size)
   : std::valarray<T>(value, row_size * col_size),
-    size_ {col_size ? row_size : 0, row_size ? col_size : 0}
+    size_ {detail::get_init_size(row_size, col_size)}
 {
 }
 
 template<typename T>
 xmaho::std_ext::valmatrix<T>::valmatrix(const std::valarray<T>& values, size_type row_size, size_type col_size)
   : std::valarray<T>(values.size() == row_size * col_size ? values : std::valarray<T>(row_size * col_size)),
-    size_ {col_size ? row_size : 0, row_size ? col_size : 0}
+    size_ {detail::get_init_size(row_size, col_size)}
 {
 }
 
 template<typename T>
 xmaho::std_ext::valmatrix<T>::valmatrix(std::valarray<T>&& values, size_type row_size, size_type col_size)
   : std::valarray<T>(values.size() == row_size * col_size ? std::move(values) : std::valarray<T>(row_size * col_size)),
-    size_ {col_size ? row_size : 0, row_size ? col_size : 0}
+    size_ {detail::get_init_size(row_size, col_size)}
 {
 }
 
@@ -108,26 +102,19 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator=(const T& r
 }
 
 template<typename T>
-xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator=(T&& rhs) & noexcept
-{
-  std::valarray<T>::operator=(std::move(rhs));
-  return *this;
-}
-
-template<typename T>
 const T& xmaho::std_ext::valmatrix<T>::operator[](position_type position) const
 {
-  assert(position.first < size_.first);
-  assert(position.second < size_.second);
-  return std::valarray<T>::operator[](detail::get_serial_index(position, size_.second));
+  assert(position.first < row_size());
+  assert(position.second < col_size());
+  return std::valarray<T>::operator[](detail::get_serial_index(position, col_size()));
 }
 
 template<typename T>
 T& xmaho::std_ext::valmatrix<T>::operator[](position_type position)
 {
-  assert(position.first < size_.first);
-  assert(position.second < size_.second);
-  return std::valarray<T>::operator[](detail::get_serial_index(position, size_.second));
+  assert(position.first < row_size());
+  assert(position.second < col_size());
+  return std::valarray<T>::operator[](detail::get_serial_index(position, col_size()));
 }
 
 template<typename T>
@@ -139,20 +126,19 @@ xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::operator+() const noe
 template<typename T>
 xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::operator-() const noexcept
 {
-  return valmatrix{std::valarray<T>::operator-(), size_.first, size_.second};
+  return valmatrix{std::valarray<T>::operator-(), row_size(), col_size()};
 }
 
 template<typename T>
 xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::operator~() const noexcept
 {
-  return valmatrix{std::valarray<T>::operator~(), size_.first, size_.second};
+  return valmatrix{std::valarray<T>::operator~(), row_size(), col_size()};
 }
 
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator+=(const valmatrix& rhs) &
 {
-  assert(size_.first == rhs.size_.first);
-  assert(size_.second == rhs.size_.second);
+  assert(rhs.size_ == size_);
   std::valarray<T>::operator+=(rhs);
   return *this;
 }
@@ -160,7 +146,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator+=(const val
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator+=(const std::valarray<T>& rhs) &
 {
-  assert(size() == rhs.size());
+  assert(rhs.size() == size());
   std::valarray<T>::operator+=(rhs);
   return *this;
 }
@@ -175,8 +161,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator+=(const T& 
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator-=(const valmatrix& rhs) &
 {
-  assert(size_.first == rhs.size_.first);
-  assert(size_.second == rhs.size_.second);
+  assert(rhs.size_ == size_);
   std::valarray<T>::operator-=(rhs);
   return *this;
 }
@@ -184,7 +169,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator-=(const val
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator-=(const std::valarray<T>& rhs) &
 {
-  assert(size() == rhs.size());
+  assert(rhs.size() == size());
   std::valarray<T>::operator-=(rhs);
   return *this;
 }
@@ -199,8 +184,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator-=(const T& 
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator*=(const valmatrix& rhs) &
 {
-  assert(size_.first == rhs.size_.first);
-  assert(size_.second == rhs.size_.second);
+  assert(rhs.size_ == size_);
   std::valarray<T>::operator*=(rhs);
   return *this;
 }
@@ -208,7 +192,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator*=(const val
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator*=(const std::valarray<T>& rhs) &
 {
-  assert(size() == rhs.size());
+  assert(rhs.size() == size());
   std::valarray<T>::operator*=(rhs);
   return *this;
 }
@@ -223,8 +207,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator*=(const T& 
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator/=(const valmatrix& rhs) &
 {
-  assert(size_.first == rhs.size_.first);
-  assert(size_.second == rhs.size_.second);
+  assert(rhs.size_ == size_);
   std::valarray<T>::operator/=(rhs);
   return *this;
 }
@@ -232,7 +215,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator/=(const val
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator/=(const std::valarray<T>& rhs) &
 {
-  assert(size() == rhs.size());
+  assert(rhs.size() == size());
   std::valarray<T>::operator/=(rhs);
   return *this;
 }
@@ -247,8 +230,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator/=(const T& 
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator%=(const valmatrix& rhs) &
 {
-  assert(size_.first == rhs.size_.first);
-  assert(size_.second == rhs.size_.second);
+  assert(rhs.size_ == size_);
   std::valarray<T>::operator%=(rhs);
   return *this;
 }
@@ -256,7 +238,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator%=(const val
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator%=(const std::valarray<T>& rhs) &
 {
-  assert(size() == rhs.size());
+  assert(rhs.size() == size());
   std::valarray<T>::operator%=(rhs);
   return *this;
 }
@@ -271,8 +253,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator%=(const T& 
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator&=(const valmatrix& rhs) &
 {
-  assert(size_.first == rhs.size_.first);
-  assert(size_.second == rhs.size_.second);
+  assert(rhs.size_ == size_);
   std::valarray<T>::operator&=(rhs);
   return *this;
 }
@@ -280,7 +261,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator&=(const val
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator&=(const std::valarray<T>& rhs) &
 {
-  assert(size() == rhs.size());
+  assert(rhs.size() == size());
   std::valarray<T>::operator&=(rhs);
   return *this;
 }
@@ -295,8 +276,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator&=(const T& 
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator|=(const valmatrix& rhs) &
 {
-  assert(size_.first == rhs.size_.first);
-  assert(size_.second == rhs.size_.second);
+  assert(rhs.size_ == size_);
   std::valarray<T>::operator|=(rhs);
   return *this;
 }
@@ -304,7 +284,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator|=(const val
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator|=(const std::valarray<T>& rhs) &
 {
-  assert(size() == rhs.size());
+  assert(rhs.size() == size());
   std::valarray<T>::operator|=(rhs);
   return *this;
 }
@@ -319,8 +299,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator|=(const T& 
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator^=(const valmatrix& rhs) &
 {
-  assert(size_.first == rhs.size_.first);
-  assert(size_.second == rhs.size_.second);
+  assert(rhs.size_ == size_);
   std::valarray<T>::operator^=(rhs);
   return *this;
 }
@@ -328,7 +307,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator^=(const val
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator^=(const std::valarray<T>& rhs) &
 {
-  assert(size() == rhs.size());
+  assert(rhs.size() == size());
   std::valarray<T>::operator^=(rhs);
   return *this;
 }
@@ -343,8 +322,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator^=(const T& 
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator<<=(const valmatrix& rhs) &
 {
-  assert(size_.first == rhs.size_.first);
-  assert(size_.second == rhs.size_.second);
+  assert(rhs.size_ == size_);
   std::valarray<T>::operator<<=(rhs);
   return *this;
 }
@@ -352,7 +330,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator<<=(const va
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator<<=(const std::valarray<T>& rhs) &
 {
-  assert(size() == rhs.size());
+  assert(rhs.size() == size());
   std::valarray<T>::operator<<=(rhs);
   return *this;
 }
@@ -367,8 +345,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator<<=(const T&
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator>>=(const valmatrix& rhs) &
 {
-  assert(size_.first == rhs.size_.first);
-  assert(size_.second == rhs.size_.second);
+  assert(rhs.size_ == size_);
   std::valarray<T>::operator>>=(rhs);
   return *this;
 }
@@ -376,7 +353,7 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator>>=(const va
 template<typename T>
 xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator>>=(const std::valarray<T>& rhs) &
 {
-  assert(size() == rhs.size());
+  assert(rhs.size() == size());
   std::valarray<T>::operator>>=(rhs);
   return *this;
 }
@@ -389,76 +366,76 @@ xmaho::std_ext::valmatrix<T>& xmaho::std_ext::valmatrix<T>::operator>>=(const T&
 }
 
 template<typename T>
-std::size_t xmaho::std_ext::valmatrix<T>::row_size() const noexcept
+typename xmaho::std_ext::valmatrix<T>::size_type xmaho::std_ext::valmatrix<T>::row_size() const noexcept
 {
   return size_.first;
 }
 
 template<typename T>
-std::size_t xmaho::std_ext::valmatrix<T>::col_size() const noexcept
+typename xmaho::std_ext::valmatrix<T>::size_type xmaho::std_ext::valmatrix<T>::col_size() const noexcept
 {
   return size_.second;
 }
 
 template<typename T>
-std::valarray<T> xmaho::std_ext::valmatrix<T>::row(std::size_t index) const
+std::valarray<T> xmaho::std_ext::valmatrix<T>::row(size_type index) const
 {
-  assert(index < size_.first);
-  return std::valarray<T>::operator[](std::slice{index * size_.second, size_.second, 1});
+  assert(index < col_size());
+  return std::valarray<T>::operator[](std::slice{index * row_size(), row_size(), 1});
 }
 
 template<typename T>
-std::slice_array<T> xmaho::std_ext::valmatrix<T>::row(std::size_t index)
+std::slice_array<T> xmaho::std_ext::valmatrix<T>::row(size_type index)
 {
-  assert(index < size_.first);
-  return std::valarray<T>::operator[](std::slice{index * size_.second, size_.second, 1});
+  assert(index < col_size());
+  return std::valarray<T>::operator[](std::slice{index * row_size(), row_size(), 1});
 }
 
 template<typename T>
-std::valarray<T> xmaho::std_ext::valmatrix<T>::col(std::size_t index) const
+std::valarray<T> xmaho::std_ext::valmatrix<T>::col(size_type index) const
 {
-  assert(index < size_.second);
-  return std::valarray<T>::operator[](std::slice{index, size_.first, size_.second});
+  assert(index < row_size());
+  return std::valarray<T>::operator[](std::slice{index, col_size(), row_size()});
 }
 
 template<typename T>
-std::slice_array<T> xmaho::std_ext::valmatrix<T>::col(std::size_t index)
+std::slice_array<T> xmaho::std_ext::valmatrix<T>::col(size_type index)
 {
-  assert(index < size_.second);
-  return std::valarray<T>::operator[](std::slice{index, size_.first, size_.second});
+  assert(index < row_size());
+  return std::valarray<T>::operator[](std::slice{index, col_size(), row_size()});
 }
 
 template<typename T>
-xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::block(position_type pos, position_type size) const
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::valmatrix<T>::block(position_type pos, position_type sub_size) const
 {
-  assert(pos.first + size.first < size_.first);
-  assert(pos.second + size.second < size_.second);
-  const std::gslice block_gslice {detail::get_serial_index(pos, size_.second), {size.first, size.second}, {size_.second, 1}};
-  return valmatrix{std::valarray<T>::operator[](block_gslice), size.first, size.second};
+  assert(pos.first + (sub_size.first - 1) < row_size());
+  assert(pos.second + (sub_size.second - 1) < col_size());
+  const std::gslice block_gslice {detail::get_serial_index(pos, col_size()), {sub_size.second, sub_size.first}, {row_size(), 1}};
+  return valmatrix{std::valarray<T>::operator[](block_gslice), sub_size.first, sub_size.second};
 }
 
 template<typename T>
-const T* xmaho::std_ext::valmatrix<T>::begin() const noexcept
+auto xmaho::std_ext::valmatrix<T>::begin() const noexcept
 {
-  return &std::valarray<T>::operator[](0);
+  return std::begin(static_cast<const std::valarray<T>&>(*this));
 }
 
 template<typename T>
-T* xmaho::std_ext::valmatrix<T>::begin() noexcept
+auto xmaho::std_ext::valmatrix<T>::begin() noexcept
 {
-  return &std::valarray<T>::operator[](0);
+  return std::begin(static_cast<std::valarray<T>&>(*this));
 }
 
 template<typename T>
-const T* xmaho::std_ext::valmatrix<T>::end() const noexcept
+auto xmaho::std_ext::valmatrix<T>::end() const noexcept
 {
-  return (&std::valarray<T>::operator[](size() - 1)) + 1;
+  return std::end(static_cast<const std::valarray<T>&>(*this));
 }
 
 template<typename T>
-T* xmaho::std_ext::valmatrix<T>::end() noexcept
+auto xmaho::std_ext::valmatrix<T>::end() noexcept
 {
-  return (&std::valarray<T>::operator[](size() - 1)) + 1;
+  return std::end(static_cast<std::valarray<T>&>(*this));
 }
 
 template<typename T>
@@ -470,25 +447,335 @@ void xmaho::std_ext::valmatrix<T>::swap(valmatrix& other) noexcept
 }
 
 template<typename T>
-const T* xmaho::std_ext::begin(const valmatrix<T>& v) noexcept
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator+(valmatrix<T> lhs, const valmatrix<T>& rhs)
+{
+  return lhs += rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator+(valmatrix<T> lhs, const std::valarray<T>& rhs)
+{
+  return lhs += rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator+(valmatrix<T> lhs, const T& rhs)
+{
+  return lhs += rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator+(const std::valarray<T>& lhs, valmatrix<T> rhs)
+{
+  return rhs += lhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator+(const T& lhs, valmatrix<T> rhs)
+{
+  return rhs += lhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator-(valmatrix<T> lhs, const valmatrix<T>& rhs)
+{
+  return lhs -= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator-(valmatrix<T> lhs, const std::valarray<T>& rhs)
+{
+  return lhs -= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator-(valmatrix<T> lhs, const T& rhs)
+{
+  return lhs -= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator-(const std::valarray<T>& lhs, const valmatrix<T>& rhs)
+{
+  valmatrix<T> tmp {lhs, rhs.row_size(), rhs.col_size()};
+  return tmp -= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator-(const T& lhs, const valmatrix<T>& rhs)
+{
+  valmatrix<T> tmp {lhs, rhs.row_size(), rhs.col_size()};
+  return tmp -= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator*(valmatrix<T> lhs, const valmatrix<T>& rhs)
+{
+  return lhs *= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator*(valmatrix<T> lhs, const std::valarray<T>& rhs)
+{
+  return lhs *= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator*(valmatrix<T> lhs, const T& rhs)
+{
+  return lhs *= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator*(const std::valarray<T>& lhs, valmatrix<T> rhs)
+{
+  return rhs *= lhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator*(const T& lhs, valmatrix<T> rhs)
+{
+  return rhs *= lhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator/(valmatrix<T> lhs, const valmatrix<T>& rhs)
+{
+  return lhs /= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator/(valmatrix<T> lhs, const std::valarray<T>& rhs)
+{
+  return lhs /= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator/(valmatrix<T> lhs, const T& rhs)
+{
+  return lhs /= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator/(const std::valarray<T>& lhs, const valmatrix<T>& rhs)
+{
+  valmatrix<T> tmp {lhs, rhs.row_size(), rhs.col_size()};
+  return tmp /= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator/(const T& lhs, const valmatrix<T>& rhs)
+{
+  valmatrix<T> tmp {lhs, rhs.row_size(), rhs.col_size()};
+  return tmp /= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator%(valmatrix<T> lhs, const valmatrix<T>& rhs)
+{
+  return lhs %= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator%(valmatrix<T> lhs, const std::valarray<T>& rhs)
+{
+  return lhs %= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator%(valmatrix<T> lhs, const T& rhs)
+{
+  return lhs %= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator%(const std::valarray<T>& lhs, const valmatrix<T>& rhs)
+{
+  valmatrix<T> tmp {lhs, rhs.row_size(), rhs.col_size()};
+  return tmp %= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator%(const T& lhs, const valmatrix<T>& rhs)
+{
+  valmatrix<T> tmp {lhs, rhs.row_size(), rhs.col_size()};
+  return tmp %= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator&(valmatrix<T> lhs, const valmatrix<T>& rhs)
+{
+  return lhs &= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator&(valmatrix<T> lhs, const std::valarray<T>& rhs)
+{
+  return lhs &= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator&(valmatrix<T> lhs, const T& rhs)
+{
+  return lhs &= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator&(const std::valarray<T>& lhs, valmatrix<T> rhs)
+{
+  return rhs &= lhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator&(const T& lhs, valmatrix<T> rhs)
+{
+  return rhs &= lhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator|(valmatrix<T> lhs, const valmatrix<T>& rhs)
+{
+  return lhs |= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator|(valmatrix<T> lhs, const std::valarray<T>& rhs)
+{
+  return lhs |= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator|(valmatrix<T> lhs, const T& rhs)
+{
+  return lhs |= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator|(const std::valarray<T>& lhs, valmatrix<T> rhs)
+{
+  return rhs |= lhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator|(const T& lhs, valmatrix<T> rhs)
+{
+  return rhs |= lhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator^(valmatrix<T> lhs, const valmatrix<T>& rhs)
+{
+  return lhs ^= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator^(valmatrix<T> lhs, const std::valarray<T>& rhs)
+{
+  return lhs ^= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator^(valmatrix<T> lhs, const T& rhs)
+{
+  return lhs ^= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator^(const std::valarray<T>& lhs, valmatrix<T> rhs)
+{
+  return rhs ^= lhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator^(const T& lhs, valmatrix<T> rhs)
+{
+  return rhs ^= lhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator<<(valmatrix<T> lhs, const valmatrix<T>& rhs)
+{
+  return lhs <<= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator<<(valmatrix<T> lhs, const std::valarray<T>& rhs)
+{
+  return lhs <<= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator<<(valmatrix<T> lhs, const T& rhs)
+{
+  return lhs <<= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator<<(const std::valarray<T>& lhs, const valmatrix<T>& rhs)
+{
+  valmatrix<T> tmp {lhs, rhs.row_size(), rhs.col_size()};
+  return tmp <<= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator<<(const T& lhs, const valmatrix<T>& rhs)
+{
+  valmatrix<T> tmp {lhs, rhs.row_size(), rhs.col_size()};
+  return tmp <<= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator>>(valmatrix<T> lhs, const valmatrix<T>& rhs)
+{
+  return lhs >>= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator>>(valmatrix<T> lhs, const std::valarray<T>& rhs)
+{
+  return lhs >>= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator>>(valmatrix<T> lhs, const T& rhs)
+{
+  return lhs >>= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator>>(const std::valarray<T>& lhs, const valmatrix<T>& rhs)
+{
+  valmatrix<T> tmp {lhs, rhs.row_size(), rhs.col_size()};
+  return tmp >>= rhs;
+}
+
+template<typename T>
+xmaho::std_ext::valmatrix<T> xmaho::std_ext::operator>>(const T& lhs, const valmatrix<T>& rhs)
+{
+  valmatrix<T> tmp {lhs, rhs.row_size(), rhs.col_size()};
+  return tmp >>= rhs;
+}
+
+template<typename T>
+auto xmaho::std_ext::begin(const valmatrix<T>& v) noexcept
 {
   return v.begin();
 }
 
 template<typename T>
-T* xmaho::std_ext::begin(valmatrix<T>& v) noexcept
+auto xmaho::std_ext::begin(valmatrix<T>& v) noexcept
 {
   return v.begin();
 }
 
 template<typename T>
-const T* xmaho::std_ext::end(const valmatrix<T>& v) noexcept
+auto xmaho::std_ext::end(const valmatrix<T>& v) noexcept
 {
   return v.end();
 }
 
 template<typename T>
-T* xmaho::std_ext::end(valmatrix<T>& v) noexcept
+auto xmaho::std_ext::end(valmatrix<T>& v) noexcept
 {
   return v.end();
 }

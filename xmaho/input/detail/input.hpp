@@ -1,3 +1,4 @@
+/*
 BSD 2-Clause License
 
 Copyright (c) 2017 - 2020, FORNO
@@ -23,3 +24,58 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+#ifndef XMAHO_INPUT_DETAIL_INPUT_H
+#define XMAHO_INPUT_DETAIL_INPUT_H
+
+#include "../input.hpp"
+
+#include <iterator>
+#include <type_traits>
+#include <utility>
+
+template<typename T, typename... Args>
+T xmaho::input::get_value(std::basic_istream<Args...>& is)
+{
+  T v {};
+  is >> v;
+  return v;
+}
+
+namespace xmaho::input::detail
+{
+
+template<typename T>
+auto has_push_back_impl(nullptr_t) -> decltype(
+  std::declval<T>().push_back(std::declval<typename T::value_type>()),
+  std::true_type{});
+
+template<typename T>
+auto has_push_back_impl(...) -> std::false_type;
+
+template<typename T>
+struct has_push_back
+  : decltype(has_push_back_impl<T>(nullptr)) {};
+
+}
+
+template<typename C, typename... Args>
+C xmaho::input::get_container(std::basic_istream<Args...>& is, typename C::size_type length)
+{
+  C v {};
+  if (length != std::numeric_limits<typename C::size_type>::max())
+    v.reserve(length);
+  typename C::value_type e {};
+  for (auto i {length}; i != 0 && is >> e; --i) {
+    if constexpr (xmaho::input::detail::has_push_back<C>{}) {
+      v.push_back(std::move_if_noexcept(e));
+    } else {
+      using std::cend;
+      v.insert(cend(v), std::move_if_noexcept(e));
+    }
+  }
+  return v;
+}
+
+#endif

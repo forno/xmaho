@@ -1,30 +1,74 @@
+cmake_minimum_required(VERSION 3.8.2)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_EXTENSIONS False)
+
 add_subdirectory(gtest)
 
-add_executable(test_gtest gtest.cpp)
-target_link_libraries(test_gtest gtest_main)
-add_executable(test_gmock gmock.cpp)
-target_link_libraries(test_gmock gmock_main)
+set(Clang_WARN_OPTIONS
+  -Weverything
+  -Wno-c++98-compat
+  -Wno-c++98-compat-pedantic
+  -Wno-global-constructors
+  -Wno-missing-variable-declarations
+  -Wno-padded
+  -fcomment-block-commands=file
+)
+set(GNU_WARN_OPTIONS
+  -Wall
+  -Wextra
+  -Wpedantic
+  -Wdouble-promotion
+  -Wnull-dereference
+  -Wimplicit-fallthrough
+  -Wmissing-include-dirs
+  -Wswitch-enum
+  -Wsync-nand
+  -Wunused-parameter
+  -Wuninitialized
+  -Wstrict-overflow
+  -Wsuggest-attribute=noreturn
+  -Wsuggest-final-types
+  -Wsuggest-final-methods
+  -Walloc-zero
+  -Walloca
+  -Wduplicated-branches
+  -Wduplicated-cond
+  -Wtrampolines
+  -Wfloat-equal
+  -Wshadow
+  -Wunsafe-loop-optimizations
+  -Wcast-qual
+  -Wconditionally-supported
+  -Wconversion
+  -Wzero-as-null-pointer-constant
+  -Wdate-time
+  -Wuseless-cast
+  -Wsized-deallocation
+  -Wlogical-op
+  -Wmissing-declarations
+  -Wnormalized
+  -Wopenmp-simd
+  -Wpacked
+  -Wredundant-decls
+  -Wrestrict
+  -Winvalid-pch
+  -Wvla
+  -Wdisabled-optimization
+  -Wstack-protector
+  -Whsa
+)
 
-set(TEST_TARGETS
-  test_gtest
-  test_gmock
+add_compile_options(
+  "$<$<CXX_COMPILER_ID:Clang>:${Clang_WARN_OPTIONS}>"
+  "$<$<CXX_COMPILER_ID:GNU>:${GNU_WARN_OPTIONS}>"
+  $<$<CXX_COMPILER_ID:MSVC>:/W4>
 )
 
 # Add some test
+add_subdirectory(floating)
+add_subdirectory(input)
+add_subdirectory(message)
+add_subdirectory(point)
 add_subdirectory(std_ext)
-
-include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG(-std=c++1z HAVE_FLAG_CXX17)
-if(HAVE_FLAG_CXX17)
-  foreach(i IN LISTS TEST_TARGETS)
-    target_compile_options(${i} PRIVATE -std=c++1z)
-  endforeach(i IN LISTS TEST_TARGETS)
-else(HAVE_FLAG_CXX17)
-  set_property(TARGET ${TEST_TARGETS} PROPERTY CXX_STANDARD 14)
-  set_property(TARGET ${TEST_TARGETS} PROPERTY CXX_STANDARD_REQUIRED True)
-  set_property(TARGET ${TEST_TARGETS} PROPERTY CXX_EXTENSIONS False)
-endif(HAVE_FLAG_CXX17)
-
-foreach(i IN LISTS TEST_TARGETS)
-  add_test(NAME ${i} COMMAND ${i})
-endforeach(i IN LISTS TEST_TARGETS)

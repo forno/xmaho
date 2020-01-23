@@ -1,0 +1,3 @@
+add_executable(test_point_point point.cpp)
+target_link_libraries(test_point_point gmock_main)
+add_test(NAME test_point_point COMMAND test_point_point)

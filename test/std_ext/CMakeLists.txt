@@ -1,7 +1,7 @@
 add_executable(test_std_ext_valmatrix valmatrix.cpp)
 target_link_libraries(test_std_ext_valmatrix gmock_main)
+add_test(NAME test_std_ext_valmatrix COMMAND test_std_ext_valmatrix)
 
-set(TEST_TARGETS ${TEST_TARGETS}
-  test_std_ext_valmatrix
-  PARENT_SCOPE
-)
+add_executable(test_std_ext_valarray valarray.cpp)
+target_link_libraries(test_std_ext_valarray gmock_main)
+add_test(NAME test_std_ext_valarray COMMAND test_std_ext_valarray)

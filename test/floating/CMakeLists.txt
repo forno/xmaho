@@ -1,0 +1,3 @@
+add_executable(test_floating_compare compare.cpp)
+target_link_libraries(test_floating_compare gmock_main)
+add_test(NAME test_floating_compare COMMAND test_floating_compare)

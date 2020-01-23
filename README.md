@@ -1,8 +1,14 @@
 # x.maho
-The c++ header only library for latest version.
+The c++ header only library for latest version with only std library.
+
+![](https://github.com/forno/xmaho/workflows/C/C++%20CI/badge.svg)
+
+## Concept
+Only depend to std library.
+Utility for my ideas.
 
 ## API
-API [here](https://forno.github.io/xmaho/annotated.html)
+API [here](https://forno.github.io/xmaho/files.html)
 
 ## Tutorial and example
 x.maho wiki is [this](https://github.com/forno/xmaho/wiki) for tutorial and example.
