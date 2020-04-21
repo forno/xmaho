@@ -48,20 +48,27 @@ namespace xmaho::math
  * @tparam modulo The modulo number.
  * @tparam T The value type.
  */
-template<std::size_t modulo, typename T = std::size_t>
+template<std::size_t modulo, typename T = int>
 class residue_system
 {
   static_assert(modulo > 0, "Modulo must be over 0");
   static_assert(std::is_nothrow_default_constructible_v<T>, "T must can be make noexcept construct");
   static_assert(std::is_nothrow_move_constructible_v<T> ||
-                std::is_nothrow_copy_constructible_v<T>, "T must can be maked by T");
-  static_assert(noexcept(T{} + T{}), "T must that can be noexcept addition by T");
-  static_assert(noexcept(T{} % T{}), "T must that can be noexcept dividion by T");
+                std::is_nothrow_copy_constructible_v<T>, "T must can be maked by T without exception");
+  static_assert(noexcept(T{} + T{}), "T must can be noexcept addition by T");
+  static_assert(noexcept(std::declval<T&>() -= T{}), "T must can be noexcept assign with subtraction by T");
+  static_assert(noexcept(T{} % T{}), "T must can be noexcept dividion by T");
+  static_assert(noexcept(T{} < T{}), "T must can be compared with T");
+  static_assert(noexcept(static_cast<T>(std::size_t{})), "T must can be noexcept convation by std::size_t");
+
 public:
   //! @brief The value type.
   using value_type = T;
 
-  //!  @brief Default constructor with T{};
+  //! @brief The modulo_value in value_type
+  static constexpr auto modulo_value {static_cast<T>(modulo)};
+
+  //! @brief Default constructor with T{} : no explicit for automatically residue system
   constexpr residue_system() = default;
 
   /**
@@ -72,8 +79,7 @@ public:
   constexpr residue_system(const T& value) noexcept;
 
   //!  @brief Convert function to T.
-  explicit constexpr operator T() const
-    noexcept(std::is_nothrow_copy_constructible_v<T>);
+  explicit constexpr operator T() const;
 
   /**
    * @brief Unary addition.
@@ -87,7 +93,7 @@ public:
    *
    * @return New value.
    */
-  constexpr residue_system operator-() const noexcept(noexcept(-T{}));
+  constexpr residue_system operator-() const noexcept;
 
   /**
    * @brief Assign combine addition.
@@ -96,7 +102,7 @@ public:
    * @return This reference.
    */
   constexpr residue_system& operator+=(const residue_system& rhs) &
-    noexcept(noexcept(T{} + T{}));
+    noexcept(noexcept(std::declval<T&>() += T{}));
 
   /**
    * @brief Assign combine subtraction.
@@ -105,7 +111,7 @@ public:
    * @return This reference.
    */
   constexpr residue_system& operator-=(const residue_system& rhs) &
-    noexcept(noexcept(T{} - T{}));
+    noexcept(noexcept(std::declval<T&>() += T{}) && noexcept(T{} - T{}));
 
   /**
    * @brief Assign combine multiplication.
@@ -180,6 +186,31 @@ private:
  */
 template<std::size_t modulo, typename T = std::size_t>
 void swap(residue_system<modulo, T>& a, residue_system<modulo, T>& b) noexcept;
+
+
+/**
+ * @brief Equal function.
+ *
+ * @return Is congruence
+ */
+template<std::size_t modulo, typename T = std::size_t>
+constexpr bool operator==(residue_system<modulo, T> lhs, residue_system<modulo, T> rhs) noexcept;
+
+/**
+ * @brief Equal function.
+ *
+ * @return Is congruence
+ */
+template<std::size_t modulo, typename T = std::size_t, typename T2>
+constexpr bool operator==(residue_system<modulo, T> lhs, T2 rhs) noexcept;
+
+/**
+ * @brief Equal function.
+ *
+ * @return Is congruence
+ */
+template<std::size_t modulo, typename T = std::size_t, typename T2>
+constexpr bool operator==(T2 lhs, residue_system<modulo, T> rhs) noexcept;
 
 }
 

@@ -30,16 +30,72 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <gtest/gtest.h>
 
-#include <limits>
-
-template<typename T>
-class ResidueSystemTest
-  : public ::testing::Test
+TEST(ResidueSystemTest, Construct)
 {
-protected:
-  static constexpr std::size_t modulo {std::numeric_limits<T>::max() / 4};
-  xmaho::math::residue_system<modulo, T> rs;
-};
+  xmaho::math::residue_system<10> rs1{};
+  xmaho::math::residue_system<10, long long> rs2{};
+  xmaho::math::residue_system<10, unsigned long long> rs3{};
+  xmaho::math::residue_system<10> rs4{5};
+}
 
-using ResidueSystemTypes = ::testing::Types<int, short, long, long long>;
-TYPED_TEST_CASE(ResidueSystemTest, ResidueSystemTypes);
+TEST(ResidueSystemTest, Congruence)
+{
+  xmaho::math::residue_system<10> rs{};
+  EXPECT_EQ(rs, rs);
+  EXPECT_EQ(rs, xmaho::math::residue_system<10>{0});
+  EXPECT_EQ(xmaho::math::residue_system<10>{0}, rs);
+  EXPECT_EQ(rs, xmaho::math::residue_system<10>{10});
+  EXPECT_EQ(xmaho::math::residue_system<10>{10}, rs);
+  EXPECT_EQ(rs, 0);
+  EXPECT_EQ(0, rs);
+  EXPECT_EQ(rs, 10);
+  EXPECT_EQ(10, rs);
+  xmaho::math::residue_system<10> rs2{10};
+  EXPECT_EQ(rs, rs2);
+}
+
+TEST(ResidueSystemTest, Addtion)
+{
+  xmaho::math::residue_system<10> rs{};
+  xmaho::math::residue_system<10> ans{5};
+  EXPECT_EQ(rs + 5, ans);
+  EXPECT_EQ(rs + 15, ans);
+  rs += 5;
+  EXPECT_EQ(rs, ans);
+  rs += 10;
+  EXPECT_EQ(rs, ans);
+}
+
+TEST(ResidueSystemTest, Substraction)
+{
+  xmaho::math::residue_system<10> rs{};
+  xmaho::math::residue_system<10> ans{5};
+  EXPECT_EQ(rs - 5, ans);
+  EXPECT_EQ(rs - 15, ans);
+  rs -= 5;
+  EXPECT_EQ(rs, ans);
+  rs -= 10;
+  EXPECT_EQ(rs, ans);
+}
+
+TEST(REsidueSytemTest, Multiplication)
+{
+  xmaho::math::residue_system<10> rs{0};
+  xmaho::math::residue_system<10> ans{0};
+  EXPECT_EQ(rs * 5, ans);
+  EXPECT_EQ(rs * 15, ans);
+  rs *= 5;
+  EXPECT_EQ(rs, ans);
+  rs *= 10;
+  EXPECT_EQ(rs, ans);
+  xmaho::math::residue_system<10> rs1{1};
+  xmaho::math::residue_system<10> ans1{5};
+  EXPECT_EQ(rs1 * 5, ans1);
+  EXPECT_EQ(rs1 * 15, ans1);
+  rs1 *= 5;
+  EXPECT_EQ(rs1, ans1);
+  rs1 *= 10;
+  EXPECT_EQ(rs1, ans);
+  xmaho::math::residue_system<10> rs2{3};
+  xmaho::math::residue_system<10> ans2{5};
+}
